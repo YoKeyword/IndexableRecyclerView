@@ -110,23 +110,7 @@ public class IndexableStickyListView extends FrameLayout implements AdapterView.
         }
 
         mSearchLayout = new SearchLayout(context);
-//        mSearchLayout.setBackgroundColor(Color.WHITE);
         LayoutParams paramsLayout = new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
-//        ProgressBar searchProgressBar = new ProgressBar(context);
-//        int searchSize = IndexBar.dp2px(context, 20);
-//        LayoutParams paramsSerach = new LayoutParams(searchSize, searchSize);
-//        paramsSerach.gravity = Gravity.CENTER;
-//        paramsSerach.topMargin = searchSize;
-//
-//        LayoutParams paramsTip = new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
-//        TextView tvTip = new TextView(context);
-//        paramsTip.topMargin = searchSize;
-//        tvTip.setText(R.string.no_results);
-//        tvTip.setTextSize(12f);
-//        tvTip.setTextColor(Color.GRAY);
-//
-//        mSearchLayout.addView(tvTip, paramsTip);
-//        mSearchLayout.addView(searchProgressBar, paramsSerach);
         addView(mSearchLayout, paramsLayout);
         mSearchLayout.setVisibility(GONE);
 
