@@ -115,3 +115,22 @@ mIndexableStickyListView.setOnItemContentClickListener(new IndexableStickyListVi
 mIndexableStickyListView.searchTextChange(newText);
 ````
 
+5、拓展：
+
+添加 数据源HeaderEntity:("选择城市"图中的 GPS、热门城市)
+````java
+// 添加定位城市Header
+ArrayList<CityEntity> gpsIndexEntityList = new ArrayList<>();
+CityEntity gpsEntity = new CityEntity();
+gpsEntity.setName("定位中...");
+gpsIndexEntityList.add(gpsEntity);
+IndexHeaderEntity<CityEntity> gpsHeader = new IndexHeaderEntity<>("定", "GPS自动定位", gpsIndexEntityList);
+// 绑定数据 bindDatas第二个参数是个IndexHeaderEntity的数组,可以添加任意多HeaderEntity
+mIndexableStickyListView.bindDatas(mCities,gpsHeader);
+````
+
+为ListView添加HeaderView: (“选择联系人”图中的Header)
+````java
+mIndexableStickyListView.addHeaderView(headerView);
+````
+
