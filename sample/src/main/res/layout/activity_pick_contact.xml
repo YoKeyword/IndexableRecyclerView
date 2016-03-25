@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:app="http://schemas.android.com/apk/res-auto"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:background="@android:color/white"
+              android:fitsSystemWindows="true"
+              android:orientation="vertical">
+
+    <android.support.v7.widget.SearchView
+        android:id="@+id/searchview"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="12dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
+        android:layout_marginTop="12dp"
+        android:background="@drawable/bg_searchview_contact"
+        android:focusable="false"
+        android:focusableInTouchMode="false"
+        app:iconifiedByDefault="false"
+        app:queryBackground="@null"
+        app:queryHint="请输入关键字"
+        android:textColor="#757575"/>
+
+    <com.yokeyword.indexablelistview.IndexableStickyListView
+        android:id="@+id/indexListView"
+        android:layout_width="match_parent"
+        app:indexListView_type_overlay="right"
+        app:indexListView_rightOverlayColor="@color/colorAccent"
+        app:indexBar_textSize="13sp"
+        app:indexBar_selected_textColor="@color/colorAccent"
+        app:indexBar_textColor="@android:color/darker_gray"
+        android:layout_height="match_parent"/>
+
+</LinearLayout>

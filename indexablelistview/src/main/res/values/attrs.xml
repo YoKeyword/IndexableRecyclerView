@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="IndexableStickyListView">
+        <attr name="indexBar_selected_textColor" format="color"/>
+        <attr name="indexBar_textColor" format="color"/>
+        <attr name="indexBar_textSize" format="dimension"/>
+        <attr name="indexListView_type_overlay" format="enum">
+            <enum name="center" value="1"/>
+            <enum name="right" value="2"/>
+        </attr>
+        <attr name="indexListView_rightOverlayColor" format="color"/>
+    </declare-styleable>
+</resources>

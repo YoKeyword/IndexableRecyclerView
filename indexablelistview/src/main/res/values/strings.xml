@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">IndexableStickyListView</string>
+    <string name="no_results">No results found for your query</string>
+</resources>

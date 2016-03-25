@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="default_indexBar_textcolor">#8c8c8c</color>
+    <dimen name="default_indexBar_textSize">13sp</dimen>
+    <color name="dafault_indexBar_selected_textColor">#f33737</color>
+    <color name="default_indexListView_rightOverlayColor">#f33737</color>
+</resources>
