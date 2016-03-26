@@ -18,7 +18,9 @@ IndexableListView + Sticky ; Supporting Chinese and English.
 
 5、绑定数据源、搜索等功能，都是异步的，通过HandlerThread优化实现
 
-6、提供2种悬浮提示View，常规居中 以及 MD风格的右侧气泡
+6、自由添加Header数据（GPS定位、热门城市功能），ListView的addHeaderView功能也可以随意使用
+
+7、提供2种悬浮提示View，常规居中 以及 MD风格的右侧气泡
 
 # 如何使用
 ### gradle
