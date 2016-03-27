@@ -8,7 +8,7 @@ IndexableListView + Sticky ; Supporting Chinese and English.
 <img src="/gif/demo_contact.gif" width="320px"/>
 
 # 特性
-1、根据数据源，自动生成字母索引Bar，以及字母Header
+1、根据数据源，自动**排序生成**字母索引Bar，以及字母Header
 
 2、字母Header是粘性的（Sticky）
 
