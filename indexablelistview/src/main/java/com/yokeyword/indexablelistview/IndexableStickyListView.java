@@ -273,6 +273,7 @@ public class IndexableStickyListView extends FrameLayout implements AdapterView.
             if (mBindDataHandlerThread == null) {
                 mBindDataHandlerThread = new HandlerThread("BindData_Thread");
                 mBindDataHandlerThread.start();
+                // 后续维护,这里有可能产生持续到绑定数据结束时的内存泄漏(话说没人有这么大数据量吧...)
                 mBindDataHandler = new Handler(mBindDataHandlerThread.getLooper()) {
                     @Override
                     public void handleMessage(Message msg) {

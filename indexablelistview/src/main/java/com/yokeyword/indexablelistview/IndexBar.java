@@ -250,6 +250,7 @@ public class IndexBar extends View {
         if (mSearchHandlerThread == null) {
             mSearchHandlerThread = new HandlerThread("Search_Thread");
             mSearchHandlerThread.start();
+            // 后续维护,这里有可能产生持续到搜索结束时的内存泄漏 (话说没人有这么大数据量吧...)
             mSearchHandler = new Handler(mSearchHandlerThread.getLooper()) {
                 @Override
                 public void handleMessage(Message msg) {
