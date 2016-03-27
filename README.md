@@ -2,6 +2,7 @@
 IndexableListView + Sticky ; Supporting Chinese and English.
 
 **轻松实现：选择城市、搜索城市 ， 选择联系人、搜索联系人功能 等需要字母索引的功能**
+
 相关阅读：[谈谈“搜索”，2种场景下的最优解](http://www.jianshu.com/p/b24e69da7bbb)
 
 # Demo演示
