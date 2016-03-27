@@ -26,7 +26,7 @@ IndexableListView + Sticky ; Supporting Chinese and English.
 ### gradle
 项目下app的build.gradle中依赖：
 ````xml
-compile 'me.yokeyword:indexablestickylistview:0.1.0'
+compile 'me.yokeyword:indexablestickylistview:0.1.1'
 ````
 
 ### 使用
