@@ -6,6 +6,7 @@ import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.os.Handler;
 import android.os.HandlerThread;
+import android.os.Looper;
 import android.os.Message;
 import android.text.TextUtils;
 import android.util.SparseArray;
@@ -18,6 +19,7 @@ import android.widget.TextView;
 
 import com.yokeyword.indexablelistview.help.PinyinUtil;
 
+import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -244,54 +246,64 @@ public class IndexBar extends View {
         }
     }
 
+    private static class SearchHanlder extends Handler {
+        private final WeakReference<IndexBar> mIndexBar;
+
+        public SearchHanlder(Looper looper, IndexBar indexBar) {
+            super(looper);
+            mIndexBar = new WeakReference<>(indexBar);
+        }
+
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+            IndexBar indexBar = mIndexBar.get();
+
+            if (indexBar.mItems == null || indexBar.mAdapter == null) return;
+
+            if (indexBar.mOnSearchResultListener != null) {
+                indexBar.mOnSearchResultListener.onStart();
+            }
+
+            String currentKey = (String) msg.obj;
+
+            indexBar.mNeedShutdown = false;
+
+            if (indexBar.mFilterList == null) {
+                indexBar.mFilterList = new ArrayList<>();
+            }
+
+            indexBar.mFilterList.clear();
+
+            if (TextUtils.isEmpty(currentKey.trim())) {
+                indexBar.runOnUIThread(true);
+            } else {
+                for (IndexEntity tmp : indexBar.mItems) {
+                    if (indexBar.mNeedShutdown) {
+                        return;
+                    }
+
+                    String name = tmp.getName();
+                    if (name.contains(currentKey) || PinyinUtil.getPingYin(name).startsWith(currentKey)) {
+                        indexBar.mFilterList.add(tmp);
+                    }
+                }
+                HashSet<IndexEntity> hashSet = new HashSet(indexBar.mFilterList);
+                indexBar.mFilterList.clear();
+                indexBar.mFilterList.addAll(hashSet);
+
+                indexBar.runOnUIThread(false);
+            }
+        }
+    }
+
     void searchTextChange(String key) {
         mNeedShutdown = true;
 
         if (mSearchHandlerThread == null) {
             mSearchHandlerThread = new HandlerThread("Search_Thread");
             mSearchHandlerThread.start();
-            // 后续维护,这里有可能产生持续到搜索结束时的内存泄漏 (话说没人有这么大数据量吧...)
-            mSearchHandler = new Handler(mSearchHandlerThread.getLooper()) {
-                @Override
-                public void handleMessage(Message msg) {
-                    super.handleMessage(msg);
-                    if (mItems == null || mAdapter == null) return;
-
-                    if (mOnSearchResultListener != null) {
-                        mOnSearchResultListener.onStart();
-                    }
-
-                    String currentKey = (String) msg.obj;
-
-                    mNeedShutdown = false;
-
-                    if (mFilterList == null) {
-                        mFilterList = new ArrayList<>();
-                    }
-
-                    mFilterList.clear();
-
-                    if (TextUtils.isEmpty(currentKey.trim())) {
-                        runOnUIThread(true);
-                    } else {
-                        for (IndexEntity tmp : mItems) {
-                            if (mNeedShutdown) {
-                                return;
-                            }
-
-                            String name = tmp.getName();
-                            if (name.contains(currentKey) || PinyinUtil.getPingYin(name).startsWith(currentKey)) {
-                                mFilterList.add(tmp);
-                            }
-                        }
-                        HashSet<IndexEntity> hashSet = new HashSet(mFilterList);
-                        mFilterList.clear();
-                        mFilterList.addAll(hashSet);
-
-                        runOnUIThread(false);
-                    }
-                }
-            };
+            mSearchHandler = new SearchHanlder(mSearchHandlerThread.getLooper(), this);
         }
         Message msg = Message.obtain();
         msg.obj = key;

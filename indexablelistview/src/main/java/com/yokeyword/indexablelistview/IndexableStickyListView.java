@@ -7,6 +7,7 @@ import android.content.res.TypedArray;
 import android.graphics.Color;
 import android.os.Handler;
 import android.os.HandlerThread;
+import android.os.Looper;
 import android.os.Message;
 import android.support.v4.view.ViewCompat;
 import android.util.AttributeSet;
@@ -21,6 +22,7 @@ import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -249,6 +251,31 @@ public class IndexableStickyListView extends FrameLayout implements AdapterView.
         mTvRightOverlay.setVisibility(INVISIBLE);
     }
 
+    private static class BindDatasHanlder extends Handler {
+        private final WeakReference<IndexableStickyListView> mIndexListView;
+
+        public BindDatasHanlder(Looper looper, IndexableStickyListView indexListView) {
+            super(looper);
+            mIndexListView = new WeakReference<>(indexListView);
+        }
+
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+            final IndexableStickyListView indexListView = mIndexListView.get();
+
+            indexListView.mAdapter.setNeedShutdown(false);
+            indexListView.mAdapter.setDatas(indexListView.mItems, indexListView.mHeaderEntities);
+            if (indexListView.mAdapter.isNeedShutdown()) return;
+            ((Activity) indexListView.mContext).runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    indexListView.updateListView();
+                }
+            });
+        }
+    }
+
     /**
      * 绑定数据
      *
@@ -273,22 +300,7 @@ public class IndexableStickyListView extends FrameLayout implements AdapterView.
             if (mBindDataHandlerThread == null) {
                 mBindDataHandlerThread = new HandlerThread("BindData_Thread");
                 mBindDataHandlerThread.start();
-                // 后续维护,这里有可能产生持续到绑定数据结束时的内存泄漏(话说没人有这么大数据量吧...)
-                mBindDataHandler = new Handler(mBindDataHandlerThread.getLooper()) {
-                    @Override
-                    public void handleMessage(Message msg) {
-                        super.handleMessage(msg);
-                        mAdapter.setNeedShutdown(false);
-                        mAdapter.setDatas(mItems, mHeaderEntities);
-                        if (mAdapter.isNeedShutdown()) return;
-                        ((Activity) mContext).runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                updateListView();
-                            }
-                        });
-                    }
-                };
+                mBindDataHandler = new BindDatasHanlder(mBindDataHandlerThread.getLooper(), this);
             }
             mBindDataHandler.sendEmptyMessage(MSG_BIND_DATA);
         } else {
