@@ -31,5 +31,13 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(new Intent(MainActivity.this, PickContactActivity.class));
             }
         });
+
+        findViewById(R.id.btn_pick_city_large).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = PickCityActivity.getCallingIntent(MainActivity.this, true);
+                startActivity(intent);
+            }
+        });
     }
 }

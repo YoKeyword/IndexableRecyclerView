@@ -1,5 +1,7 @@
 package com.yokeyword.sample.city;
 
+import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
@@ -25,6 +27,8 @@ import java.util.List;
 public class PickCityActivity extends AppCompatActivity {
     public static final String TAG = PickCityActivity.class.getSimpleName();
 
+    private static final String EXTRA_LARGE = "extra_large";
+
     private IndexableStickyListView mIndexableStickyListView;
     private SearchView mSearchView;
 
@@ -32,6 +36,12 @@ public class PickCityActivity extends AppCompatActivity {
     private List<CityEntity> mCities = new ArrayList<>();
 
     private String[] mHotCities = new String[]{"杭州市", "北京市", "上海市", "广州市"};
+
+    public static Intent getCallingIntent(Context context, boolean isLarge) {
+        Intent intent = new Intent(context, PickCityActivity.class);
+        intent.putExtra(EXTRA_LARGE, isLarge);
+        return intent;
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,6 +68,16 @@ public class PickCityActivity extends AppCompatActivity {
             CityEntity cityEntity = new CityEntity();
             cityEntity.setName(item);
             mCities.add(cityEntity);
+        }
+
+        if (getIntent().getBooleanExtra(EXTRA_LARGE, false)) {
+            mCities.addAll(mCities);
+            mCities.addAll(mCities);
+            mCities.addAll(mCities);
+            mCities.addAll(mCities);
+            mCities.addAll(mCities);
+            mCities.addAll(mCities);
+            mCities.addAll(mCities);
         }
 
         // 添加定位城市Header
@@ -123,7 +143,7 @@ public class PickCityActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        if(item.getItemId() == android.R.id.home){
+        if (item.getItemId() == android.R.id.home) {
             finish();
         }
         return super.onOptionsItemSelected(item);
