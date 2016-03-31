@@ -138,3 +138,6 @@ mIndexableStickyListView.bindDatas(mCities,gpsHeader);
 mIndexableStickyListView.addHeaderView(headerView);
 ````
 
+#致谢
+####[TinyPinyin](https://github.com/promeG/TinyPinyin)
+
