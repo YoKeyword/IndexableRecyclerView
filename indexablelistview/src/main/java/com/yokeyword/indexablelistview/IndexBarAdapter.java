@@ -6,6 +6,7 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
+import com.github.promeg.pinyinhelper.Pinyin;
 import com.yokeyword.indexablelistview.help.PinyinComparator;
 import com.yokeyword.indexablelistview.help.PinyinUtil;
 
@@ -162,7 +163,7 @@ public abstract class IndexBarAdapter<T extends IndexEntity> extends BaseAdapter
     void setDatas(final List<T> items, final IndexHeaderEntity... headerEntities) {
         for (T t : items) {
             if (mNeedShutdown) return;
-            t.setFirstSpell(PinyinUtil.converterToFirstSpell(t.getName().substring(0, 1)).toUpperCase());
+            t.setFirstSpell(PinyinUtil.getPingYin(t.getName()).substring(0, 1).toUpperCase());
         }
         Collections.sort(items, new PinyinComparator());
 

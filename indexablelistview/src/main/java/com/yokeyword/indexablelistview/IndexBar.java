@@ -141,7 +141,7 @@ public class IndexBar extends View {
                     }
                     mListView.setSelection(mAdapter.getIndexMapPosition(mSelectionPos) + mListView.getHeaderViewsCount());
                 }
-                processOverlayView(touchPos, y);
+                processOverlayView(touchPos);
                 break;
             case MotionEvent.ACTION_MOVE:
                 processRightOverlayView(y);
@@ -154,7 +154,7 @@ public class IndexBar extends View {
                         }
                         mListView.setSelection(mAdapter.getIndexMapPosition(mSelectionPos) + mListView.getHeaderViewsCount());
                     }
-                    processOverlayView(touchPos, y);
+                    processOverlayView(touchPos);
                 }
                 break;
             case MotionEvent.ACTION_UP:
@@ -177,7 +177,7 @@ public class IndexBar extends View {
         }
     }
 
-    private void processOverlayView(final int touchPos, float y) {
+    private void processOverlayView(final int touchPos) {
         if (mRightOverlayView != null) {
             if (mRightOverlayView.getVisibility() != VISIBLE) {
                 mRightOverlayView.setVisibility(VISIBLE);
@@ -188,6 +188,7 @@ public class IndexBar extends View {
             if (mOverlayView.getVisibility() != VISIBLE) {
                 mOverlayView.setVisibility(VISIBLE);
             }
+            if (mIndex.size() <= touchPos) return;
             mOverlayView.setText(mIndex.get(touchPos));
         }
         if (mOnIndexSelectedListener != null) {

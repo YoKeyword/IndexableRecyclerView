@@ -195,6 +195,7 @@ public class IndexableStickyListView extends FrameLayout implements AdapterView.
             if (mTvRightOverlay == null) {
                 initRightOverlayTextView(color);
                 addView(mTvRightOverlay);
+                mTvRightOverlay.invalidate();
                 mIndexBar.showTouchOverlayView(mTvRightOverlay);
             }
         } else {
