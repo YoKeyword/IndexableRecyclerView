@@ -24,6 +24,8 @@ IndexableListView + Sticky ; Supporting Chinese and English.
 
 7、提供2种悬浮提示View，常规居中 以及 MD风格的右侧气泡
 
+8、使用[TinyPinyin](https://github.com/promeG/TinyPinyin)代替Pinyin4j.jar库，体积更小，拼音转化速度提升4倍！
+
 # 如何使用
 ### gradle
 项目下app的build.gradle中依赖：
