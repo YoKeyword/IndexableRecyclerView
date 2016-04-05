@@ -9,7 +9,7 @@ import android.os.Handler;
 import android.os.HandlerThread;
 import android.os.Looper;
 import android.os.Message;
-import android.support.v4.view.ViewCompat;
+import android.support.v7.widget.AppCompatTextView;
 import android.util.AttributeSet;
 import android.util.SparseArray;
 import android.view.Gravity;
@@ -44,7 +44,8 @@ public class IndexableStickyListView extends FrameLayout implements AdapterView.
     private IndexBar mIndexBar;
     private SearchLayout mSearchLayout;
     private ProgressBar mProgressBar;
-    private TextView mTvOverlay, mTvRightOverlay;
+    private TextView mTvOverlay;
+    private AppCompatTextView mTvRightOverlay;
 
     private Context mContext;
     private IndexBarAdapter mAdapter;
@@ -238,9 +239,9 @@ public class IndexableStickyListView extends FrameLayout implements AdapterView.
     }
 
     private void initRightOverlayTextView(int color) {
-        mTvRightOverlay = new TextView(mContext);
+        mTvRightOverlay = new AppCompatTextView(mContext);
         mTvRightOverlay.setBackgroundResource(R.drawable.bg_right_overlay);
-        ViewCompat.setBackgroundTintList(mTvRightOverlay, ColorStateList.valueOf(color));
+        mTvRightOverlay.setSupportBackgroundTintList(ColorStateList.valueOf(color));
         mTvRightOverlay.setTextColor(Color.WHITE);
         mTvRightOverlay.setTextSize(38);
         mTvRightOverlay.setGravity(Gravity.CENTER);
