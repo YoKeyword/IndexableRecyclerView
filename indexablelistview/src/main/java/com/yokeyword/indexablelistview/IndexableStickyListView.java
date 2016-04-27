@@ -288,10 +288,14 @@ public class IndexableStickyListView extends FrameLayout implements AdapterView.
      */
     public <T extends IndexEntity> void bindDatas(final List<T> items, final IndexHeaderEntity... headerEntities) {
         mItems = new ArrayList<>();
+        mHeaderEntities = new IndexHeaderEntity[headerEntities.length];
 
         mItems.addAll(items);
 
         mHeaderEntities = headerEntities;
+        for (int i = 0; i < headerEntities.length; i++) {
+            mHeaderEntities[i] = headerEntities[i];
+        }
 
         if (mAdapter == null) {
             return;
@@ -456,6 +460,8 @@ public class IndexableStickyListView extends FrameLayout implements AdapterView.
             View view = mAdapter.getView(mTitleMap.keyAt(0), null, mListView);
             if (view instanceof TextView) {
                 mStickView = (TextView) view;
+
+                System.out.println("重新绑定StickyView-->" + mStickView.getText().toString());
             }
             mStickView.setOnClickListener(new OnClickListener() {
                 @Override
@@ -466,6 +472,11 @@ public class IndexableStickyListView extends FrameLayout implements AdapterView.
                 }
             });
             addView(mStickView, 1);
+
+            int childCount = getChildCount();
+            if (childCount > 2 && (getChildAt(2) instanceof TextView)) {
+                removeViewAt(2);
+            }
 
             if (mListView.getHeaderViewsCount() > 0) {
                 mStickView.setVisibility(INVISIBLE);
