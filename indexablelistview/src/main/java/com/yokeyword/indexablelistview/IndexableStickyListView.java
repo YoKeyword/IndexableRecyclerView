@@ -24,6 +24,7 @@ import android.widget.TextView;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -286,8 +287,10 @@ public class IndexableStickyListView extends FrameLayout implements AdapterView.
      * @param <T>            继承IndexEntity
      */
     public <T extends IndexEntity> void bindDatas(final List<T> items, final IndexHeaderEntity... headerEntities) {
+        mItems = new ArrayList<>();
 
-        mItems = (List<IndexEntity>) items;
+        mItems.addAll(items);
+
         mHeaderEntities = headerEntities;
 
         if (mAdapter == null) {
@@ -306,7 +309,7 @@ public class IndexableStickyListView extends FrameLayout implements AdapterView.
             }
             mBindDataHandler.sendEmptyMessage(MSG_BIND_DATA);
         } else {
-            mAdapter.setDatas(items, headerEntities);
+            mAdapter.setDatas(mItems, headerEntities);
             updateListView();
         }
     }

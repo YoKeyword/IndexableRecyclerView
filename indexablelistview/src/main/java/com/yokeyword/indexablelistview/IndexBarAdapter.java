@@ -161,6 +161,9 @@ public abstract class IndexBarAdapter<T extends IndexEntity> extends BaseAdapter
     }
 
     void setDatas(final List<T> items, final IndexHeaderEntity... headerEntities) {
+        mTitleMap.clear();
+        mHeaderIndexs.clear();
+
         for (T t : items) {
             if (mNeedShutdown) return;
             t.setFirstSpell(PinyinUtil.getPingYin(t.getName()).substring(0, 1).toUpperCase());

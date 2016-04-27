@@ -216,6 +216,7 @@ public class IndexBar extends View {
     }
 
     void setListView(ListView indexListView) {
+        mIndex.clear();
         mListView = indexListView;
 
         ListAdapter listAdapter = mListView.getAdapter();
