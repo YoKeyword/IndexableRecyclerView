@@ -460,8 +460,6 @@ public class IndexableStickyListView extends FrameLayout implements AdapterView.
             View view = mAdapter.getView(mTitleMap.keyAt(0), null, mListView);
             if (view instanceof TextView) {
                 mStickView = (TextView) view;
-
-                System.out.println("重新绑定StickyView-->" + mStickView.getText().toString());
             }
             mStickView.setOnClickListener(new OnClickListener() {
                 @Override
