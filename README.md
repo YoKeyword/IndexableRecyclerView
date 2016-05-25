@@ -30,7 +30,7 @@ IndexableListView + Sticky ; Supporting Chinese and English.
 ### gradle
 项目下app的build.gradle中依赖：
 ````xml
-compile 'me.yokeyword:indexablestickylistview:0.5.1'
+compile 'me.yokeyword:indexablestickylistview:0.6.0'
 
 // 因为provided了V7里AppCompatTextView的tint功能，所以V7包也是必须的
 compile 'com.android.support:appcompat-v7:你的版本'
@@ -38,7 +38,8 @@ compile 'com.android.support:appcompat-v7:你的版本'
 
 ### 使用
 ````xml
-<com.yokeyword.indexablelistview.IndexableStickyListView
+// 注意:这里从0.6版本开始由原来的com.xx 改为 me.xx
+<me.yokeyword.indexablelistview.IndexableStickyListView
     android:id="@+id/listView"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -59,7 +60,8 @@ public class CityEntity extends IndexEntity {
 
 2、Adapter继承IndexAdapter<T extends IndexEntity>
 ````java
-public class CityAdapter extends IndexBarAdapter<CityEntity> {
+// 注意:这里从0.6版本开始由原来的IndexBarAdapter 改为 IndexableAdapter
+public class CityAdapter extends IndexableAdapter<CityEntity> {
     private Context mContext;
 
     public CityAdapter(Context context) {
