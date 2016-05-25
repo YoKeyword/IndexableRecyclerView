@@ -129,7 +129,6 @@ public abstract class IndexableAdapter<T extends IndexEntity> extends BaseAdapte
 
     TextView getTitleTextView() {
         if (mTvTitle == null) {
-            System.out.println("null");
             return onCreateTitleViewHolder(mParentView);
         }
         return mTvTitle;

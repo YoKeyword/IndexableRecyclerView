@@ -26,7 +26,7 @@ import java.util.List;
 
 
 /**
- * 字母索引
+ * 字母索引Bar
  * Created by YoKeyword on 2016/3/20.
  */
 public class IndexBar extends View {

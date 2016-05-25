@@ -439,6 +439,9 @@ public class IndexableStickyListView extends FrameLayout implements AdapterView.
         void onItemClick(View v, String title);
     }
 
+    /**
+     * 更新相关View数据
+     */
     private void updateListView() {
         mListView.post(new Runnable() {
             @Override
@@ -454,29 +457,84 @@ public class IndexableStickyListView extends FrameLayout implements AdapterView.
         });
 
         mTitleMap = mAdapter.getTitleMap();
-
-        if (mTitleMap.size() > 0) {
-            View view = mAdapter.getView(mTitleMap.keyAt(0), null, mListView);
-            if (view instanceof TextView) {
+        if (mStickView == null) {
+            if (mTitleMap.size() > 0) {
+                View view = mAdapter.getView(mTitleMap.keyAt(0), null, mListView);
                 mStickView = (TextView) view;
+                addView(mStickView, 1);
+
+                mStickView.setOnClickListener(new OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if (mOnTitleListener != null) {
+                            mOnTitleListener.onItemClick(v, mStickView.getText().toString());
+                        }
+                    }
+                });
+
+                if (mListView.getHeaderViewsCount() > 0) {
+                    mStickView.setVisibility(INVISIBLE);
+                }
             }
-            mStickView.setOnClickListener(new OnClickListener() {
+
+            mIndexBar.setOnSearchResultListener(new IndexBar.OnSearchResultListener() {
                 @Override
-                public void onClick(View v) {
-                    if (mOnTitleListener != null) {
-                        mOnTitleListener.onItemClick(v, mStickView.getText().toString());
+                public void onStart() {
+                    if (!mSearchLayout.isProgressVisible()) {
+                        if (mContext instanceof Activity) {
+                            ((Activity) mContext).runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    mSearchLayout.showProgress();
+                                }
+                            });
+                        }
                     }
                 }
+
+                @Override
+                public void onResult(boolean isSearch, int dataSize) {
+                    if (mAdapter == null) return;
+
+                    if (!isSearch || dataSize > 0) {
+                        mSearchLayout.hide();
+                    } else {
+                        mSearchLayout.showTip();
+                    }
+
+                    mListView.setSelection(1);
+                    if (mAdapter.isFilter()) {
+                        if (mAddHeaderViewList != null) {
+                            for (View view : mAddHeaderViewList) {
+                                if (view.getHeight() != 0) {
+                                    view.setTag(view.getHeight());
+                                    view.getLayoutParams().height = 1;
+                                }
+                            }
+                        }
+                        if (mStickView != null && mStickView.getVisibility() == VISIBLE) {
+                            mStickView.setVisibility(INVISIBLE);
+                        }
+                    } else {
+                        if (mAddHeaderViewList != null) {
+                            for (View view : mAddHeaderViewList) {
+                                view.getLayoutParams().height = (int) view.getTag();
+                            }
+                        }
+                        if (mStickView != null && mStickView.getVisibility() != VISIBLE) {
+                            mStickView.setVisibility(VISIBLE);
+                        }
+                    }
+                    mListView.smoothScrollToPosition(0);
+                }
             });
-            addView(mStickView, 1);
-
-            int childCount = getChildCount();
-            if (childCount > 2 && (getChildAt(2) instanceof TextView)) {
-                removeViewAt(2);
-            }
-
-            if (mListView.getHeaderViewsCount() > 0) {
-                mStickView.setVisibility(INVISIBLE);
+        } else {
+            if (mTitleMap.size() == 0) {
+                removeView(mStickView);
+                mStickView = null;
+            } else {
+                String title = mAdapter.getItemTitle(mListView.getFirstVisiblePosition());
+                mStickView.setText(title);
             }
         }
 
@@ -485,58 +543,6 @@ public class IndexableStickyListView extends FrameLayout implements AdapterView.
         mAdapter.notifyDataSetChanged();
         mIndexBar.setListView(mListView);
         mIndexBar.postInvalidate();
-
-        mIndexBar.setOnSearchResultListener(new IndexBar.OnSearchResultListener() {
-            @Override
-            public void onStart() {
-                if (!mSearchLayout.isProgressVisible()) {
-                    if (mContext instanceof Activity) {
-                        ((Activity) mContext).runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                mSearchLayout.showProgress();
-                            }
-                        });
-                    }
-                }
-            }
-
-            @Override
-            public void onResult(boolean isSearch, int dataSize) {
-                if (mAdapter == null) return;
-
-                if (!isSearch || dataSize > 0) {
-                    mSearchLayout.hide();
-                } else {
-                    mSearchLayout.showTip();
-                }
-
-                mListView.setSelection(1);
-                if (mAdapter.isFilter()) {
-                    if (mAddHeaderViewList != null) {
-                        for (View view : mAddHeaderViewList) {
-                            if (view.getHeight() != 0) {
-                                view.setTag(view.getHeight());
-                                view.getLayoutParams().height = 1;
-                            }
-                        }
-                    }
-                    if (mStickView != null && mStickView.getVisibility() == VISIBLE) {
-                        mStickView.setVisibility(INVISIBLE);
-                    }
-                } else {
-                    if (mAddHeaderViewList != null) {
-                        for (View view : mAddHeaderViewList) {
-                            view.getLayoutParams().height = (int) view.getTag();
-                        }
-                    }
-                    if (mStickView != null && mStickView.getVisibility() != VISIBLE) {
-                        mStickView.setVisibility(VISIBLE);
-                    }
-                }
-                mListView.smoothScrollToPosition(0);
-            }
-        });
     }
 
     @Override

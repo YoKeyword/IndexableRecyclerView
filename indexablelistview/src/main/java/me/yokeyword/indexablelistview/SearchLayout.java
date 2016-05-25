@@ -7,10 +7,9 @@ import android.widget.FrameLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import me.yokeyword.indexablelistview.IndexBar;
-
 
 /**
+ * 搜索部分 相关
  * Created by YoKeyword on 16/3/25.
  */
 public class SearchLayout extends FrameLayout {
