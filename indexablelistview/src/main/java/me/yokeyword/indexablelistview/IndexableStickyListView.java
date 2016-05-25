@@ -1,4 +1,4 @@
-package com.yokeyword.indexablelistview;
+package me.yokeyword.indexablelistview;
 
 import android.app.Activity;
 import android.content.Context;
@@ -24,7 +24,6 @@ import android.widget.TextView;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 /**
@@ -49,7 +48,7 @@ public class IndexableStickyListView extends FrameLayout implements AdapterView.
     private AppCompatTextView mTvRightOverlay;
 
     private Context mContext;
-    private IndexBarAdapter mAdapter;
+    private IndexableAdapter mAdapter;
 
     private List<IndexEntity> mItems;
     private IndexHeaderEntity[] mHeaderEntities;
@@ -331,7 +330,7 @@ public class IndexableStickyListView extends FrameLayout implements AdapterView.
     /**
      * 为IndexListView设置Adapter
      */
-    public <T extends IndexEntity> void setAdapter(IndexBarAdapter<T> adapter) {
+    public <T extends IndexEntity> void setAdapter(IndexableAdapter<T> adapter) {
         mAdapter = adapter;
         mAdapter.setParent(this);
         mListView.setAdapter(adapter);

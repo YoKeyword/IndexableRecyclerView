@@ -1,4 +1,4 @@
-package com.yokeyword.indexablelistview;
+package me.yokeyword.indexablelistview;
 
 import android.util.SparseArray;
 import android.view.View;
@@ -6,9 +6,8 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
-import com.github.promeg.pinyinhelper.Pinyin;
-import com.yokeyword.indexablelistview.help.PinyinComparator;
-import com.yokeyword.indexablelistview.help.PinyinUtil;
+import me.yokeyword.indexablelistview.help.PinyinComparator;
+import me.yokeyword.indexablelistview.help.PinyinUtil;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -17,7 +16,7 @@ import java.util.List;
 /**
  * Created by YoKeyword on 16/3/20.
  */
-public abstract class IndexBarAdapter<T extends IndexEntity> extends BaseAdapter {
+public abstract class IndexableAdapter<T extends IndexEntity> extends BaseAdapter {
     protected static final int TYPE_CONTENT = -100;
     protected static final int TYPE_INDEX = -99;
 

@@ -1,6 +1,6 @@
 package com.yokeyword.sample.contact;
 
-import com.yokeyword.indexablelistview.IndexEntity;
+import me.yokeyword.indexablelistview.IndexEntity;
 
 /**
  * Created by YoKeyword on 16/3/24.

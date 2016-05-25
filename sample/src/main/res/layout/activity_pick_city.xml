@@ -22,7 +22,7 @@
         app:queryBackground="@null"
         app:queryHint="请输入关键字"/>
 
-    <com.yokeyword.indexablelistview.IndexableStickyListView
+    <me.yokeyword.indexablelistview.IndexableStickyListView
         android:id="@+id/indexListView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"

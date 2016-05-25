@@ -6,13 +6,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.yokeyword.indexablelistview.IndexBarAdapter;
+import me.yokeyword.indexablelistview.IndexableAdapter;
 import com.yokeyword.sample.R;
 
 /**
  * Created by YoKeyword on 16/3/20.
  */
-public class CityAdapter extends IndexBarAdapter<CityEntity> {
+public class CityAdapter extends IndexableAdapter<CityEntity> {
     private Context mContext;
 
     public CityAdapter(Context context) {
@@ -38,7 +38,7 @@ public class CityAdapter extends IndexBarAdapter<CityEntity> {
     }
 
 
-    class CityViewHolder extends IndexBarAdapter.ViewHolder {
+    class CityViewHolder extends IndexableAdapter.ViewHolder {
         TextView tvCity;
 
         public CityViewHolder(View view) {

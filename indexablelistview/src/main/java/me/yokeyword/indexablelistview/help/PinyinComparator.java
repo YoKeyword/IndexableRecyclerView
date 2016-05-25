@@ -1,7 +1,7 @@
-package com.yokeyword.indexablelistview.help;
+package me.yokeyword.indexablelistview.help;
 
 
-import com.yokeyword.indexablelistview.IndexEntity;
+import me.yokeyword.indexablelistview.IndexEntity;
 
 import java.util.Comparator;
 

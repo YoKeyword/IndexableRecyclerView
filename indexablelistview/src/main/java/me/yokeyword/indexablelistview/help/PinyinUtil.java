@@ -1,4 +1,4 @@
-package com.yokeyword.indexablelistview.help;
+package me.yokeyword.indexablelistview.help;
 
 import com.github.promeg.pinyinhelper.Pinyin;
 

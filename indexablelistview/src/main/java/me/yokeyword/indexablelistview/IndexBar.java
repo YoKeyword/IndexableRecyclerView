@@ -1,4 +1,4 @@
-package com.yokeyword.indexablelistview;
+package me.yokeyword.indexablelistview;
 
 import android.app.Activity;
 import android.content.Context;
@@ -17,7 +17,7 @@ import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.yokeyword.indexablelistview.help.PinyinUtil;
+import me.yokeyword.indexablelistview.help.PinyinUtil;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
@@ -46,7 +46,7 @@ public class IndexBar extends View {
     private int mCurrentScrollPos;   // 记录当前ListView滚动位置
 
     private ListView mListView;
-    private IndexBarAdapter mAdapter;
+    private IndexableAdapter mAdapter;
     private List<IndexEntity> mItems;
     private List<IndexEntity> mFilterList;
 
@@ -220,17 +220,17 @@ public class IndexBar extends View {
         mListView = indexListView;
 
         ListAdapter listAdapter = mListView.getAdapter();
-        if (listAdapter instanceof IndexBarAdapter) {
-            mAdapter = (IndexBarAdapter) mListView.getAdapter();
+        if (listAdapter instanceof IndexableAdapter) {
+            mAdapter = (IndexableAdapter) mListView.getAdapter();
         } else if (listAdapter instanceof HeaderViewListAdapter) {
             ListAdapter adapter = ((HeaderViewListAdapter) listAdapter).getWrappedAdapter();
-            if (adapter instanceof IndexBarAdapter) {
-                mAdapter = (IndexBarAdapter) adapter;
+            if (adapter instanceof IndexableAdapter) {
+                mAdapter = (IndexableAdapter) adapter;
             } else {
-                throw new ClassCastException("Your Adapter must extends IndexBarAdapter!");
+                throw new ClassCastException("Your Adapter must extends IndexableAdapter!");
             }
         } else {
-            throw new ClassCastException("Your Adapter must extends IndexBarAdapter!");
+            throw new ClassCastException("Your Adapter must extends IndexableAdapter!");
         }
 
         mItems = mAdapter.getItems();

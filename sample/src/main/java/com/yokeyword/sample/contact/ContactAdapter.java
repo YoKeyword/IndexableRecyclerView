@@ -7,13 +7,13 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.yokeyword.indexablelistview.IndexBarAdapter;
+import me.yokeyword.indexablelistview.IndexableAdapter;
 import com.yokeyword.sample.R;
 
 /**
  * Created by YoKeyword on 16/3/24.
  */
-public class ContactAdapter extends IndexBarAdapter<ContactEntity> {
+public class ContactAdapter extends IndexableAdapter<ContactEntity> {
     private Context mContext;
 
     public ContactAdapter(Context context) {

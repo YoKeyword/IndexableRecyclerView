@@ -10,9 +10,9 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
-import com.yokeyword.indexablelistview.IndexEntity;
-import com.yokeyword.indexablelistview.IndexHeaderEntity;
-import com.yokeyword.indexablelistview.IndexableStickyListView;
+import me.yokeyword.indexablelistview.IndexEntity;
+import me.yokeyword.indexablelistview.IndexHeaderEntity;
+import me.yokeyword.indexablelistview.IndexableStickyListView;
 import com.yokeyword.sample.R;
 
 import java.util.ArrayList;

@@ -23,7 +23,7 @@
         app:queryHint="请输入关键字"
         android:textColor="#757575"/>
 
-    <com.yokeyword.indexablelistview.IndexableStickyListView
+    <me.yokeyword.indexablelistview.IndexableStickyListView
         android:id="@+id/indexListView"
         android:layout_width="match_parent"
         app:indexListView_type_overlay="right"

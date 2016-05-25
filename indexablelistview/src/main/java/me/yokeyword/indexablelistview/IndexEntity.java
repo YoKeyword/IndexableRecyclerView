@@ -1,4 +1,4 @@
-package com.yokeyword.indexablelistview;
+package me.yokeyword.indexablelistview;
 
 /**
  * Created by YoKeyword on 16/3/20.

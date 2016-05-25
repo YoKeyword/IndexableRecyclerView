@@ -1,4 +1,4 @@
-package com.yokeyword.indexablelistview;
+package me.yokeyword.indexablelistview;
 
 import android.content.Context;
 import android.graphics.Color;
@@ -6,6 +6,8 @@ import android.view.Gravity;
 import android.widget.FrameLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+
+import me.yokeyword.indexablelistview.IndexBar;
 
 
 /**
