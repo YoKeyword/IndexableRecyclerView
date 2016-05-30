@@ -64,21 +64,17 @@ public class PickCityActivity extends AppCompatActivity {
         mIndexableStickyListView.setAdapter(mAdapter);
 
         // 初始化数据
-        List<String> cityStrings = Arrays.asList(getResources().getStringArray(R.array.city_array));
-        for (String item : cityStrings) {
-            CityEntity cityEntity = new CityEntity();
-            cityEntity.setName(item);
-            mCities.add(cityEntity);
-        }
+        initCities();
 
+        // 128倍大数据
         if (getIntent().getBooleanExtra(EXTRA_LARGE, false)) {
-            mCities.addAll(mCities);
-            mCities.addAll(mCities);
-            mCities.addAll(mCities);
-            mCities.addAll(mCities);
-            mCities.addAll(mCities);
-            mCities.addAll(mCities);
-            mCities.addAll(mCities);
+            initCities();
+            initCities();
+            initCities();
+            initCities();
+            initCities();
+            initCities();
+            initCities();
         }
 
         // 添加定位城市Header
@@ -141,6 +137,15 @@ public class PickCityActivity extends AppCompatActivity {
                 mAdapter.notifyDataSetChanged();
             }
         }, 3000);
+    }
+
+    private void initCities() {
+        List<String> cityStrings = Arrays.asList(getResources().getStringArray(R.array.city_array));
+        for (String item : cityStrings) {
+            CityEntity cityEntity = new CityEntity();
+            cityEntity.setName(item);
+            mCities.add(cityEntity);
+        }
     }
 
     @Override
