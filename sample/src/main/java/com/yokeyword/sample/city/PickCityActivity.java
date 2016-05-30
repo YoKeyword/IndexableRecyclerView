@@ -13,6 +13,7 @@ import android.widget.Toast;
 import me.yokeyword.indexablelistview.IndexEntity;
 import me.yokeyword.indexablelistview.IndexHeaderEntity;
 import me.yokeyword.indexablelistview.IndexableStickyListView;
+
 import com.yokeyword.sample.R;
 
 import java.util.ArrayList;
@@ -120,7 +121,8 @@ public class PickCityActivity extends AppCompatActivity {
         mIndexableStickyListView.setOnItemContentClickListener(new IndexableStickyListView.OnItemContentClickListener() {
             @Override
             public void onItemClick(View v, IndexEntity indexEntity) {
-                Toast.makeText(PickCityActivity.this, "选择了" + indexEntity.getName(), Toast.LENGTH_SHORT).show();
+                CityEntity cityEntity = (CityEntity) indexEntity;
+                Toast.makeText(PickCityActivity.this, "选择了" + cityEntity.getName(), Toast.LENGTH_SHORT).show();
             }
         });
 
