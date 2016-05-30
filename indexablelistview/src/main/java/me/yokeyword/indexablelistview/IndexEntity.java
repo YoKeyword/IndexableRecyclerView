@@ -4,9 +4,11 @@ package me.yokeyword.indexablelistview;
  * Created by YoKeyword on 16/3/20.
  */
 public class IndexEntity {
+    private String name;
     // 库生成 不用传值
     private String firstSpell;
-    private String name;
+    // 库生成 不用传值
+    private String spell;
 
     public IndexEntity() {
     }
@@ -29,6 +31,14 @@ public class IndexEntity {
 
     void setFirstSpell(String firstSpell) {
         this.firstSpell = firstSpell;
+    }
+
+    String getSpell() {
+        return spell;
+    }
+
+    void setSpell(String spell) {
+        this.spell = spell;
     }
 
     @Override

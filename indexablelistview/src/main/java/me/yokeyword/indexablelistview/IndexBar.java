@@ -17,8 +17,6 @@ import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import me.yokeyword.indexablelistview.help.PinyinUtil;
-
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -233,7 +231,7 @@ public class IndexBar extends View {
             throw new ClassCastException("Your Adapter must extends IndexableAdapter!");
         }
 
-        mItems = mAdapter.getItems();
+        mItems = mAdapter.getSourceItems();
 
         SparseArray<String> indexMap = mAdapter.getTitleMap();
         List<String> headerIndexs = mAdapter.getHeaderIndexs();
@@ -286,7 +284,7 @@ public class IndexBar extends View {
                     }
 
                     String name = tmp.getName();
-                    if (name.contains(currentKey) || PinyinUtil.getPingYin(name).startsWith(currentKey)) {
+                    if (name.contains(currentKey) || tmp.getSpell().startsWith(currentKey)) {
                         indexBar.mFilterList.add(tmp);
                     }
                 }

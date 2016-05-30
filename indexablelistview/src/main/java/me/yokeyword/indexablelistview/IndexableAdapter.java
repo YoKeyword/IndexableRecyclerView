@@ -162,14 +162,14 @@ public abstract class IndexableAdapter<T extends IndexEntity> extends BaseAdapte
         mTitleMap.clear();
         mHeaderIndexs.clear();
 
-        for (T t : items) {
-            if (mNeedShutdown) return;
-            t.setFirstSpell(PinyinUtil.getPingYin(t.getName()).substring(0, 1).toUpperCase());
-        }
+        // 给数据源赋值 拼音,首字母
+        if (processIndexEntity(items)) return;
         Collections.sort(items, new PinyinComparator());
 
         mItems = items;
         mHeaderEntitied = headerEntities;
+        // 给headerEntity赋值 拼音
+        processHeaderEntity(headerEntities);
 
         mHeaderSize = 0;
         for (int i = 0; i < headerEntities.length; i++) {
@@ -200,6 +200,39 @@ public abstract class IndexableAdapter<T extends IndexEntity> extends BaseAdapte
             if (!currentFirstSpell.equals(firstSpell)) {
                 mTitleMap.put(i + mTitleMap.size(), firstSpell);
                 currentFirstSpell = firstSpell;
+            }
+        }
+    }
+
+    private boolean processIndexEntity(List<T> items) {
+        for (T t : items) {
+            if (mNeedShutdown) return true;
+            String pinyin = PinyinUtil.getPingYin(t.getName());
+            boolean isPolyphone = PinyinUtil.matchingPolyphone(pinyin);
+            if (!isPolyphone) {
+                t.setFirstSpell(pinyin.substring(0, 1).toUpperCase());
+                t.setSpell(pinyin);
+            } else {
+                t.setFirstSpell(PinyinUtil.getMatchingFirstPinyin(pinyin).toUpperCase());
+                t.setSpell(PinyinUtil.getMatchingPinyin(pinyin));
+                t.setName(PinyinUtil.getMatchingHanzi(t.getName()));
+            }
+        }
+        return false;
+    }
+
+    private void processHeaderEntity(IndexHeaderEntity[] headerEntities) {
+        for (IndexHeaderEntity indexHeaderEntity : headerEntities) {
+            for (Object o : indexHeaderEntity.getHeaderList()) {
+                IndexEntity t = (IndexEntity) o;
+                String pinyin = PinyinUtil.getPingYin(t.getName());
+                boolean isPolyphone = PinyinUtil.matchingPolyphone(pinyin);
+                if (!isPolyphone) {
+                    t.setSpell(pinyin);
+                } else {
+                    t.setSpell(PinyinUtil.getMatchingPinyin(pinyin));
+                    t.setName(PinyinUtil.getMatchingHanzi(t.getName()));
+                }
             }
         }
     }
@@ -287,7 +320,7 @@ public abstract class IndexableAdapter<T extends IndexEntity> extends BaseAdapte
     }
 
 
-    public List<T> getItems() {
+    public List<T> getSourceItems() {
         return mItems;
     }
 
