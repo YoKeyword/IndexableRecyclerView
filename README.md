@@ -30,7 +30,7 @@ IndexableListView + Sticky ; Supporting Chinese and English.
 ### gradle
 项目下app的build.gradle中依赖：
 ````xml
-compile 'me.yokeyword:indexablestickylistview:0.6.0'
+compile 'me.yokeyword:indexablestickylistview:0.6.1'
 
 // 因为provided了V7里AppCompatTextView的tint功能，所以V7包也是必须的
 compile 'com.android.support:appcompat-v7:你的版本'
@@ -126,7 +126,11 @@ mIndexableStickyListView.setOnItemContentClickListener(new IndexableStickyListVi
 mIndexableStickyListView.searchTextChange(newText);
 ````
 
-5、拓展：
+5、多音字处理
+该库对多音字不能完美识别(这不现实), 所以在某些情况需要你手动处理:
+例如你在使用城市排序时,拼音转化库默认重庆为zhongqing,对于这种情况**你需要手动将'重庆'修改为'#chongqing#重庆'**, 库会根据正则表达式进行对应的辨别处理
+
+6、拓展：
 
 添加 数据源HeaderEntity:("选择城市"图中的 GPS、热门城市)
 ````java
