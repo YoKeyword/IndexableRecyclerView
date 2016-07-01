@@ -3,8 +3,7 @@ package me.yokeyword.indexablelistview;
 /**
  * Created by YoKeyword on 16/3/20.
  */
-public class IndexEntity {
-    private String name;
+public abstract class IndexEntity {
     // 库生成 不用传值
     private String firstSpell;
     // 库生成 不用传值
@@ -13,17 +12,9 @@ public class IndexEntity {
     public IndexEntity() {
     }
 
-    public IndexEntity(String name) {
-        this.name = name;
-    }
+    public abstract String getName();
 
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
+    public abstract void setName(String name);
 
     public String getFirstSpell() {
         return firstSpell;
@@ -48,13 +39,13 @@ public class IndexEntity {
 
         IndexEntity entity = (IndexEntity) o;
 
-        if (!name.equals(entity.name)) return false;
+        if (!getName().equals(entity.getName())) return false;
 
         return true;
     }
 
     @Override
     public int hashCode() {
-        return name.hashCode();
+        return getName().hashCode();
     }
 }
