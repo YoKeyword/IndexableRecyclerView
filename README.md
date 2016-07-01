@@ -30,7 +30,7 @@ IndexableListView + Sticky ; Supporting Chinese and English.
 ### gradle
 项目下app的build.gradle中依赖：
 ````xml
-compile 'me.yokeyword:indexablestickylistview:0.6.1'
+compile 'me.yokeyword:indexablestickylistview:0.6.2'
 
 // 因为provided了V7里AppCompatTextView的tint功能，所以V7包也是必须的
 compile 'com.android.support:appcompat-v7:你的版本'
@@ -52,9 +52,22 @@ compile 'com.android.support:appcompat-v7:你的版本'
 
 下面以选择城市功能为例：
 
-1、实体类继承IndexEntity（IndexEntity里有个name属性以及自动生成的首字母fistSpell属性，如果属性够用，可直接使用该实体类）
+// 注意:这里IndexEntity从0.6.2版本改为抽象类
+
+1、实体类继承IndexEntity，并实现setName()，getName()
 ````java
 public class CityEntity extends IndexEntity {
+    private String name;
+    
+    @Override
+    public String getName() {
+        return name;
+    }
+
+    @Override
+    public void setName(String name) {
+        this.name = name;
+    }
 }
 ````
 
