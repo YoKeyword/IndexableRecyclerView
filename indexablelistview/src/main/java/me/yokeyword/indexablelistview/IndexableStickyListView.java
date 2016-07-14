@@ -18,6 +18,7 @@ import android.view.WindowManager;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.FrameLayout;
+import android.widget.HeaderViewListAdapter;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -271,6 +272,11 @@ public class IndexableStickyListView extends FrameLayout implements AdapterView.
 
             indexListView.mAdapter.setNeedShutdown(false);
             indexListView.mAdapter.setDatas(indexListView.mItems, indexListView.mHeaderEntities);
+            if (indexListView.getListView() != null && indexListView.getListView().getAdapter() instanceof HeaderViewListAdapter) {
+                // 在ListView有HeaderView的时候, 需要即时同步数据
+                // 否则可能快速返回时,在某些机型会产生java.lang.IllegalStateException: The content of the adapter has changed but ListView did not receive a notification的异常
+                indexListView.mAdapter.notifyDataSetChanged();
+            }
             if (indexListView.mAdapter.isNeedShutdown()) return;
             ((Activity) indexListView.mContext).runOnUiThread(new Runnable() {
                 @Override
