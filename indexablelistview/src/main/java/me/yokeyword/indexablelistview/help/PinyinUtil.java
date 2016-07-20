@@ -8,7 +8,8 @@ import java.util.regex.Pattern;
  * Created by YoKeyword on 16/3/20.
  */
 public class PinyinUtil {
-    public static final String PATTERN_POLYPHONE = "^#[a-zA-Z]+#.+";
+    private static final String PATTERN_POLYPHONE = "^#[a-zA-Z]+#.+";
+    private static final String PATTERN_LETTER = "^[a-zA-Z].+";
 
     /**
      * 将字符串中的中文转化为拼音,其他字符不变
@@ -23,10 +24,17 @@ public class PinyinUtil {
     }
 
     /**
-     * 是否以%[a-zA-Z]%开头,用以处理多音字
+     * 是否以#[a-zA-Z]#开头,用以处理多音字
      */
     public static boolean matchingPolyphone(String inputString) {
         return Pattern.matches(PATTERN_POLYPHONE, inputString);
+    }
+
+    /**
+     * 是否以字母开头,如果不是, 索引: #
+     */
+    public static boolean matchingLETTER(String inputString) {
+        return Pattern.matches(PATTERN_LETTER, inputString);
     }
 
     /**

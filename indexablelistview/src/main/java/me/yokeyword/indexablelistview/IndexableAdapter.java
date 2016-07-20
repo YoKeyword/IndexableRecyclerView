@@ -208,14 +208,17 @@ public abstract class IndexableAdapter<T extends IndexEntity> extends BaseAdapte
         for (T t : items) {
             if (mNeedShutdown) return true;
             String pinyin = PinyinUtil.getPingYin(t.getName());
-            boolean isPolyphone = PinyinUtil.matchingPolyphone(pinyin);
-            if (!isPolyphone) {
-                t.setFirstSpell(pinyin.substring(0, 1).toUpperCase());
-                t.setSpell(pinyin);
-            } else {
+
+            if (PinyinUtil.matchingPolyphone(pinyin)) {
                 t.setFirstSpell(PinyinUtil.getMatchingFirstPinyin(pinyin).toUpperCase());
                 t.setSpell(PinyinUtil.getMatchingPinyin(pinyin));
                 t.setName(PinyinUtil.getMatchingHanzi(t.getName()));
+            } else if (PinyinUtil.matchingLETTER(pinyin)) {
+                t.setFirstSpell(pinyin.substring(0, 1).toUpperCase());
+                t.setSpell(pinyin);
+            } else {
+                t.setFirstSpell(IndexBar.INDEX_SIGN);
+                t.setSpell(pinyin);
             }
         }
         return false;

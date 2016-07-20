@@ -28,6 +28,7 @@ import java.util.List;
  * Created by YoKeyword on 2016/3/20.
  */
 public class IndexBar extends View {
+    static final String INDEX_SIGN = "#";
     private static final int MSG_SEARCH = 1;
 
     private OnIndexTitleSelectedListener mOnIndexSelectedListener;
