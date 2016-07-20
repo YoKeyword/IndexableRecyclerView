@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string-array name="contact_array">
+        <item>$^*张狗蛋</item>
+        <item>000王二</item>
         <item>张三</item>
+        <item>❤迷</item>
         <item>boy</item>
-        <!--<item>李四</item>-->
-        <item>小天</item>
-        <item>王二</item>
         <item>马蜂窝</item>
         <item>王了了</item>
         <item>李玖折</item>
@@ -95,6 +95,7 @@
     </string-array>
 
     <string-array name="mobile_array">
+        <item>18019913883</item>
         <item>10086</item>
         <item>12306</item>
         <item>18019913333</item>
