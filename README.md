@@ -10,7 +10,7 @@ IndexableListView + Sticky ; Supporting Chinese and English.
 <img src="/gif/demo_contact.gif" width="320px"/>
 
 # 特性
-1、根据数据源，自动**排序生成**字母索引Bar，以及字母Header
+1、根据数据源，自动**排序生成**字母索引Bar(若是emoji表情或数字等非字母开头,则划分索引为"#")，以及字母Header
 
 2、字母Header是粘性的（Sticky）
 
@@ -30,7 +30,7 @@ IndexableListView + Sticky ; Supporting Chinese and English.
 ### gradle
 项目下app的build.gradle中依赖：
 ````xml
-compile 'me.yokeyword:indexablestickylistview:0.6.3'
+compile 'me.yokeyword:indexablestickylistview:0.6.4'
 
 // 因为provided了V7里AppCompatTextView的tint功能，所以V7包也是必须的
 compile 'com.android.support:appcompat-v7:你的版本'
