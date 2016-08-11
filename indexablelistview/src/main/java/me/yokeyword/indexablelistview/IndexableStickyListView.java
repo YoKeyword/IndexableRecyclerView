@@ -472,6 +472,9 @@ public class IndexableStickyListView extends FrameLayout implements AdapterView.
         if (mStickView == null) {
             if (mTitleMap.size() > 0) {
                 View view = mAdapter.getView(mTitleMap.keyAt(0), null, mListView);
+                if(!(view instanceof TextView)){
+                    return;
+                }
                 mStickView = (TextView) view;
                 addView(mStickView, 1);
 
@@ -494,7 +497,6 @@ public class IndexableStickyListView extends FrameLayout implements AdapterView.
                 public void onStart() {
                     if (!mSearchLayout.isProgressVisible()) {
                         if (mContext instanceof Activity) {
-                            mSearchLayout.showProgress();
                             mSearchLayout.post(new Runnable() {
                                 @Override
                                 public void run() {
