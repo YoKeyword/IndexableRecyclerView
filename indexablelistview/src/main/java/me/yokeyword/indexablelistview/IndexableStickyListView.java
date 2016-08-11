@@ -275,7 +275,12 @@ public class IndexableStickyListView extends FrameLayout implements AdapterView.
             if (indexListView.getListView() != null && indexListView.getListView().getAdapter() instanceof HeaderViewListAdapter) {
                 // 在ListView有HeaderView的时候, 需要即时同步数据
                 // 否则可能快速返回时,在某些机型会产生java.lang.IllegalStateException: The content of the adapter has changed but ListView did not receive a notification的异常
-                indexListView.mAdapter.notifyDataSetChanged();
+                ((Activity) indexListView.mContext).runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        indexListView.mAdapter.notifyDataSetChanged();
+                    }
+                });
             }
             if (indexListView.mAdapter.isNeedShutdown()) return;
             ((Activity) indexListView.mContext).runOnUiThread(new Runnable() {
@@ -390,12 +395,12 @@ public class IndexableStickyListView extends FrameLayout implements AdapterView.
         if (mTitleHeight == 0 || mTitleMap == null) return;
 
         if (firstVisibleItem < mListView.getHeaderViewsCount()) {
-            if (mStickView.getVisibility() == VISIBLE) {
+            if (mStickView != null && mStickView.getVisibility() == VISIBLE) {
                 mStickView.setVisibility(INVISIBLE);
             }
             return;
         } else if (firstVisibleItem == mListView.getHeaderViewsCount()) {
-            if (mStickView.getVisibility() != VISIBLE) {
+            if (mStickView != null && mStickView.getVisibility() != VISIBLE) {
                 if (mAdapter == null || !mAdapter.isFilter()) {
                     mStickView.setVisibility(VISIBLE);
                 }
