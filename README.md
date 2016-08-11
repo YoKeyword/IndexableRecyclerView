@@ -30,7 +30,7 @@ IndexableListView + Sticky ; Supporting Chinese and English.
 ### gradle
 项目下app的build.gradle中依赖：
 ````xml
-compile 'me.yokeyword:indexablestickylistview:0.6.5'
+compile 'me.yokeyword:indexablestickylistview:0.6.6'
 
 // 因为provided了V7里AppCompatTextView的tint功能，所以V7包也是必须的
 compile 'com.android.support:appcompat-v7:你的版本'
