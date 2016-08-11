@@ -9,7 +9,7 @@ import java.util.regex.Pattern;
  */
 public class PinyinUtil {
     private static final String PATTERN_POLYPHONE = "^#[a-zA-Z]+#.+";
-    private static final String PATTERN_LETTER = "^[a-zA-Z].+";
+    private static final String PATTERN_LETTER = "^[a-zA-Z]+";
 
     /**
      * 将字符串中的中文转化为拼音,其他字符不变
