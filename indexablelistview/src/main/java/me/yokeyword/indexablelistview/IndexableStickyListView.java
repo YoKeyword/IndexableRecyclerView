@@ -25,10 +25,7 @@ import android.widget.TextView;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
-
-import me.yokeyword.indexablelistview.help.PinyinUtil;
 
 /**
  * Created by YoKeyword on 16/3/21.
@@ -518,7 +515,7 @@ public class IndexableStickyListView extends FrameLayout implements AdapterView.
                     if (mAdapter.isFilter()) {
                         if (mAddHeaderViewList != null) {
                             for (View view : mAddHeaderViewList) {
-                                if (view.getHeight() != 0) {
+                                if (view.getHeight() != 0 && view.getHeight() != 1) {
                                     view.setTag(view.getHeight());
                                     view.getLayoutParams().height = 1;
                                 }
