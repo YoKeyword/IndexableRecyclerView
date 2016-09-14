@@ -125,6 +125,7 @@ public class IndexBar extends View {
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
+        if (mIndex.size() <= 0) return false;
         float y = event.getY();
         int touchPos = positionForPoint(y);
         switch (event.getAction()) {
@@ -181,6 +182,7 @@ public class IndexBar extends View {
             if (mRightOverlayView.getVisibility() != VISIBLE) {
                 mRightOverlayView.setVisibility(VISIBLE);
             }
+
             mRightOverlayView.setText(mIndex.get(touchPos));
         }
         if (mOverlayView != null) {
