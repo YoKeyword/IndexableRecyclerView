@@ -7,6 +7,13 @@ public class CityEntity {
     private long id;
     private String name;
 
+    public CityEntity() {
+    }
+
+    public CityEntity(String name) {
+        this.name = name;
+    }
+
     public long getId() {
         return id;
     }

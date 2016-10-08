@@ -37,7 +37,7 @@ class IndexBar extends View {
     }
 
     private void init() {
-        MARGIN = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 8, getResources().getDisplayMetrics());
+        MARGIN = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 4, getResources().getDisplayMetrics());
     }
 
     void init(int barTextColor, int barFocusTextColor, float barTextSize) {
@@ -130,28 +130,37 @@ class IndexBar extends View {
      */
     void setDatas(boolean showAllLetter, ArrayList<EntityWrapper> datas) {
         this.mDatas = datas;
+
+        ArrayList<String> tempList = null;
         if (showAllLetter) {
             mIndexList = Arrays.asList(getResources().getStringArray(R.array.indexable_letter));
             mIndexList = new ArrayList<>(mIndexList);
+            tempList = new ArrayList<>();
         }
-        boolean addedSign = false;
         for (int i = 0; i < datas.size(); i++) {
             EntityWrapper wrapper = datas.get(i);
             if (wrapper.getItemType() == EntityWrapper.TYPE_INDEX) {
                 if (!showAllLetter) {
                     mIndexList.add(wrapper.getIndex());
                 } else {
-                    if (!addedSign && IndexableLayout.INDEX_SIGN.equals(wrapper.getIndex())) {
-                        addedSign = true;
+                    if (IndexableLayout.INDEX_SIGN.equals(wrapper.getIndex())) {
                         mIndexList.add(IndexableLayout.INDEX_SIGN);
+                    } else if (mIndexList.indexOf(wrapper.getIndex()) < 0) {
+                        tempList.add(wrapper.getIndex());
                     }
                 }
                 mMapping.put(wrapper.getIndex(), i);
             }
         }
+        if (showAllLetter) {
+            mIndexList.addAll(0, tempList);
+        }
         requestLayout();
     }
+
     void setSelection(int firstVisibleItemPosition) {
+        if (mDatas == null || mDatas.size() <= firstVisibleItemPosition || firstVisibleItemPosition < 0)
+            return;
         EntityWrapper wrapper = mDatas.get(firstVisibleItemPosition);
         int position = mIndexList.indexOf(wrapper.getIndex());
 

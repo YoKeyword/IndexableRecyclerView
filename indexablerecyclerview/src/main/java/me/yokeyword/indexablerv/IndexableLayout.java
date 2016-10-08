@@ -84,6 +84,13 @@ public class IndexableLayout extends FrameLayout {
     }
 
     /**
+     * add HeaderView Adapter
+     */
+    public <T> void addHeaderAdapter(IndexableHeaderAdapter<T> adapter) {
+        mRealAdapter.addIndexableHeaderAdapter(adapter);
+    }
+
+    /**
      * set Index-ItemView click listener
      */
     public void setOnItemIndexClickListener(OnItemIndexClickListener listener) {
@@ -312,8 +319,8 @@ public class IndexableLayout extends FrameLayout {
                 post(new Runnable() {
                     @Override
                     public void run() {
-                        mRealAdapter.setDatas(datas);
-                        mIndexBar.setDatas(mShowAllLetter, datas);
+                        mRealAdapter.addDatas(datas);
+                        mIndexBar.setDatas(mShowAllLetter, mRealAdapter.getItems());
 
                         if (mCenterOverlay == null && mMDOverlay == null) {
                             initCenterOverlay();
@@ -362,6 +369,7 @@ public class IndexableLayout extends FrameLayout {
                     entity.setIndex(INDEX_SIGN);
                     entity.setPinyin(pinyin);
                 }
+                entity.setIndexTitle(entity.getIndex());
                 entity.setData(item);
                 entity.setOriginalPosition(i);
 

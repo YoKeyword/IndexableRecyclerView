@@ -11,7 +11,7 @@ import java.util.List;
  */
 public abstract class IndexableAdapter<T> {
     private List<T> mDatas = new ArrayList<>();
-    private IndexableLayout layout;
+    private IndexableLayout mLayout;
 
     public abstract String getIndexName(T data);
 
@@ -28,11 +28,13 @@ public abstract class IndexableAdapter<T> {
     public void setDatas(List<T> datas) {
         mDatas.clear();
         mDatas.addAll(datas);
-        notifyDataChanged();
+        if (mLayout != null) {
+            notifyDataChanged();
+        }
     }
 
     public void notifyDataChanged() {
-        layout.notifyDataChanged();
+        mLayout.notifyDataChanged();
     }
 
     int getItemCount() {
@@ -48,6 +50,9 @@ public abstract class IndexableAdapter<T> {
     }
 
     void setLayout(IndexableLayout indexableLayout) {
-        layout = indexableLayout;
+        mLayout = indexableLayout;
+        if (mDatas.size() > 0) {
+            notifyDataChanged();
+        }
     }
 }

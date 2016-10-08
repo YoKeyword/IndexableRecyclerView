@@ -8,6 +8,7 @@ class EntityWrapper<T> {
     static final int TYPE_CONTENT = Integer.MAX_VALUE;
 
     private String index;
+    private String indexTitle;
     private String pinyin;
     private String indexName;
     private T data;
@@ -29,6 +30,14 @@ class EntityWrapper<T> {
 
     void setIndex(String index) {
         this.index = index;
+    }
+
+    public String getIndexTitle() {
+        return indexTitle;
+    }
+
+    public void setIndexTitle(String indexTitle) {
+        this.indexTitle = indexTitle;
     }
 
     public String getPinyin() {

@@ -2,6 +2,7 @@ package me.yokeyword.sample;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -15,6 +16,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import me.yokeyword.indexablerv.IndexableAdapter;
+import me.yokeyword.indexablerv.IndexableHeaderAdapter;
 import me.yokeyword.indexablerv.IndexableLayout;
 
 /**
@@ -27,8 +29,9 @@ public class PickCityActivity extends AppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_pick_city);
-
         IndexableLayout indexableLayout = (IndexableLayout) findViewById(R.id.indexableLayout);
+
+        // 绑定Adapter
         indexableLayout.setAdapter(adapter);
         adapter.setDatas(initDatas());
 
@@ -46,41 +49,27 @@ public class PickCityActivity extends AppCompatActivity {
             }
         });
 
-        indexableLayout.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                adapter.setDatas(initDatas());
-            }
-        }, 4000);
+        // 添加 HeaderView
+        indexableLayout.addHeaderAdapter(new IndexableHeaderAdapter<CityEntity>("热", "热门城市", iniyHotCityDatas()) {
 
-        indexableLayout.postDelayed(new Runnable() {
             @Override
-            public void run() {
-                adapter.setDatas(initDatas());
+            public int getItemViewType() {
+                return 1;
             }
-        }, 4001);
 
-        indexableLayout.postDelayed(new Runnable() {
             @Override
-            public void run() {
-                adapter.setDatas(initDatas());
+            public RecyclerView.ViewHolder onCreateContentView(ViewGroup parent) {
+                View view = LayoutInflater.from(PickCityActivity.this).inflate(R.layout.item_city, parent, false);
+                return new ContentVH(view);
             }
-        }, 4002);
 
-
-        indexableLayout.postDelayed(new Runnable() {
             @Override
-            public void run() {
-                adapter.setDatas(initDatas());
+            public void onBindContentViewHolder(RecyclerView.ViewHolder holder, CityEntity entity) {
+                ContentVH vh = (ContentVH) holder;
+                vh.tv.setTextColor(ContextCompat.getColor(PickCityActivity.this, R.color.colorAccent));
+                vh.tv.setText(entity.getName());
             }
-        }, 4003);
-
-        indexableLayout.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                adapter.setDatas(initDatas());
-            }
-        }, 4004);
+        });
     }
 
     private IndexableAdapter<CityEntity> adapter = new IndexableAdapter<CityEntity>() {
@@ -117,25 +106,25 @@ public class PickCityActivity extends AppCompatActivity {
             ContentVH vh = (ContentVH) holder;
             vh.tv.setText(entity.getName());
         }
-
-        class IndexVH extends RecyclerView.ViewHolder {
-            TextView tv;
-
-            public IndexVH(View itemView) {
-                super(itemView);
-                tv = (TextView) itemView.findViewById(R.id.tv_index);
-            }
-        }
-
-        class ContentVH extends RecyclerView.ViewHolder {
-            TextView tv;
-
-            public ContentVH(View itemView) {
-                super(itemView);
-                tv = (TextView) itemView.findViewById(R.id.tv_name);
-            }
-        }
     };
+
+    class IndexVH extends RecyclerView.ViewHolder {
+        TextView tv;
+
+        public IndexVH(View itemView) {
+            super(itemView);
+            tv = (TextView) itemView.findViewById(R.id.tv_index);
+        }
+    }
+
+    class ContentVH extends RecyclerView.ViewHolder {
+        TextView tv;
+
+        public ContentVH(View itemView) {
+            super(itemView);
+            tv = (TextView) itemView.findViewById(R.id.tv_name);
+        }
+    }
 
     private List<CityEntity> initDatas() {
         List<CityEntity> list = new ArrayList<>();
@@ -145,6 +134,15 @@ public class PickCityActivity extends AppCompatActivity {
             cityEntity.setName(item);
             list.add(cityEntity);
         }
+        return list;
+    }
+
+    private List<CityEntity> iniyHotCityDatas() {
+        List<CityEntity> list = new ArrayList<>();
+        list.add(new CityEntity("杭州市"));
+        list.add(new CityEntity("北京市"));
+        list.add(new CityEntity("上海市"));
+        list.add(new CityEntity("广州市"));
         return list;
     }
 }
