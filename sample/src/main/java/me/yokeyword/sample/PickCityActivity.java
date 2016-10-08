@@ -2,7 +2,6 @@ package me.yokeyword.sample;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -15,8 +14,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import me.yokeyword.indexablerv.DefaultHeaderAdapter;
 import me.yokeyword.indexablerv.IndexableAdapter;
-import me.yokeyword.indexablerv.IndexableHeaderAdapter;
 import me.yokeyword.indexablerv.IndexableLayout;
 
 /**
@@ -48,48 +47,10 @@ public class PickCityActivity extends AppCompatActivity {
             }
         });
 
-        // 添加 HeaderView
-        indexableLayout.addHeaderAdapter(new IndexableHeaderAdapter<CityEntity>("热", "热门城市", iniyHotCityDatas()) {
-
-            @Override
-            public int getItemViewType() {
-                return 2;
-            }
-
-            @Override
-            public RecyclerView.ViewHolder onCreateContentView(ViewGroup parent) {
-                View view = LayoutInflater.from(PickCityActivity.this).inflate(R.layout.item_city, parent, false);
-                return new ContentVH(view);
-            }
-
-            @Override
-            public void onBindContentViewHolder(RecyclerView.ViewHolder holder, CityEntity entity) {
-                ContentVH vh = (ContentVH) holder;
-                vh.tv.setText(entity.getName());
-            }
-        });
-
-        // 添加 HeaderView
-        indexableLayout.addHeaderAdapter(new IndexableHeaderAdapter<CityEntity>("定", "当前城市", iniyGPSCityDatas()) {
-
-            @Override
-            public int getItemViewType() {
-                return 1;
-            }
-
-            @Override
-            public RecyclerView.ViewHolder onCreateContentView(ViewGroup parent) {
-                View view = LayoutInflater.from(PickCityActivity.this).inflate(R.layout.item_city, parent, false);
-                return new ContentVH(view);
-            }
-
-            @Override
-            public void onBindContentViewHolder(RecyclerView.ViewHolder holder, CityEntity entity) {
-                ContentVH vh = (ContentVH) holder;
-                vh.tv.setTextColor(ContextCompat.getColor(PickCityActivity.this, R.color.colorAccent));
-                vh.tv.setText(entity.getName());
-            }
-        });
+        // 添加 HeaderView   DefaultHeaderAdapter接收一个IndexableAdapter, 使其布局以及点击事件和IndexableAdapter一致
+        // 如果想自定义布局,点击事件, 可传入 new IndexableHeaderAdapter
+        indexableLayout.addHeaderAdapter(new DefaultHeaderAdapter<>(adapter, "热", "热门城市", iniyHotCityDatas()));
+        indexableLayout.addHeaderAdapter(new DefaultHeaderAdapter<>(adapter, "定", "当前城市", iniyGPSCityDatas()));
     }
 
     private IndexableAdapter<CityEntity> adapter = new IndexableAdapter<CityEntity>() {
@@ -167,7 +128,7 @@ public class PickCityActivity extends AppCompatActivity {
     }
 
     private List<CityEntity> iniyGPSCityDatas() {
-        List<me.yokeyword.sample.CityEntity> list = new ArrayList<>();
+        List<CityEntity> list = new ArrayList<>();
         list.add(new CityEntity("杭州市"));
         return list;
     }
