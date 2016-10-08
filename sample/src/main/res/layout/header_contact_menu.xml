@@ -7,13 +7,12 @@
 
     <ImageView
         android:id="@+id/img"
-        android:layout_width="wrap_content"
-        android:src="@mipmap/menu_settings"
-        android:tint="@android:color/holo_green_dark"
+        android:layout_width="30dp"
         android:layout_centerVertical="true"
+        tools:src="@mipmap/icon_1"
         android:layout_marginLeft="24dp"
         android:layout_marginRight="16dp"
-        android:layout_height="wrap_content" />
+        android:layout_height="30dp" />
 
     <TextView
         android:id="@+id/tv_title"

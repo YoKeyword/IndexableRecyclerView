@@ -5,9 +5,11 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.SearchView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -15,6 +17,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import me.yokeyword.indexablerv.DefaultHeaderAdapter;
 import me.yokeyword.indexablerv.IndexableAdapter;
 import me.yokeyword.indexablerv.IndexableHeaderAdapter;
 import me.yokeyword.indexablerv.IndexableLayout;
@@ -25,7 +28,8 @@ import me.yokeyword.sample.R;
  */
 public class PickContactActivity extends AppCompatActivity {
     private ContactAdapter mAdapter;
-    private HeaderAdapter mHeaderAdapter;
+    private MenuHeaderAdapter mMenuHeaderAdapter;
+    private SearchHeaderAdapter mSearchHeaderAdapter;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -57,28 +61,32 @@ public class PickContactActivity extends AppCompatActivity {
             }
         });
 
-        mHeaderAdapter = new HeaderAdapter("↑", initMenuDatas());
-        indexableLayout.addHeaderAdapter(mHeaderAdapter);
+        // 添加我关心的人
+        indexableLayout.addHeaderAdapter(new DefaultHeaderAdapter<>(mAdapter, "☆", "我关心的", initFavDatas()));
 
-        mHeaderAdapter.setOnItemHeaderClickListener(new IndexableHeaderAdapter.OnItemHeaderClickListener<MenuEntity>() {
+        // 构造函数里3个参数,分别对应 (IndexBar的字母索引, IndexTitle, 数据源), 不想显示哪个就传null, 数据源传null时,代表add一个普通的View
+        mMenuHeaderAdapter = new MenuHeaderAdapter("↑", null, initMenuDatas());
+        // 添加菜单
+        indexableLayout.addHeaderAdapter(mMenuHeaderAdapter);
+        mMenuHeaderAdapter.setOnItemHeaderClickListener(new IndexableHeaderAdapter.OnItemHeaderClickListener<MenuEntity>() {
             @Override
             public void onItemClick(View v, int currentPosition, MenuEntity entity) {
-                Toast.makeText(PickContactActivity.this, "Menu: " + entity.getMenuTitle() + "  当前位置: " + currentPosition, Toast.LENGTH_SHORT).show();
+                Toast.makeText(PickContactActivity.this, entity.getMenuTitle(), Toast.LENGTH_SHORT).show();
             }
         });
+
+        mSearchHeaderAdapter = new SearchHeaderAdapter(null, null, null);
+        // 添加 搜索框
+        indexableLayout.addHeaderAdapter(mSearchHeaderAdapter);
     }
 
     /**
-     * 自定义的Header布局
+     * 自定义的MenuHeader
      */
-    class HeaderAdapter extends IndexableHeaderAdapter<MenuEntity> {
+    class MenuHeaderAdapter extends IndexableHeaderAdapter<MenuEntity> {
         private static final int TYPE = 1;
 
-        public HeaderAdapter(String index, List<MenuEntity> datas) {
-            super(index, datas);
-        }
-
-        public HeaderAdapter(String index, String indexTitle, List<MenuEntity> datas) {
+        public MenuHeaderAdapter(String index, String indexTitle, List<MenuEntity> datas) {
             super(index, indexTitle, datas);
         }
 
@@ -89,21 +97,61 @@ public class PickContactActivity extends AppCompatActivity {
 
         @Override
         public RecyclerView.ViewHolder onCreateContentViewHolder(ViewGroup parent) {
-            return new VH(LayoutInflater.from(PickContactActivity.this).inflate(R.layout.item_contact_header, parent, false));
+            return new VH(LayoutInflater.from(PickContactActivity.this).inflate(R.layout.header_contact_menu, parent, false));
         }
 
         @Override
         public void onBindContentViewHolder(RecyclerView.ViewHolder holder, MenuEntity entity) {
             VH vh = (VH) holder;
             vh.tv.setText(entity.getMenuTitle());
+            vh.img.setImageResource(entity.getMenuIconRes());
         }
 
         private class VH extends RecyclerView.ViewHolder {
             private TextView tv;
+            private ImageView img;
 
             public VH(View itemView) {
                 super(itemView);
                 tv = (TextView) itemView.findViewById(R.id.tv_title);
+                img = (ImageView) itemView.findViewById(R.id.img);
+            }
+        }
+    }
+
+    /**
+     * 自定义的搜索Header
+     */
+    class SearchHeaderAdapter extends IndexableHeaderAdapter {
+        private static final int TYPE = 2;
+
+        public SearchHeaderAdapter(String index, String indexTitle, List datas) {
+            super(index, indexTitle, datas);
+        }
+
+        @Override
+        public int getItemViewType() {
+            return TYPE;
+        }
+
+        @Override
+        public RecyclerView.ViewHolder onCreateContentViewHolder(ViewGroup parent) {
+            View view = LayoutInflater.from(PickContactActivity.this).inflate(R.layout.header_contact_search, parent, false);
+            VH holder = new VH(view);
+            return holder;
+        }
+
+        @Override
+        public void onBindContentViewHolder(RecyclerView.ViewHolder holder, Object entity) {
+            // 数据源为null时, 该方法不用实现
+        }
+
+        private class VH extends RecyclerView.ViewHolder {
+            private SearchView searchview;
+
+            public VH(View itemView) {
+                super(itemView);
+                searchview = (SearchView) itemView.findViewById(R.id.searchview);
             }
         }
     }
@@ -120,12 +168,19 @@ public class PickContactActivity extends AppCompatActivity {
         return list;
     }
 
+    private List<UserEntity> initFavDatas() {
+        List<UserEntity> list = new ArrayList<>();
+        list.add(new UserEntity("张三", "10000"));
+        list.add(new UserEntity("李四", "10001"));
+        return list;
+    }
+
     private List<MenuEntity> initMenuDatas() {
         List<MenuEntity> list = new ArrayList<>();
-        list.add(new MenuEntity("新的朋友"));
-        list.add(new MenuEntity("群聊"));
-        list.add(new MenuEntity("标签"));
-        list.add(new MenuEntity("公众号"));
+        list.add(new MenuEntity("新的朋友", R.mipmap.icon_1));
+        list.add(new MenuEntity("群聊", R.mipmap.icon_2));
+        list.add(new MenuEntity("标签", R.mipmap.icon_3));
+        list.add(new MenuEntity("公众号", R.mipmap.icon_4));
         return list;
     }
 }

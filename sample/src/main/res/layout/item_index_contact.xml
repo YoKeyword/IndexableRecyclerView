@@ -12,9 +12,9 @@
         android:paddingBottom="8dp"
         android:paddingLeft="24dp"
         android:paddingTop="8dp"
-        android:textColor="@color/colorAccent"
+        android:textColor="@color/colorPrimary"
         android:textStyle="bold"
-        android:textSize="20sp" />
+        android:textSize="14sp" />
 
     <ImageView
         android:layout_width="match_parent"
