@@ -54,9 +54,15 @@ class IndexBar extends View {
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         int mode = MeasureSpec.getMode(widthMeasureSpec);
 
+        int height = MeasureSpec.getSize(heightMeasureSpec);
+
         mTotalHeight = (int) ((mIndexList.size() - 1) * mPaint.getTextSize()
                 + mFocusPaint.getTextSize())
                 + (mIndexList.size() + 1) * MARGIN;
+
+        if (mTotalHeight > height) {
+            mTotalHeight = height;
+        }
 
         if (mode == MeasureSpec.AT_MOST) {
             int maxWidth = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 25, getResources().getDisplayMetrics());
@@ -74,14 +80,11 @@ class IndexBar extends View {
 
         mIndexHeight = ((float) getHeight()) / mIndexList.size();
 
-        int currentHeight = (getHeight() - mTotalHeight) / 2;
         for (int i = 0; i < mIndexList.size(); i++) {
             if (mSelectionPosition == i) {
-                currentHeight += (mFocusPaint.getTextSize() + MARGIN);
-                canvas.drawText(mIndexList.get(i), getWidth() / 2, currentHeight, mFocusPaint);
+                canvas.drawText(mIndexList.get(i), getWidth() / 2, mIndexHeight * 0.85f + mIndexHeight * i, mFocusPaint);
             } else {
-                currentHeight += (mPaint.getTextSize() + MARGIN);
-                canvas.drawText(mIndexList.get(i), getWidth() / 2, currentHeight, mPaint);
+                canvas.drawText(mIndexList.get(i), getWidth() / 2, mIndexHeight * 0.85f + mIndexHeight * i, mPaint);
             }
         }
     }

@@ -120,6 +120,7 @@ public class IndexableLayout extends FrameLayout {
         } else {
             ViewCompat.setBackgroundTintList(mMDOverlay, ColorStateList.valueOf(color));
         }
+        mCenterOverlay = null;
     }
 
     /**
@@ -129,6 +130,7 @@ public class IndexableLayout extends FrameLayout {
         if (mCenterOverlay == null) {
             initCenterOverlay();
         }
+        mMDOverlay = null;
     }
 
     /**
