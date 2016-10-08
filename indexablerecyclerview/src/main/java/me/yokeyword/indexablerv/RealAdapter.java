@@ -18,8 +18,8 @@ class RealAdapter<T> extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     private SparseArray<IndexableHeaderAdapter> mHeaderAdapterMap = new SparseArray<>();
 
-    private IndexableLayout.OnItemIndexClickListener mIndexClickListener;
-    private IndexableLayout.OnItemContentClickListener<T> mContentClickListener;
+    private IndexableAdapter.OnItemIndexClickListener mIndexClickListener;
+    private IndexableAdapter.OnItemContentClickListener<T> mContentClickListener;
 
     void setIndexableAdapter(IndexableAdapter<T> adapter) {
         this.mAdapter = adapter;
@@ -97,11 +97,11 @@ class RealAdapter<T> extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         return mDatasList.size();
     }
 
-    void setOnItemIndexClickListener(IndexableLayout.OnItemIndexClickListener listener) {
+    void setOnItemIndexClickListener(IndexableAdapter.OnItemIndexClickListener listener) {
         this.mIndexClickListener = listener;
     }
 
-    void setOnItemContentClickListener(IndexableLayout.OnItemContentClickListener<T> listener) {
+    void setOnItemContentClickListener(IndexableAdapter.OnItemContentClickListener<T> listener) {
         this.mContentClickListener = listener;
     }
 }

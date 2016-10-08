@@ -93,14 +93,14 @@ public class IndexableLayout extends FrameLayout {
     /**
      * set Index-ItemView click listener
      */
-    public void setOnItemIndexClickListener(OnItemIndexClickListener listener) {
+    void setOnItemIndexClickListener(IndexableAdapter.OnItemIndexClickListener listener) {
         mRealAdapter.setOnItemIndexClickListener(listener);
     }
 
     /**
      * set Content-ItemView click listener
      */
-    public <T> void setOnItemContentClickListener(OnItemContentClickListener<T> listener) {
+    <T> void setOnItemContentClickListener(IndexableAdapter.OnItemContentClickListener<T> listener) {
         mRealAdapter.setOnItemContentClickListener(listener);
     }
 
@@ -408,11 +408,9 @@ public class IndexableLayout extends FrameLayout {
         }
     }
 
-    public interface OnItemContentClickListener<T> {
-        void onItemClick(View v, int originalPosition, int currentPosition, T entity);
-    }
-
-    public interface OnItemIndexClickListener {
-        void onItemClick(View v, int currentPosition, String indexName);
+    @Override
+    protected void onDetachedFromWindow() {
+        super.onDetachedFromWindow();
+        mRecy.setAdapter(null);
     }
 }

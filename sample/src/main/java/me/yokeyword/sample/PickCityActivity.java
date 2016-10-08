@@ -34,14 +34,14 @@ public class PickCityActivity extends AppCompatActivity {
         // 绑定Adapter
         indexableLayout.setAdapter(adapter);
         adapter.setDatas(initDatas());
-        indexableLayout.setOnItemContentClickListener(new IndexableLayout.OnItemContentClickListener<CityEntity>() {
+        adapter.setOnItemContentClickListener(new IndexableAdapter.OnItemContentClickListener<CityEntity>() {
             @Override
             public void onItemClick(View v, int originalPosition, int currentPosition, CityEntity entity) {
                 Toast.makeText(PickCityActivity.this, "选中:" + entity.getName() + "  当前位置:" + currentPosition + "  原始所在数组位置:" + originalPosition, Toast.LENGTH_SHORT).show();
             }
         });
 
-        indexableLayout.setOnItemIndexClickListener(new IndexableLayout.OnItemIndexClickListener() {
+        adapter.setOnItemIndexClickListener(new IndexableAdapter.OnItemIndexClickListener() {
             @Override
             public void onItemClick(View v, int currentPosition, String indexTitle) {
                 Toast.makeText(PickCityActivity.this, "选中:" + indexTitle + "  当前位置:" + currentPosition, Toast.LENGTH_SHORT).show();
