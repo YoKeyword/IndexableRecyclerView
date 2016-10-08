@@ -34,7 +34,6 @@ public class PickCityActivity extends AppCompatActivity {
         // 绑定Adapter
         indexableLayout.setAdapter(adapter);
         adapter.setDatas(initDatas());
-
         indexableLayout.setOnItemContentClickListener(new IndexableLayout.OnItemContentClickListener<CityEntity>() {
             @Override
             public void onItemClick(View v, int originalPosition, int currentPosition, CityEntity entity) {
@@ -44,13 +43,34 @@ public class PickCityActivity extends AppCompatActivity {
 
         indexableLayout.setOnItemIndexClickListener(new IndexableLayout.OnItemIndexClickListener() {
             @Override
-            public void onItemClick(View v, int currentPosition, String indexName) {
-                Toast.makeText(PickCityActivity.this, "选中:" + indexName + "  当前位置:" + currentPosition, Toast.LENGTH_SHORT).show();
+            public void onItemClick(View v, int currentPosition, String indexTitle) {
+                Toast.makeText(PickCityActivity.this, "选中:" + indexTitle + "  当前位置:" + currentPosition, Toast.LENGTH_SHORT).show();
             }
         });
 
         // 添加 HeaderView
         indexableLayout.addHeaderAdapter(new IndexableHeaderAdapter<CityEntity>("热", "热门城市", iniyHotCityDatas()) {
+
+            @Override
+            public int getItemViewType() {
+                return 2;
+            }
+
+            @Override
+            public RecyclerView.ViewHolder onCreateContentView(ViewGroup parent) {
+                View view = LayoutInflater.from(PickCityActivity.this).inflate(R.layout.item_city, parent, false);
+                return new ContentVH(view);
+            }
+
+            @Override
+            public void onBindContentViewHolder(RecyclerView.ViewHolder holder, CityEntity entity) {
+                ContentVH vh = (ContentVH) holder;
+                vh.tv.setText(entity.getName());
+            }
+        });
+
+        // 添加 HeaderView
+        indexableLayout.addHeaderAdapter(new IndexableHeaderAdapter<CityEntity>("定", "当前城市", iniyGPSCityDatas()) {
 
             @Override
             public int getItemViewType() {
@@ -74,13 +94,13 @@ public class PickCityActivity extends AppCompatActivity {
 
     private IndexableAdapter<CityEntity> adapter = new IndexableAdapter<CityEntity>() {
         @Override
-        public String getIndexName(CityEntity data) {
+        public String getIndexField(CityEntity data) {
             return data.getName();
         }
 
         @Override
-        public void setIndexName(CityEntity data, String indexName) {
-            data.setName(indexName);
+        public void setIndexField(CityEntity data, String indexField) {
+            data.setName(indexField);
         }
 
         @Override
@@ -96,9 +116,9 @@ public class PickCityActivity extends AppCompatActivity {
         }
 
         @Override
-        public void onBindIndexViewHolder(RecyclerView.ViewHolder holder, String indexName) {
+        public void onBindIndexViewHolder(RecyclerView.ViewHolder holder, String indexTitle) {
             IndexVH vh = (IndexVH) holder;
-            vh.tv.setText(indexName);
+            vh.tv.setText(indexTitle);
         }
 
         @Override
@@ -143,6 +163,12 @@ public class PickCityActivity extends AppCompatActivity {
         list.add(new CityEntity("北京市"));
         list.add(new CityEntity("上海市"));
         list.add(new CityEntity("广州市"));
+        return list;
+    }
+
+    private List<CityEntity> iniyGPSCityDatas() {
+        List<me.yokeyword.sample.CityEntity> list = new ArrayList<>();
+        list.add(new CityEntity("杭州市"));
         return list;
     }
 }
