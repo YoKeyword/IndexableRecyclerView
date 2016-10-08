@@ -28,6 +28,7 @@ public class PickCityActivity extends AppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_pick_city);
+        getSupportActionBar().setTitle("选择城市");
         IndexableLayout indexableLayout = (IndexableLayout) findViewById(R.id.indexableLayout);
 
         // 绑定Adapter
@@ -65,13 +66,13 @@ public class PickCityActivity extends AppCompatActivity {
         }
 
         @Override
-        public RecyclerView.ViewHolder onCreateIndexView(ViewGroup parent) {
+        public RecyclerView.ViewHolder onCreateIndexViewHolder(ViewGroup parent) {
             View view = LayoutInflater.from(PickCityActivity.this).inflate(R.layout.item_index_city, parent, false);
             return new IndexVH(view);
         }
 
         @Override
-        public RecyclerView.ViewHolder onCreateContentView(ViewGroup parent) {
+        public RecyclerView.ViewHolder onCreateContentViewHolder(ViewGroup parent) {
             View view = LayoutInflater.from(PickCityActivity.this).inflate(R.layout.item_city, parent, false);
             return new ContentVH(view);
         }

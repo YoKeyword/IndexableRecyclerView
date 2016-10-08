@@ -23,8 +23,8 @@ public class DefaultHeaderAdapter<T> extends IndexableHeaderAdapter<T> {
     }
 
     @Override
-    public RecyclerView.ViewHolder onCreateContentView(ViewGroup parent) {
-        return mAdapter.onCreateContentView(parent);
+    public RecyclerView.ViewHolder onCreateContentViewHolder(ViewGroup parent) {
+        return mAdapter.onCreateContentViewHolder(parent);
     }
 
     @Override

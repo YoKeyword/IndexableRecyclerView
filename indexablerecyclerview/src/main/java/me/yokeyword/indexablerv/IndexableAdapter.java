@@ -17,9 +17,9 @@ public abstract class IndexableAdapter<T> {
 
     public abstract void setIndexField(T data, String indexField);
 
-    public abstract RecyclerView.ViewHolder onCreateIndexView(ViewGroup parent);
+    public abstract RecyclerView.ViewHolder onCreateIndexViewHolder(ViewGroup parent);
 
-    public abstract RecyclerView.ViewHolder onCreateContentView(ViewGroup parent);
+    public abstract RecyclerView.ViewHolder onCreateContentViewHolder(ViewGroup parent);
 
     public abstract void onBindIndexViewHolder(RecyclerView.ViewHolder holder, String indexTitle);
 

@@ -52,12 +52,12 @@ class RealAdapter<T> extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         final RecyclerView.ViewHolder holder;
 
         if (viewType == EntityWrapper.TYPE_INDEX) {
-            holder = mAdapter.onCreateIndexView(parent);
+            holder = mAdapter.onCreateIndexViewHolder(parent);
         } else if (viewType == EntityWrapper.TYPE_CONTENT) {
-            holder = mAdapter.onCreateContentView(parent);
+            holder = mAdapter.onCreateContentViewHolder(parent);
         } else {
             IndexableHeaderAdapter adapter = mHeaderAdapterMap.get(viewType);
-            holder = adapter.onCreateContentView(parent);
+            holder = adapter.onCreateContentViewHolder(parent);
         }
 
         holder.itemView.setOnClickListener(new View.OnClickListener() {

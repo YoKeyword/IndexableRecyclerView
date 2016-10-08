@@ -35,7 +35,7 @@ public abstract class IndexableHeaderAdapter<T> {
 
     public abstract int getItemViewType();
 
-    public abstract RecyclerView.ViewHolder onCreateContentView(ViewGroup parent);
+    public abstract RecyclerView.ViewHolder onCreateContentViewHolder(ViewGroup parent);
 
     public abstract void onBindContentViewHolder(RecyclerView.ViewHolder holder, T entity);
 
