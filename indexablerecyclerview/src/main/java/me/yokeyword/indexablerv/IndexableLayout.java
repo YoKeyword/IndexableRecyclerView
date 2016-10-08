@@ -252,6 +252,9 @@ public class IndexableLayout extends FrameLayout {
 
             String index = mIndexBar.getIndexList().get(touchPos);
             if (!mMDOverlay.getText().equals(index)) {
+                if (index.length() > 1) {
+                    mMDOverlay.setTextSize(30);
+                }
                 mMDOverlay.setText(index);
             }
         }
@@ -261,6 +264,9 @@ public class IndexableLayout extends FrameLayout {
             }
             String index = mIndexBar.getIndexList().get(touchPos);
             if (!mCenterOverlay.getText().equals(index)) {
+                if (index.length() > 1) {
+                    mCenterOverlay.setTextSize(32);
+                }
                 mCenterOverlay.setText(index);
             }
         }
@@ -295,6 +301,7 @@ public class IndexableLayout extends FrameLayout {
         mMDOverlay = new TextView(mContext);
         mMDOverlay.setBackgroundResource(R.drawable.indexable_bg_md_overlay);
         ViewCompat.setBackgroundTintList(mMDOverlay, ColorStateList.valueOf(color));
+        mMDOverlay.setSingleLine();
         mMDOverlay.setTextColor(Color.WHITE);
         mMDOverlay.setTextSize(38);
         mMDOverlay.setGravity(Gravity.CENTER);
@@ -353,7 +360,7 @@ public class IndexableLayout extends FrameLayout {
             for (int i = 0; i < datas.size(); i++) {
                 EntityWrapper<T> entity = new EntityWrapper<>();
                 T item = datas.get(i);
-                String indexName = mIndexableAdapter.getIndexName(item);
+                String indexName = mIndexableAdapter.getIndexField(item);
                 String pinyin = PinyinUtil.getPingYin(indexName);
 
                 // init EntityWrapper
@@ -364,9 +371,9 @@ public class IndexableLayout extends FrameLayout {
                     entity.setIndex(PinyinUtil.gePolyphoneInitial(pinyin).toUpperCase());
                     entity.setPinyin(PinyinUtil.getPolyphonePinyin(pinyin));
                     String hanzi = PinyinUtil.getPolyphoneHanzi(indexName);
-                    entity.setIndexName(hanzi);
+                    entity.setIndexField(hanzi);
 
-                    mIndexableAdapter.setIndexName(item, hanzi);
+                    mIndexableAdapter.setIndexField(item, hanzi);
                 } else {
                     entity.setIndex(INDEX_SIGN);
                     entity.setPinyin(pinyin);

@@ -16,8 +16,8 @@ class PinyinComparator<T> implements Comparator<EntityWrapper<T>> {
 
     @Override
     public int compare(EntityWrapper<T> lhs, EntityWrapper<T> rhs) {
-        String lhsIndexName = lhs.getData() != null ? adapter.getIndexName(lhs.getData()) : lhs.getIndex();
-        String rhsIndexName = rhs.getData() != null ? adapter.getIndexName(rhs.getData()) : rhs.getIndex();
+        String lhsIndexName = lhs.getData() != null ? adapter.getIndexField(lhs.getData()) : lhs.getIndex();
+        String rhsIndexName = rhs.getData() != null ? adapter.getIndexField(rhs.getData()) : rhs.getIndex();
 
         if (lhsIndexName == null) {
             lhsIndexName = "";

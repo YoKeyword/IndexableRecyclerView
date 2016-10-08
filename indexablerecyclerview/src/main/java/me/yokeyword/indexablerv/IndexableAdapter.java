@@ -13,15 +13,15 @@ public abstract class IndexableAdapter<T> {
     private List<T> mDatas = new ArrayList<>();
     private IndexableLayout mLayout;
 
-    public abstract String getIndexName(T data);
+    public abstract String getIndexField(T data);
 
-    public abstract void setIndexName(T data, String indexName);
+    public abstract void setIndexField(T data, String indexField);
 
     public abstract RecyclerView.ViewHolder onCreateIndexView(ViewGroup parent);
 
     public abstract RecyclerView.ViewHolder onCreateContentView(ViewGroup parent);
 
-    public abstract void onBindIndexViewHolder(RecyclerView.ViewHolder holder, String indexName);
+    public abstract void onBindIndexViewHolder(RecyclerView.ViewHolder holder, String indexTitle);
 
     public abstract void onBindContentViewHolder(RecyclerView.ViewHolder holder, T entity);
 

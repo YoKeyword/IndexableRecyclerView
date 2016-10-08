@@ -66,7 +66,7 @@ class RealAdapter<T> extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                 int position = holder.getAdapterPosition();
                 EntityWrapper<T> wrapper = mDatasList.get(position);
                 if (viewType == EntityWrapper.TYPE_INDEX && mIndexClickListener != null) {
-                    mIndexClickListener.onItemClick(v, position, wrapper.getIndex());
+                    mIndexClickListener.onItemClick(v, position, wrapper.getIndexTitle());
                 } else if (viewType == EntityWrapper.TYPE_CONTENT && mContentClickListener != null) {
                     mContentClickListener.onItemClick(v, wrapper.getOriginalPosition(), position, wrapper.getData());
                 } else {
@@ -83,7 +83,7 @@ class RealAdapter<T> extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
         int viewType = getItemViewType(position);
         if (viewType == EntityWrapper.TYPE_INDEX) {
-            mAdapter.onBindIndexViewHolder(holder, item.getIndex());
+            mAdapter.onBindIndexViewHolder(holder, item.getIndexTitle());
         } else if (viewType == EntityWrapper.TYPE_CONTENT) {
             mAdapter.onBindContentViewHolder(holder, item.getData());
         } else {
