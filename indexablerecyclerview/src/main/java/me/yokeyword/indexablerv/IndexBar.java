@@ -132,20 +132,25 @@ class IndexBar extends View {
         this.mDatas = datas;
         if (showAllLetter) {
             mIndexList = Arrays.asList(getResources().getStringArray(R.array.indexable_letter));
-
+            mIndexList = new ArrayList<>(mIndexList);
         }
+        boolean addedSign = false;
         for (int i = 0; i < datas.size(); i++) {
             EntityWrapper wrapper = datas.get(i);
             if (wrapper.getItemType() == EntityWrapper.TYPE_INDEX) {
                 if (!showAllLetter) {
                     mIndexList.add(wrapper.getIndex());
+                } else {
+                    if (!addedSign && IndexableLayout.INDEX_SIGN.equals(wrapper.getIndex())) {
+                        addedSign = true;
+                        mIndexList.add(IndexableLayout.INDEX_SIGN);
+                    }
                 }
                 mMapping.put(wrapper.getIndex(), i);
             }
         }
         requestLayout();
     }
-
     void setSelection(int firstVisibleItemPosition) {
         EntityWrapper wrapper = mDatas.get(firstVisibleItemPosition);
         int position = mIndexList.indexOf(wrapper.getIndex());

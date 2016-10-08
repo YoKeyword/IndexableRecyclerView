@@ -20,6 +20,7 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.TreeMap;
 import java.util.concurrent.ExecutorService;
@@ -328,7 +329,17 @@ public class IndexableLayout extends FrameLayout {
      */
     private <T> ArrayList<EntityWrapper<T>> transform(List<T> datas) {
         try {
-            TreeMap<String, List<EntityWrapper<T>>> map = new TreeMap<>();
+            TreeMap<String, List<EntityWrapper<T>>> map = new TreeMap<>(new Comparator<String>() {
+                @Override
+                public int compare(String lhs, String rhs) {
+                    if (lhs.equals(INDEX_SIGN)) {
+                        return rhs.equals(INDEX_SIGN) ? 0 : 1;
+                    } else if (rhs.equals(INDEX_SIGN)) {
+                        return -1;
+                    }
+                    return lhs.compareTo(rhs);
+                }
+            });
 
             for (int i = 0; i < datas.size(); i++) {
                 EntityWrapper<T> entity = new EntityWrapper<>();
