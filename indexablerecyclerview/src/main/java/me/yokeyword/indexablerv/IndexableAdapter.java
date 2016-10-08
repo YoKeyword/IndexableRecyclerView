@@ -88,11 +88,11 @@ public abstract class IndexableAdapter<T> {
         }
     }
 
-    public interface OnItemContentClickListener<T> {
-        void onItemClick(View v, int originalPosition, int currentPosition, T entity);
-    }
-
     public interface OnItemIndexClickListener {
         void onItemClick(View v, int currentPosition, String indexName);
+    }
+
+    public interface OnItemContentClickListener<T> {
+        void onItemClick(View v, int originalPosition, int currentPosition, T entity);
     }
 }

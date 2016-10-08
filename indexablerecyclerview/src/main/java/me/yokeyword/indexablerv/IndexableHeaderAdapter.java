@@ -1,6 +1,7 @@
 package me.yokeyword.indexablerv;
 
 import android.support.v7.widget.RecyclerView;
+import android.view.View;
 import android.view.ViewGroup;
 
 import java.util.ArrayList;
@@ -11,6 +12,7 @@ import java.util.List;
  */
 public abstract class IndexableHeaderAdapter<T> {
     private ArrayList<EntityWrapper<T>> mEntityWrapperList = new ArrayList<>();
+    private OnItemHeaderClickListener<T> mListener;
 
     public IndexableHeaderAdapter(String index, List<T> datas) {
         this(index, null, datas);
@@ -39,6 +41,17 @@ public abstract class IndexableHeaderAdapter<T> {
 
     public abstract void onBindContentViewHolder(RecyclerView.ViewHolder holder, T entity);
 
+    /**
+     * set Content-ItemView click listener
+     */
+    public void setOnItemHeaderClickListener(OnItemHeaderClickListener<T> listener) {
+        this.mListener = listener;
+    }
+
+    OnItemHeaderClickListener<T> getOnItemHeaderClickListener() {
+        return mListener;
+    }
+
     ArrayList<EntityWrapper<T>> getDatas() {
         for (EntityWrapper<T> wrapper : mEntityWrapperList) {
             if (wrapper.getItemType() == EntityWrapper.TYPE_CONTENT) {
@@ -46,5 +59,9 @@ public abstract class IndexableHeaderAdapter<T> {
             }
         }
         return mEntityWrapperList;
+    }
+
+    public interface OnItemHeaderClickListener<T> {
+        void onItemClick(View v, int currentPosition, T entity);
     }
 }

@@ -70,7 +70,8 @@ class RealAdapter<T> extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                 } else if (viewType == EntityWrapper.TYPE_CONTENT && mContentClickListener != null) {
                     mContentClickListener.onItemClick(v, wrapper.getOriginalPosition(), position, wrapper.getData());
                 } else {
-
+                    IndexableHeaderAdapter adapter = mHeaderAdapterMap.get(viewType);
+                    adapter.getOnItemHeaderClickListener().onItemClick(v, position, wrapper.getData());
                 }
             }
         });
