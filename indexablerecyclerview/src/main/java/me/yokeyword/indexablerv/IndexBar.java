@@ -5,6 +5,7 @@ import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
+import android.text.TextUtils;
 import android.view.View;
 
 import java.util.ArrayList;
@@ -149,16 +150,21 @@ class IndexBar extends View {
         for (int i = 0; i < datas.size(); i++) {
             EntityWrapper wrapper = datas.get(i);
             if (wrapper.getItemType() == EntityWrapper.TYPE_INDEX || wrapper.getIndexTitle() == null) {
-                if (!showAllLetter) {
-                    mIndexList.add(wrapper.getIndex());
-                } else {
-                    if (IndexableLayout.INDEX_SIGN.equals(wrapper.getIndex())) {
-                        mIndexList.add(IndexableLayout.INDEX_SIGN);
-                    } else if (mIndexList.indexOf(wrapper.getIndex()) < 0 && tempList.indexOf(wrapper.getIndex()) < 0) {
-                        tempList.add(wrapper.getIndex());
+                String index = wrapper.getIndex();
+                if (!TextUtils.isEmpty(index)) {
+                    if (!showAllLetter) {
+                        mIndexList.add(index);
+                    } else {
+                        if (IndexableLayout.INDEX_SIGN.equals(index)) {
+                            mIndexList.add(IndexableLayout.INDEX_SIGN);
+                        } else if (mIndexList.indexOf(index) < 0 && tempList.indexOf(index) < 0) {
+                            tempList.add(index);
+                        }
+                    }
+                    if (!mMapping.containsKey(index)) {
+                        mMapping.put(index, i);
                     }
                 }
-                mMapping.put(wrapper.getIndex(), i);
             }
         }
         if (showAllLetter) {
@@ -173,7 +179,7 @@ class IndexBar extends View {
         EntityWrapper wrapper = mDatas.get(firstVisibleItemPosition);
         int position = mIndexList.indexOf(wrapper.getIndex());
 
-        if (mSelectionPosition != position) {
+        if (mSelectionPosition != position && position >= 0) {
             mSelectionPosition = position;
             invalidate();
         }

@@ -218,7 +218,11 @@ public class IndexableLayout extends FrameLayout {
 
                         if (touchPos != mIndexBar.getSelectionPosition()) {
                             mIndexBar.setSelectionPosition(touchPos);
-                            mLayoutManager.scrollToPositionWithOffset(mIndexBar.getRecyPosition(), 0);
+                            if (touchPos == 0) {
+                                mLayoutManager.scrollToPositionWithOffset(0, 0);
+                            } else {
+                                mLayoutManager.scrollToPositionWithOffset(mIndexBar.getRecyPosition(), 0);
+                            }
                         }
                         break;
                     case MotionEvent.ACTION_UP:

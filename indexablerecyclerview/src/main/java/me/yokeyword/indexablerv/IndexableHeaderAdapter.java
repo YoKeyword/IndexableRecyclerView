@@ -15,30 +15,34 @@ public abstract class IndexableHeaderAdapter<T> {
     private OnItemHeaderClickListener<T> mListener;
 
     /**
-     * none indexTitle
+     * 不想显示哪个就传null, 数据源传null时,代表add一个普通的View
+     *
+     * @param index      IndexBar的字母索引
+     * @param indexTitle IndexTitle
+     * @param datas      数据源
      */
-    public IndexableHeaderAdapter(String index, List<T> datas) {
-        this(index, null, datas);
-    }
-
     public IndexableHeaderAdapter(String index, String indexTitle, List<T> datas) {
         if (indexTitle != null) {
-            EntityWrapper<T> wrapper = new EntityWrapper<>();
-            wrapper.setIndex(index);
-            wrapper.setIndexTitle(indexTitle);
+            EntityWrapper<T> wrapper = wrapEntity(index, indexTitle);
             wrapper.setItemType(EntityWrapper.TYPE_INDEX);
-            mEntityWrapperList.add(wrapper);
         }
-        for (int i = 0; i < datas.size(); i++) {
-            EntityWrapper<T> wrapper = new EntityWrapper<>();
-            wrapper.setIndex(index);
-            if (indexTitle == null && i != 0) {
-                indexTitle = "";
+        if (datas == null) {
+            EntityWrapper<T> wrapper = wrapEntity(index, indexTitle);
+            wrapper.setItemType(getItemViewType());
+        } else {
+            for (int i = 0; i < datas.size(); i++) {
+                EntityWrapper<T> wrapper = wrapEntity(index, indexTitle);
+                wrapper.setData(datas.get(i));
             }
-            wrapper.setIndexTitle(indexTitle);
-            wrapper.setData(datas.get(i));
-            mEntityWrapperList.add(wrapper);
         }
+    }
+
+    private EntityWrapper<T> wrapEntity(String index, String indexTitle) {
+        EntityWrapper<T> wrapper = new EntityWrapper<>();
+        wrapper.setIndex(index);
+        wrapper.setIndexTitle(indexTitle);
+        mEntityWrapperList.add(wrapper);
+        return wrapper;
     }
 
     public abstract int getItemViewType();

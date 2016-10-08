@@ -7,14 +7,14 @@ import java.util.regex.Pattern;
 /**
  * Created by YoKey on 16/3/20.
  */
-class PinyinUtil {
+public class PinyinUtil {
     private static final String PATTERN_POLYPHONE = "^#[a-zA-Z]+#.+";
     private static final String PATTERN_LETTER = "^[a-zA-Z].*+";
 
     /**
      * 将字符串中的中文转化为拼音,其他字符不变
      */
-    static String getPingYin(String inputString) {
+    public static String getPingYin(String inputString) {
         char[] input = inputString.trim().toCharArray();
         String output = "";
         for (int i = 0; i < input.length; i++) {
