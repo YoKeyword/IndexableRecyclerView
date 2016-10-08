@@ -14,6 +14,9 @@ public abstract class IndexableHeaderAdapter<T> {
     private ArrayList<EntityWrapper<T>> mEntityWrapperList = new ArrayList<>();
     private OnItemHeaderClickListener<T> mListener;
 
+    /**
+     * none indexTitle
+     */
     public IndexableHeaderAdapter(String index, List<T> datas) {
         this(index, null, datas);
     }
@@ -26,11 +29,14 @@ public abstract class IndexableHeaderAdapter<T> {
             wrapper.setItemType(EntityWrapper.TYPE_INDEX);
             mEntityWrapperList.add(wrapper);
         }
-        for (T data : datas) {
+        for (int i = 0; i < datas.size(); i++) {
             EntityWrapper<T> wrapper = new EntityWrapper<>();
             wrapper.setIndex(index);
+            if (indexTitle == null && i != 0) {
+                indexTitle = "";
+            }
             wrapper.setIndexTitle(indexTitle);
-            wrapper.setData(data);
+            wrapper.setData(datas.get(i));
             mEntityWrapperList.add(wrapper);
         }
     }

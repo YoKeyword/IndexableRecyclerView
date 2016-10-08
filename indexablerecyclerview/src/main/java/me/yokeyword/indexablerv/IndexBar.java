@@ -27,7 +27,6 @@ class IndexBar extends View {
     private ArrayList<EntityWrapper> mDatas;
 
     private int mSelectionPosition;
-    private float mWidth;
     private float mIndexHeight;
 
     private Paint mPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
@@ -149,13 +148,13 @@ class IndexBar extends View {
         }
         for (int i = 0; i < datas.size(); i++) {
             EntityWrapper wrapper = datas.get(i);
-            if (wrapper.getItemType() == EntityWrapper.TYPE_INDEX) {
+            if (wrapper.getItemType() == EntityWrapper.TYPE_INDEX || wrapper.getIndexTitle() == null) {
                 if (!showAllLetter) {
                     mIndexList.add(wrapper.getIndex());
                 } else {
                     if (IndexableLayout.INDEX_SIGN.equals(wrapper.getIndex())) {
                         mIndexList.add(IndexableLayout.INDEX_SIGN);
-                    } else if (mIndexList.indexOf(wrapper.getIndex()) < 0) {
+                    } else if (mIndexList.indexOf(wrapper.getIndex()) < 0 && tempList.indexOf(wrapper.getIndex()) < 0) {
                         tempList.add(wrapper.getIndex());
                     }
                 }

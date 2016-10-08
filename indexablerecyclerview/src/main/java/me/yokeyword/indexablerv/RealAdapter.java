@@ -71,7 +71,10 @@ class RealAdapter<T> extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                     mContentClickListener.onItemClick(v, wrapper.getOriginalPosition(), position, wrapper.getData());
                 } else {
                     IndexableHeaderAdapter adapter = mHeaderAdapterMap.get(viewType);
-                    adapter.getOnItemHeaderClickListener().onItemClick(v, position, wrapper.getData());
+                    IndexableHeaderAdapter.OnItemHeaderClickListener listener = adapter.getOnItemHeaderClickListener();
+                    if (listener != null) {
+                        listener.onItemClick(v, position, wrapper.getData());
+                    }
                 }
             }
         });
