@@ -26,8 +26,9 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@android:color/white"
-        app:indexBar_selectedTextColor="@color/colorAccent"
-        app:indexBar_textColor="@android:color/darker_gray"
-        app:indexBar_textSize="14sp"/>
+        app:indexBar_background="#08000000"
+        app:indexBar_layout_width="24dp"
+        app:indexBar_textColor="@android:color/black"
+        app:indexBar_textSpace="8dp" />
 
 </LinearLayout>

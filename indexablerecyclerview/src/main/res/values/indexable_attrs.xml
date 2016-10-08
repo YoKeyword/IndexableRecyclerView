@@ -4,10 +4,10 @@
         <attr name="indexBar_selectedTextColor" format="color" />
         <attr name="indexBar_textColor" format="color" />
         <attr name="indexBar_textSize" format="dimension" />
-        <attr name="MDOverlayColor" format="color" />
-        <attr name="typeOverlay" format="enum">
-            <enum name="center" value="1" />
-            <enum name="md" value="2" />
+        <attr name="indexBar_textSpace" format="dimension" />
+        <attr name="indexBar_background" format="reference|color" />
+        <attr name="indexBar_layout_width" format="dimension">
+            <!--<enum name="wrap_content" value="-2" /> 暂不支持 -->
         </attr>
     </declare-styleable>
 </resources>

@@ -5,6 +5,8 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 
+import me.yokeyword.sample.city.PickCityActivity;
+
 
 /**
  * Created by YoKey on 16/10/7.

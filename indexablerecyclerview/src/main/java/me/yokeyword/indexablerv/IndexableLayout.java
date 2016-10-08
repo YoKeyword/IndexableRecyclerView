@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.res.ColorStateList;
 import android.content.res.TypedArray;
 import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewCompat;
 import android.support.v7.widget.LinearLayoutManager;
@@ -57,9 +58,9 @@ public class IndexableLayout extends FrameLayout {
 
     private TextView mCenterOverlay, mMDOverlay;
 
-    private int mBarTextColor, mBarFocusTextColor, mMDOverlayColor;
-    private float mBarTextSize;
-    private int mTypeOverlay;
+    private int mBarTextColor, mBarFocusTextColor;
+    private float mBarTextSize, mBarTextSpace, mBarWidth;
+    private Drawable mBarBg;
 
     public IndexableLayout(Context context) {
         this(context, null);
@@ -114,7 +115,7 @@ public class IndexableLayout extends FrameLayout {
     /**
      * display Material Design OverlayView
      */
-    public void setMDOverlayStyle(int color) {
+    public void setOverlayStyle_MaterialDesign(int color) {
         if (mMDOverlay == null) {
             initMDOverlay(color);
         } else {
@@ -126,7 +127,7 @@ public class IndexableLayout extends FrameLayout {
     /**
      * display Center OverlayView
      */
-    public void setCenterOverlayStyle() {
+    public void setOverlayStyle_Center() {
         if (mCenterOverlay == null) {
             initCenterOverlay();
         }
@@ -147,6 +148,13 @@ public class IndexableLayout extends FrameLayout {
         return mRecy;
     }
 
+    /**
+     * Set the enabled state of this IndexBar.
+     */
+    public void setIndexBarVisibility(boolean visible) {
+        mIndexBar.setVisibility(visible ? VISIBLE : GONE);
+    }
+
     private void init(Context context, AttributeSet attrs) {
         this.mContext = context;
         this.mExecutorService = Executors.newSingleThreadExecutor();
@@ -156,9 +164,10 @@ public class IndexableLayout extends FrameLayout {
             TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.IndexableRecyclerView);
             mBarTextColor = a.getColor(R.styleable.IndexableRecyclerView_indexBar_textColor, ContextCompat.getColor(context, R.color.default_indexBar_textColor));
             mBarTextSize = a.getDimension(R.styleable.IndexableRecyclerView_indexBar_textSize, getResources().getDimension(R.dimen.default_indexBar_textSize));
-            mBarFocusTextColor = a.getColor(R.styleable.IndexableRecyclerView_indexBar_selectedTextColor, ContextCompat.getColor(context, R.color.dafault_indexBar_selectedTextColor));
-            mMDOverlayColor = a.getColor(R.styleable.IndexableRecyclerView_MDOverlayColor, ContextCompat.getColor(context, R.color.default_MDOverlayColor));
-            mTypeOverlay = a.getInt(R.styleable.IndexableRecyclerView_typeOverlay, 0);
+            mBarFocusTextColor = a.getColor(R.styleable.IndexableRecyclerView_indexBar_selectedTextColor, ContextCompat.getColor(context, R.color.default_indexBar_selectedTextColor));
+            mBarTextSpace = a.getDimension(R.styleable.IndexableRecyclerView_indexBar_textSpace, getResources().getDimension(R.dimen.default_indexBar_textSpace));
+            mBarBg = a.getDrawable(R.styleable.IndexableRecyclerView_indexBar_background);
+            mBarWidth = a.getDimension(R.styleable.IndexableRecyclerView_indexBar_layout_width, getResources().getDimension(R.dimen.default_indexBar_layout_width));
             a.recycle();
         }
 
@@ -173,8 +182,8 @@ public class IndexableLayout extends FrameLayout {
         addView(mRecy, new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
 
         mIndexBar = new IndexBar(context);
-        mIndexBar.init(mBarTextColor, mBarFocusTextColor, mBarTextSize);
-        LayoutParams params = new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
+        mIndexBar.init(mBarBg, mBarTextColor, mBarFocusTextColor, mBarTextSize, mBarTextSpace);
+        LayoutParams params = new LayoutParams((int) mBarWidth, LayoutParams.WRAP_CONTENT);
         params.gravity = Gravity.END | Gravity.CENTER_VERTICAL;
         addView(mIndexBar, params);
 
@@ -185,12 +194,6 @@ public class IndexableLayout extends FrameLayout {
         mRecy.setAdapter(mRealAdapter);
 
         initListener();
-
-        if (mTypeOverlay == TYPE_CENTER) {
-            initCenterOverlay();
-        } else if (mTypeOverlay == TYPE_MD) {
-            initMDOverlay(mMDOverlayColor);
-        }
     }
 
     private void initListener() {

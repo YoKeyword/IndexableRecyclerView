@@ -2,6 +2,8 @@
 <resources>
     <color name="default_indexBar_textColor">#8c8c8c</color>
     <dimen name="default_indexBar_textSize">14sp</dimen>
-    <color name="dafault_indexBar_selectedTextColor">#f33737</color>
-    <color name="default_MDOverlayColor">#f33737</color>
+    <color name="default_indexBar_selectedTextColor">#f33737</color>
+    <dimen name="default_indexBar_textSpace">4dp</dimen>
+    <drawable name="dafault_indexBar_background">@android:color/transparent</drawable>
+    <dimen name="default_indexBar_layout_width">24dp</dimen>
 </resources>

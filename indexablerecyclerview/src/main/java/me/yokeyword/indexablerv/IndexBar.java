@@ -3,7 +3,8 @@ package me.yokeyword.indexablerv;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Paint;
-import android.util.TypedValue;
+import android.graphics.drawable.Drawable;
+import android.os.Build;
 import android.view.View;
 
 import java.util.ArrayList;
@@ -17,8 +18,8 @@ import me.yokeyword.indexablerecyclerview.R;
  * Created by YoKey on 16/10/6.
  */
 class IndexBar extends View {
-    private static int MARGIN;
-    private static int mTotalHeight;
+    private int mTotalHeight;
+    private float mTextSpace;
 
     private List<String> mIndexList = new ArrayList<>();
     // 首字母 到 mIndexList 的映射
@@ -26,6 +27,7 @@ class IndexBar extends View {
     private ArrayList<EntityWrapper> mDatas;
 
     private int mSelectionPosition;
+    private float mWidth;
     private float mIndexHeight;
 
     private Paint mPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
@@ -33,14 +35,17 @@ class IndexBar extends View {
 
     public IndexBar(Context context) {
         super(context);
-        init();
     }
 
-    private void init() {
-        MARGIN = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 4, getResources().getDisplayMetrics());
-    }
+    void init(Drawable barBg, int barTextColor, int barFocusTextColor, float barTextSize, float textSpace) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+            setBackground(barBg);
+        } else {
+            setBackgroundDrawable(barBg);
+        }
 
-    void init(int barTextColor, int barFocusTextColor, float barTextSize) {
+        this.mTextSpace = textSpace;
+
         mPaint.setColor(barTextColor);
         mPaint.setTextAlign(Paint.Align.CENTER);
         mPaint.setTextSize(barTextSize);
@@ -53,22 +58,24 @@ class IndexBar extends View {
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         int mode = MeasureSpec.getMode(widthMeasureSpec);
-
         int height = MeasureSpec.getSize(heightMeasureSpec);
 
-        mTotalHeight = (int) ((mIndexList.size() - 1) * mPaint.getTextSize()
-                + mFocusPaint.getTextSize())
-                + (mIndexList.size() + 1) * MARGIN;
+        if (mIndexList.size() > 0) {
+            mTotalHeight = (int) (((mIndexList.size() - 1) * mPaint.getTextSize()
+                    + mFocusPaint.getTextSize())
+                    + (mIndexList.size() + 1) * mTextSpace);
+        }
 
         if (mTotalHeight > height) {
             mTotalHeight = height;
         }
 
-        if (mode == MeasureSpec.AT_MOST) {
-            int maxWidth = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 36, getResources().getDisplayMetrics());
-            super.onMeasure(MeasureSpec.makeMeasureSpec(maxWidth, MeasureSpec.EXACTLY), MeasureSpec.makeMeasureSpec(mTotalHeight, MeasureSpec.EXACTLY));
-            return;
-        }
+//        // TODO: 16/10/8  测量
+//        if (mode == MeasureSpec.AT_MOST) {
+//            int maxWidth = (int) getResources().getDimension(R.dimen.default_indexBar_layout_width);
+//            super.onMeasure(MeasureSpec.makeMeasureSpec(maxWidth, MeasureSpec.EXACTLY), MeasureSpec.makeMeasureSpec(mTotalHeight, MeasureSpec.EXACTLY));
+//            return;
+//        }
         super.onMeasure(widthMeasureSpec, MeasureSpec.makeMeasureSpec(mTotalHeight, MeasureSpec.EXACTLY));
     }
 

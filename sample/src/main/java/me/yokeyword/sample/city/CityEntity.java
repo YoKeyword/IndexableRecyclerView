@@ -1,4 +1,4 @@
-package me.yokeyword.sample;
+package me.yokeyword.sample.city;
 
 /**
  * Created by YoKey on 16/10/7.
