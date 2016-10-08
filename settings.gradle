@@ -1,1 +1,1 @@
-include ':sample', ':indexablelistview'
+include ':sample', ':indexablerecyclerview'

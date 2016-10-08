@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
@@ -9,8 +8,7 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    android:gravity="center"
-    tools:context="com.yokeyword.sample.MainActivity">
+    android:gravity="center">
 
     <Button
         android:id="@+id/btn_pick_city"
@@ -24,12 +22,5 @@
         android:layout_marginTop="32dp"
         android:layout_height="wrap_content"
         android:text="选择联系人Demo"/>
-
-    <Button
-        android:id="@+id/btn_pick_city_large"
-        android:layout_width="match_parent"
-        android:layout_marginTop="32dp"
-        android:layout_height="wrap_content"
-        android:text="128倍数据测试Demo"/>
 
 </LinearLayout>

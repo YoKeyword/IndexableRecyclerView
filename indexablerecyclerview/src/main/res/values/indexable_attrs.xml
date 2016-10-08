@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="IndexableRecyclerView">
+        <attr name="indexBar_selectedTextColor" format="color" />
+        <attr name="indexBar_textColor" format="color" />
+        <attr name="indexBar_textSize" format="dimension" />
+        <attr name="MDOverlayColor" format="color" />
+        <attr name="typeOverlay" format="enum">
+            <enum name="center" value="1" />
+            <enum name="md" value="2" />
+        </attr>
+    </declare-styleable>
+</resources>

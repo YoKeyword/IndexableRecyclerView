@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="default_indexBar_textColor">#8c8c8c</color>
+    <dimen name="default_indexBar_textSize">14sp</dimen>
+    <color name="dafault_indexBar_selectedTextColor">#f33737</color>
+    <color name="default_MDOverlayColor">#f33737</color>
+</resources>
