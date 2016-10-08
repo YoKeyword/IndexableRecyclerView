@@ -3,6 +3,7 @@ apply plugin: 'com.android.application'
 android {
     compileSdkVersion 24
     buildToolsVersion "24.0.1"
+
     defaultConfig {
         applicationId "me.yokeyword.indexablecv.sample"
         minSdkVersion 14
@@ -10,6 +11,7 @@ android {
         versionCode 1
         versionName "1.0"
     }
+    
     buildTypes {
         release {
             minifyEnabled false
