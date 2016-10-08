@@ -6,6 +6,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 
 import me.yokeyword.sample.city.PickCityActivity;
+import me.yokeyword.sample.contact.PickContactActivity;
 
 
 /**
@@ -22,6 +23,12 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 startActivity(new Intent(MainActivity.this, PickCityActivity.class));
+            }
+        });
+        findViewById(R.id.btn_pick_contact).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(MainActivity.this, PickContactActivity.class));
             }
         });
     }

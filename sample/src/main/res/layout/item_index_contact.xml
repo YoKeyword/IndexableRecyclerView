@@ -1,13 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<TextView
-    android:id="@+id/tv_index"
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:paddingBottom="8dp"
-    android:paddingLeft="24dp"
-    android:background="#fafafa"
-    android:paddingTop="8dp"
-    android:textColor="#969696"
-    android:textSize="18sp"/>
+    android:layout_height="wrap_content">
+
+    <TextView
+        android:id="@+id/tv_index"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@android:color/white"
+        android:paddingBottom="8dp"
+        android:paddingLeft="24dp"
+        android:paddingTop="8dp"
+        android:textColor="@color/colorAccent"
+        android:textStyle="bold"
+        android:textSize="20sp" />
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="0.8dp"
+        android:background="#f0f0f0" />
+</FrameLayout>

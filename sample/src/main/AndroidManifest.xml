@@ -17,6 +17,7 @@
         </activity>
 
         <activity android:name=".city.PickCityActivity" />
+        <activity android:name=".contact.PickContactActivity"/>
     </application>
 
 </manifest>
