@@ -49,7 +49,11 @@ public class PickContactActivity extends AppCompatActivity {
         mAdapter.setOnItemContentClickListener(new IndexableAdapter.OnItemContentClickListener<UserEntity>() {
             @Override
             public void onItemClick(View v, int originalPosition, int currentPosition, UserEntity entity) {
-                ToastUtil.showShort(PickContactActivity.this, "选中:" + entity.getNick() + "  当前位置:" + currentPosition + "  原始所在数组位置:" + originalPosition);
+                if (originalPosition >= 0) {
+                    ToastUtil.showShort(PickContactActivity.this, "选中:" + entity.getNick() + "  当前位置:" + currentPosition + "  原始所在数组位置:" + originalPosition);
+                } else {
+                    ToastUtil.showShort(PickContactActivity.this, "选中Header:" + entity.getNick() + "  当前位置:" + currentPosition);
+                }
             }
         });
 

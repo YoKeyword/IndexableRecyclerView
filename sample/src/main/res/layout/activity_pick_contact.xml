@@ -13,6 +13,6 @@
         app:indexBar_selectedTextColor="#f33737"
         app:indexBar_textColor="@android:color/black"
         app:indexBar_textSize="14sp"
-        app:indexBar_textSpace="6dp" />
+        app:indexBar_textSpace="4dp" />
 
 </LinearLayout>

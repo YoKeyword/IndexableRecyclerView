@@ -45,7 +45,11 @@ public class PickCityActivity extends AppCompatActivity {
         adapter.setOnItemContentClickListener(new IndexableAdapter.OnItemContentClickListener<CityEntity>() {
             @Override
             public void onItemClick(View v, int originalPosition, int currentPosition, CityEntity entity) {
-               ToastUtil.showShort(PickCityActivity.this, "选中:" + entity.getName() + "  当前位置:" + currentPosition + "  原始所在数组位置:" + originalPosition);
+                if (originalPosition >= 0) {
+                    ToastUtil.showShort(PickCityActivity.this, "选中:" + entity.getName() + "  当前位置:" + currentPosition + "  原始所在数组位置:" + originalPosition);
+                } else {
+                    ToastUtil.showShort(PickCityActivity.this, "选中Header:" + entity.getName() + "  当前位置:" + currentPosition);
+                }
             }
         });
 

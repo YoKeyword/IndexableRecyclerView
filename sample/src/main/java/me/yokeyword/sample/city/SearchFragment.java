@@ -5,6 +5,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -49,7 +50,9 @@ public class SearchFragment extends Fragment {
      * 根据newText 进行查找, 显示
      */
     public void bindQueryText(String newText) {
-        mAdapter.getFilter().filter(newText.toLowerCase());
+        if (!TextUtils.isEmpty(newText)) {
+            mAdapter.getFilter().filter(newText.toLowerCase());
+        }
     }
 
     private class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.VH> implements Filterable {
@@ -67,7 +70,7 @@ public class SearchFragment extends Fragment {
                 @Override
                 public void onClick(View v) {
                     int position = holder.getAdapterPosition();
-                   ToastUtil.showShort(getActivity(), "选择了" + items.get(position).getName());
+                    ToastUtil.showShort(getActivity(), "选择了" + items.get(position).getName());
                 }
             });
             return holder;
@@ -88,6 +91,7 @@ public class SearchFragment extends Fragment {
             return new Filter() {
                 @Override
                 protected FilterResults performFiltering(CharSequence constraint) {
+                    System.out.println("--->" + constraint);
                     ArrayList<CityEntity> list = new ArrayList<>();
                     for (CityEntity item : mDatas) {
                         if (item.getPinyin().startsWith(constraint.toString()) || item.getName().contains(constraint)) {
