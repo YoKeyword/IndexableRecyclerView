@@ -78,8 +78,11 @@ public class PickContactActivity extends AppCompatActivity {
             }
         });
 
-        mBannerHeaderAdapter = new BannerHeaderAdapter(null, null, null);
-        // 添加 搜索框
+        // 这里BannerView只有一个Item, 添加一个长度为1的任意List作为第三个参数
+        List<String> bannerList = new ArrayList<>();
+        bannerList.add("");
+        mBannerHeaderAdapter = new BannerHeaderAdapter(null, null, bannerList);
+        // 添加 Banner
         indexableLayout.addHeaderAdapter(mBannerHeaderAdapter);
     }
 
