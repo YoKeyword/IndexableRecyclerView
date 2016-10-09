@@ -150,7 +150,7 @@ class IndexBar extends View {
         }
         for (int i = 0; i < datas.size(); i++) {
             EntityWrapper wrapper = datas.get(i);
-            if (wrapper.getItemType() == EntityWrapper.TYPE_INDEX || wrapper.getIndexTitle() == null) {
+            if (wrapper.getItemType() == EntityWrapper.TYPE_TITLE || wrapper.getIndexTitle() == null) {
                 String index = wrapper.getIndex();
                 if (!TextUtils.isEmpty(index)) {
                     if (!showAllLetter) {

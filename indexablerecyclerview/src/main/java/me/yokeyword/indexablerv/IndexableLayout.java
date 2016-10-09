@@ -49,6 +49,7 @@ public class IndexableLayout extends FrameLayout {
     private RecyclerView mRecy;
     private IndexBar mIndexBar;
     private RecyclerView.ViewHolder mStickyViewHolder;
+    private String mStickyTitle;
 
     private RealAdapter mRealAdapter;
     private LinearLayoutManager mLayoutManager;
@@ -237,7 +238,24 @@ public class IndexableLayout extends FrameLayout {
                 ArrayList<EntityWrapper> list = mRealAdapter.getItems();
                 if (mStickyViewHolder != null && list.size() > firstItemPosition) {
                     EntityWrapper wrapper = list.get(firstItemPosition);
-                    if (wrapper.getItemType() == EntityWrapper.TYPE_INDEX) {
+                    if (firstItemPosition + 1 < list.size()) {
+                        EntityWrapper nextWrapper = list.get(firstItemPosition + 1);
+                        View nextTitleView = mLayoutManager.findViewByPosition(firstItemPosition + 1);
+                        if (nextWrapper.getItemType() == EntityWrapper.TYPE_TITLE) {
+                            if (nextTitleView.getTop() <= mStickyViewHolder.itemView.getHeight()) {
+                                mStickyViewHolder.itemView.setTranslationY(nextTitleView.getTop() - mStickyViewHolder.itemView.getHeight());
+                            }
+                            if (!wrapper.getIndexTitle().equals(mStickyTitle)) {
+                                mStickyTitle = wrapper.getIndexTitle();
+                                mIndexableAdapter.onBindTitleViewHolder(mStickyViewHolder, wrapper.getIndexTitle());
+                            }
+                        } else if (mStickyViewHolder.itemView.getTranslationY() != 0) {
+                            mStickyViewHolder.itemView.setTranslationY(0);
+                        }
+                    }
+
+                    if (wrapper.getItemType() == EntityWrapper.TYPE_TITLE && !wrapper.getIndexTitle().equals(mStickyTitle)) {
+                        mStickyTitle = wrapper.getIndexTitle();
                         mIndexableAdapter.onBindTitleViewHolder(mStickyViewHolder, wrapper.getIndexTitle());
                     }
                 }
@@ -474,7 +492,7 @@ public class IndexableLayout extends FrameLayout {
                 List<EntityWrapper<T>> list;
                 if (!map.containsKey(inital)) {
                     list = new ArrayList<>();
-                    list.add(new EntityWrapper<T>(entity.getIndex(), EntityWrapper.TYPE_INDEX));
+                    list.add(new EntityWrapper<T>(entity.getIndex(), EntityWrapper.TYPE_TITLE));
                     map.put(inital, list);
                 } else {
                     list = map.get(inital);

@@ -29,7 +29,7 @@ public abstract class IndexableHeaderAdapter<T> {
     public IndexableHeaderAdapter(String index, String indexTitle, List<T> datas) {
         if (indexTitle != null) {
             EntityWrapper<T> wrapper = wrapEntity(index, indexTitle);
-            wrapper.setItemType(EntityWrapper.TYPE_INDEX);
+            wrapper.setItemType(EntityWrapper.TYPE_TITLE);
         }
         if (datas == null) {
             EntityWrapper<T> wrapper = wrapEntity(index, indexTitle);

@@ -53,7 +53,7 @@ class RealAdapter<T extends IndexableEntity> extends RecyclerView.Adapter<Recycl
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, final int viewType) {
         final RecyclerView.ViewHolder holder;
 
-        if (viewType == EntityWrapper.TYPE_INDEX) {
+        if (viewType == EntityWrapper.TYPE_TITLE) {
             holder = mAdapter.onCreateTitleViewHolder(parent);
         } else if (viewType == EntityWrapper.TYPE_CONTENT) {
             holder = mAdapter.onCreateContentViewHolder(parent);
@@ -67,7 +67,7 @@ class RealAdapter<T extends IndexableEntity> extends RecyclerView.Adapter<Recycl
             public void onClick(View v) {
                 int position = holder.getAdapterPosition();
                 EntityWrapper<T> wrapper = mDatasList.get(position);
-                if (viewType == EntityWrapper.TYPE_INDEX && mTitleClickListener != null) {
+                if (viewType == EntityWrapper.TYPE_TITLE && mTitleClickListener != null) {
                     mTitleClickListener.onItemClick(v, position, wrapper.getIndexTitle());
                 } else if (viewType == EntityWrapper.TYPE_CONTENT && mContentClickListener != null) {
                     mContentClickListener.onItemClick(v, wrapper.getOriginalPosition(), position, wrapper.getData());
@@ -86,7 +86,7 @@ class RealAdapter<T extends IndexableEntity> extends RecyclerView.Adapter<Recycl
             public boolean onLongClick(View v) {
                 int position = holder.getAdapterPosition();
                 EntityWrapper<T> wrapper = mDatasList.get(position);
-                if (viewType == EntityWrapper.TYPE_INDEX && mTitleLongClickListener != null) {
+                if (viewType == EntityWrapper.TYPE_TITLE && mTitleLongClickListener != null) {
                     return mTitleLongClickListener.onItemLongClick(v, position, wrapper.getIndexTitle());
                 } else if (viewType == EntityWrapper.TYPE_CONTENT && mContentLongClickListener != null) {
                     return mContentLongClickListener.onItemLongClick(v, wrapper.getOriginalPosition(), position, wrapper.getData());
@@ -108,7 +108,7 @@ class RealAdapter<T extends IndexableEntity> extends RecyclerView.Adapter<Recycl
         EntityWrapper<T> item = mDatasList.get(position);
 
         int viewType = getItemViewType(position);
-        if (viewType == EntityWrapper.TYPE_INDEX) {
+        if (viewType == EntityWrapper.TYPE_TITLE) {
             mAdapter.onBindTitleViewHolder(holder, item.getIndexTitle());
         } else if (viewType == EntityWrapper.TYPE_CONTENT) {
             mAdapter.onBindContentViewHolder(holder, item.getData());
