@@ -3,16 +3,43 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@android:color/white"
     android:orientation="vertical">
 
-    <me.yokeyword.indexablerv.IndexableLayout
-        android:id="@+id/indexableLayout"
+    <android.support.v7.widget.SearchView
+        android:id="@+id/searchview"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@android:color/white"
-        app:indexBar_background="#08000000"
-        app:indexBar_layout_width="24dp"
-        app:indexBar_textColor="@android:color/black"
-        app:indexBar_textSpace="8dp" />
+        android:layout_height="42dp"
+        android:layout_marginBottom="4dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
+        android:layout_marginTop="8dp"
+        android:background="#f3f3f3"
+        android:focusable="false"
+        android:focusableInTouchMode="false"
+        android:textColor="#757575"
+        app:iconifiedByDefault="false"
+        app:queryBackground="@null"
+        app:queryHint="请输入关键字" />
 
+    <FrameLayout
+        android:id="@+id/fl_container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <me.yokeyword.indexablerv.IndexableLayout
+            android:id="@+id/indexableLayout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:indexBar_background="#08000000"
+            app:indexBar_layout_width="24dp"
+            app:indexBar_textColor="@android:color/black"
+            app:indexBar_textSpace="8dp" />
+
+        <fragment
+            android:id="@+id/search_fragment"
+            class="me.yokeyword.sample.city.SearchFragment"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
+    </FrameLayout>
 </LinearLayout>

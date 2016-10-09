@@ -9,7 +9,6 @@ public class UserEntity implements IndexableEntity {
     private String nick;
     private String avatar;
     private String mobile;
-    private String pinyin;
 
     public UserEntity(String nick, String mobile) {
         this.nick = nick;
@@ -40,26 +39,19 @@ public class UserEntity implements IndexableEntity {
         this.nick = name;
     }
 
-    public String getPinyin() {
-        return pinyin;
-    }
-
-    public void setPinyin(String pinyin) {
-        this.pinyin = pinyin;
-    }
-
     @Override
-    public String getIndexField() {
+    public String getIndexByField() {
         return nick;
     }
 
     @Override
-    public void setIndexField(String indexField) {
+    public void setIndexByField(String indexField) {
         this.nick = indexField;
     }
 
     @Override
-    public void setIndexFieldPinyin(String pinyin) {
-        this.pinyin = pinyin;
+    public void setIndexByFieldPinyin(String pinyin) {
+        // 需要用到拼音时(比如:搜索), 可增添pinyin字段 this.pinyin  = pinyin
+        // 见 CityEntity
     }
 }

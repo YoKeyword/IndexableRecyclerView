@@ -8,6 +8,7 @@ import me.yokeyword.indexablerv.IndexableEntity;
 public class CityEntity implements IndexableEntity {
     private long id;
     private String name;
+    private String pinyin;
 
     public CityEntity() {
     }
@@ -32,19 +33,26 @@ public class CityEntity implements IndexableEntity {
         this.name = name;
     }
 
+    public String getPinyin() {
+        return pinyin;
+    }
+
+    public void setPinyin(String pinyin) {
+        this.pinyin = pinyin;
+    }
+
     @Override
-    public String getIndexField() {
+    public String getIndexByField() {
         return name;
     }
 
     @Override
-    public void setIndexField(String indexField) {
-        this.name = indexField;
+    public void setIndexByField(String indexByField) {
+        this.name = indexByField;
     }
 
     @Override
-    public void setIndexFieldPinyin(String pinyin) {
-        // 需要用到拼音时(比如:搜索), 可增添pinyin字段 this.pinyin  = pinyin
-        // 见 UserEntity
+    public void setIndexByFieldPinyin(String pinyin) {
+        this.pinyin = pinyin;
     }
 }
