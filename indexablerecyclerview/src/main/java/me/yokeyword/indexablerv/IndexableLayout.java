@@ -36,9 +36,6 @@ import me.yokeyword.indexablerecyclerview.R;
  */
 @SuppressWarnings("unchecked")
 public class IndexableLayout extends FrameLayout {
-    private static final int TYPE_CENTER = 1;
-    private static final int TYPE_MD = 2;
-
     private static int PADDING_RIGHT_OVERLAY;
     static final String INDEX_SIGN = "#";
 
@@ -94,8 +91,8 @@ public class IndexableLayout extends FrameLayout {
     /**
      * set Index-ItemView click listener
      */
-    void setOnItemIndexClickListener(IndexableAdapter.OnItemIndexClickListener listener) {
-        mRealAdapter.setOnItemIndexClickListener(listener);
+    void setOnItemTitleClickListener(IndexableAdapter.OnItemTitleClickListener listener) {
+        mRealAdapter.setOnItemTitleClickListener(listener);
     }
 
     /**
@@ -350,7 +347,7 @@ public class IndexableLayout extends FrameLayout {
     /**
      * List<T> -> List<Indexable<T>
      */
-    private <T> ArrayList<EntityWrapper<T>> transform(List<T> datas) {
+    private <T extends IndexableEntity> ArrayList<EntityWrapper<T>> transform(List<T> datas) {
         try {
             TreeMap<String, List<EntityWrapper<T>>> map = new TreeMap<>(new Comparator<String>() {
                 @Override
@@ -367,27 +364,30 @@ public class IndexableLayout extends FrameLayout {
             for (int i = 0; i < datas.size(); i++) {
                 EntityWrapper<T> entity = new EntityWrapper<>();
                 T item = datas.get(i);
-                String indexName = mIndexableAdapter.getIndexField(item);
+                String indexName = item.getIndexField();
                 String pinyin = PinyinUtil.getPingYin(indexName);
 
                 // init EntityWrapper
                 if (PinyinUtil.matchingLetter(pinyin)) {
                     entity.setIndex(pinyin.substring(0, 1).toUpperCase());
                     entity.setPinyin(pinyin);
+                    entity.setIndexField(item.getIndexField());
                 } else if (PinyinUtil.matchingPolyphone(pinyin)) {
                     entity.setIndex(PinyinUtil.gePolyphoneInitial(pinyin).toUpperCase());
                     entity.setPinyin(PinyinUtil.getPolyphonePinyin(pinyin));
                     String hanzi = PinyinUtil.getPolyphoneHanzi(indexName);
                     entity.setIndexField(hanzi);
-
-                    mIndexableAdapter.setIndexField(item, hanzi);
+                    // 把多音字的真实indexField重新赋值
+                    item.setIndexField(hanzi);
                 } else {
                     entity.setIndex(INDEX_SIGN);
                     entity.setPinyin(pinyin);
+                    entity.setIndexField(item.getIndexField());
                 }
                 entity.setIndexTitle(entity.getIndex());
                 entity.setData(item);
                 entity.setOriginalPosition(i);
+                item.setIndexFieldPinyin(entity.getPinyin());
 
                 String inital = entity.getIndex();
 
@@ -405,7 +405,7 @@ public class IndexableLayout extends FrameLayout {
 
             ArrayList<EntityWrapper<T>> list = new ArrayList<>();
             for (List<EntityWrapper<T>> indexableEntities : map.values()) {
-                Collections.sort(indexableEntities, new PinyinComparator<>(mIndexableAdapter));
+                Collections.sort(indexableEntities, new PinyinComparator<T>());
                 list.addAll(indexableEntities);
             }
             return list;

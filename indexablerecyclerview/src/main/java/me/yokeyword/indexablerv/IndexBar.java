@@ -6,6 +6,7 @@ import android.graphics.Paint;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.text.TextUtils;
+import android.util.TypedValue;
 import android.view.View;
 
 import java.util.ArrayList;
@@ -51,7 +52,7 @@ class IndexBar extends View {
         mPaint.setTextSize(barTextSize);
 
         mFocusPaint.setTextAlign(Paint.Align.CENTER);
-        mFocusPaint.setTextSize(barTextSize + 1);
+        mFocusPaint.setTextSize(barTextSize + (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 1, getResources().getDisplayMetrics()));
         mFocusPaint.setColor(barFocusTextColor);
     }
 

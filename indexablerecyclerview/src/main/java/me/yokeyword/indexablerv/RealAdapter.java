@@ -18,7 +18,7 @@ class RealAdapter<T> extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     private SparseArray<IndexableHeaderAdapter> mHeaderAdapterMap = new SparseArray<>();
 
-    private IndexableAdapter.OnItemIndexClickListener mIndexClickListener;
+    private IndexableAdapter.OnItemTitleClickListener mTitleClickListener;
     private IndexableAdapter.OnItemContentClickListener<T> mContentClickListener;
 
     void setIndexableAdapter(IndexableAdapter<T> adapter) {
@@ -52,7 +52,7 @@ class RealAdapter<T> extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         final RecyclerView.ViewHolder holder;
 
         if (viewType == EntityWrapper.TYPE_INDEX) {
-            holder = mAdapter.onCreateIndexViewHolder(parent);
+            holder = mAdapter.onCreateTitleViewHolder(parent);
         } else if (viewType == EntityWrapper.TYPE_CONTENT) {
             holder = mAdapter.onCreateContentViewHolder(parent);
         } else {
@@ -65,8 +65,8 @@ class RealAdapter<T> extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             public void onClick(View v) {
                 int position = holder.getAdapterPosition();
                 EntityWrapper<T> wrapper = mDatasList.get(position);
-                if (viewType == EntityWrapper.TYPE_INDEX && mIndexClickListener != null) {
-                    mIndexClickListener.onItemClick(v, position, wrapper.getIndexTitle());
+                if (viewType == EntityWrapper.TYPE_INDEX && mTitleClickListener != null) {
+                    mTitleClickListener.onItemClick(v, position, wrapper.getIndexTitle());
                 } else if (viewType == EntityWrapper.TYPE_CONTENT && mContentClickListener != null) {
                     mContentClickListener.onItemClick(v, wrapper.getOriginalPosition(), position, wrapper.getData());
                 } else {
@@ -87,7 +87,7 @@ class RealAdapter<T> extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
         int viewType = getItemViewType(position);
         if (viewType == EntityWrapper.TYPE_INDEX) {
-            mAdapter.onBindIndexViewHolder(holder, item.getIndexTitle());
+            mAdapter.onBindTitleViewHolder(holder, item.getIndexTitle());
         } else if (viewType == EntityWrapper.TYPE_CONTENT) {
             mAdapter.onBindContentViewHolder(holder, item.getData());
         } else {
@@ -101,8 +101,8 @@ class RealAdapter<T> extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         return mDatasList.size();
     }
 
-    void setOnItemIndexClickListener(IndexableAdapter.OnItemIndexClickListener listener) {
-        this.mIndexClickListener = listener;
+    void setOnItemTitleClickListener(IndexableAdapter.OnItemTitleClickListener listener) {
+        this.mTitleClickListener = listener;
     }
 
     void setOnItemContentClickListener(IndexableAdapter.OnItemContentClickListener<T> listener) {

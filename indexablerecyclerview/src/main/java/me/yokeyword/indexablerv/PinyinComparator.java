@@ -7,17 +7,12 @@ import java.util.Comparator;
 /**
  * Created by YoKey on 16/10/7.
  */
-class PinyinComparator<T> implements Comparator<EntityWrapper<T>> {
-    private IndexableAdapter<T> adapter;
-
-    public PinyinComparator(IndexableAdapter<T> adapter) {
-        this.adapter = adapter;
-    }
+class PinyinComparator<T extends IndexableEntity> implements Comparator<EntityWrapper<T>> {
 
     @Override
     public int compare(EntityWrapper<T> lhs, EntityWrapper<T> rhs) {
-        String lhsIndexName = lhs.getData() != null ? adapter.getIndexField(lhs.getData()) : lhs.getIndex();
-        String rhsIndexName = rhs.getData() != null ? adapter.getIndexField(rhs.getData()) : rhs.getIndex();
+        String lhsIndexName = lhs.getIndexField();
+        String rhsIndexName = rhs.getIndexField();
 
         if (lhsIndexName == null) {
             lhsIndexName = "";

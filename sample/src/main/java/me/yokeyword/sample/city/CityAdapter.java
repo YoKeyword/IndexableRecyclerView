@@ -21,17 +21,7 @@ public class CityAdapter extends IndexableAdapter<CityEntity> {
     }
 
     @Override
-    public String getIndexField(CityEntity data) {
-        return data.getName();
-    }
-
-    @Override
-    public void setIndexField(CityEntity data, String indexField) {
-        data.setName(indexField);
-    }
-
-    @Override
-    public RecyclerView.ViewHolder onCreateIndexViewHolder(ViewGroup parent) {
+    public RecyclerView.ViewHolder onCreateTitleViewHolder(ViewGroup parent) {
         View view = mInflater.inflate(R.layout.item_index_city, parent, false);
         return new IndexVH(view);
     }
@@ -43,7 +33,7 @@ public class CityAdapter extends IndexableAdapter<CityEntity> {
     }
 
     @Override
-    public void onBindIndexViewHolder(RecyclerView.ViewHolder holder, String indexTitle) {
+    public void onBindTitleViewHolder(RecyclerView.ViewHolder holder, String indexTitle) {
         IndexVH vh = (IndexVH) holder;
         vh.tv.setText(indexTitle);
     }

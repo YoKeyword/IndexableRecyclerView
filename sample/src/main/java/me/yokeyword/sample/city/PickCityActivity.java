@@ -10,7 +10,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import me.yokeyword.indexablerv.DefaultHeaderAdapter;
+import me.yokeyword.indexablerv.SimpleHeaderAdapter;
 import me.yokeyword.indexablerv.IndexableAdapter;
 import me.yokeyword.indexablerv.IndexableLayout;
 import me.yokeyword.sample.R;
@@ -43,7 +43,7 @@ public class PickCityActivity extends AppCompatActivity {
             }
         });
 
-        mAdapter.setOnItemIndexClickListener(new IndexableAdapter.OnItemIndexClickListener() {
+        mAdapter.setOnItemTitleClickListener(new IndexableAdapter.OnItemTitleClickListener() {
             @Override
             public void onItemClick(View v, int currentPosition, String indexTitle) {
                 Toast.makeText(PickCityActivity.this, "选中:" + indexTitle + "  当前位置:" + currentPosition, Toast.LENGTH_SHORT).show();
@@ -52,8 +52,8 @@ public class PickCityActivity extends AppCompatActivity {
 
         // 添加 HeaderView DefaultHeaderAdapter接收一个IndexableAdapter, 使其布局以及点击事件和IndexableAdapter一致
         // 如果想自定义布局,点击事件, 可传入 new IndexableHeaderAdapter
-        indexableLayout.addHeaderAdapter(new DefaultHeaderAdapter<>(mAdapter, "热", "热门城市", iniyHotCityDatas()));
-        indexableLayout.addHeaderAdapter(new DefaultHeaderAdapter<>(mAdapter, "定", "当前城市", iniyGPSCityDatas()));
+        indexableLayout.addHeaderAdapter(new SimpleHeaderAdapter<>(mAdapter, "热", "热门城市", iniyHotCityDatas()));
+        indexableLayout.addHeaderAdapter(new SimpleHeaderAdapter<>(mAdapter, "定", "当前城市", iniyGPSCityDatas()));
     }
 
     private List<CityEntity> initDatas() {

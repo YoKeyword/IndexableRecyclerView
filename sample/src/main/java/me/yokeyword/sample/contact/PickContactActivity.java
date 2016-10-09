@@ -17,7 +17,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import me.yokeyword.indexablerv.DefaultHeaderAdapter;
+import me.yokeyword.indexablerv.SimpleHeaderAdapter;
 import me.yokeyword.indexablerv.IndexableAdapter;
 import me.yokeyword.indexablerv.IndexableHeaderAdapter;
 import me.yokeyword.indexablerv.IndexableLayout;
@@ -54,7 +54,7 @@ public class PickContactActivity extends AppCompatActivity {
             }
         });
 
-        mAdapter.setOnItemIndexClickListener(new IndexableAdapter.OnItemIndexClickListener() {
+        mAdapter.setOnItemTitleClickListener(new IndexableAdapter.OnItemTitleClickListener() {
             @Override
             public void onItemClick(View v, int currentPosition, String indexTitle) {
                 Toast.makeText(PickContactActivity.this, "选中:" + indexTitle + "  当前位置:" + currentPosition, Toast.LENGTH_SHORT).show();
@@ -62,7 +62,7 @@ public class PickContactActivity extends AppCompatActivity {
         });
 
         // 添加我关心的人
-        indexableLayout.addHeaderAdapter(new DefaultHeaderAdapter<>(mAdapter, "☆", "我关心的", initFavDatas()));
+        indexableLayout.addHeaderAdapter(new SimpleHeaderAdapter<>(mAdapter, "☆", "我关心的", initFavDatas()));
 
         // 构造函数里3个参数,分别对应 (IndexBar的字母索引, IndexTitle, 数据源), 不想显示哪个就传null, 数据源传null时,代表add一个普通的View
         mMenuHeaderAdapter = new MenuHeaderAdapter("↑", null, initMenuDatas());

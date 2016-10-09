@@ -10,22 +10,18 @@ import java.util.List;
 /**
  * Created by YoKey on 16/10/6.
  */
-public abstract class IndexableAdapter<T> {
+public abstract class IndexableAdapter<T extends IndexableEntity> {
     private List<T> mDatas = new ArrayList<>();
     private IndexableLayout mLayout;
 
-    private OnItemIndexClickListener mIndexClickListener;
+    private OnItemTitleClickListener mTitleClickListener;
     private OnItemContentClickListener mContentClickListener;
 
-    public abstract String getIndexField(T data);
-
-    public abstract void setIndexField(T data, String indexField);
-
-    public abstract RecyclerView.ViewHolder onCreateIndexViewHolder(ViewGroup parent);
+    public abstract RecyclerView.ViewHolder onCreateTitleViewHolder(ViewGroup parent);
 
     public abstract RecyclerView.ViewHolder onCreateContentViewHolder(ViewGroup parent);
 
-    public abstract void onBindIndexViewHolder(RecyclerView.ViewHolder holder, String indexTitle);
+    public abstract void onBindTitleViewHolder(RecyclerView.ViewHolder holder, String indexTitle);
 
     public abstract void onBindContentViewHolder(RecyclerView.ViewHolder holder, T entity);
 
@@ -40,11 +36,11 @@ public abstract class IndexableAdapter<T> {
     /**
      * set Index-ItemView click listener
      */
-    public void setOnItemIndexClickListener(OnItemIndexClickListener listener) {
+    public void setOnItemTitleClickListener(OnItemTitleClickListener listener) {
         if (mLayout != null) {
-            mLayout.setOnItemIndexClickListener(listener);
+            mLayout.setOnItemTitleClickListener(listener);
         } else {
-            this.mIndexClickListener = listener;
+            this.mTitleClickListener = listener;
         }
     }
 
@@ -80,15 +76,15 @@ public abstract class IndexableAdapter<T> {
         if (mDatas.size() > 0) {
             notifyDataChanged();
         }
-        if(mIndexClickListener!=null){
-            mLayout.setOnItemIndexClickListener(mIndexClickListener);
+        if (mTitleClickListener != null) {
+            mLayout.setOnItemTitleClickListener(mTitleClickListener);
         }
-        if(mContentClickListener!=null){
+        if (mContentClickListener != null) {
             mLayout.setOnItemContentClickListener(mContentClickListener);
         }
     }
 
-    public interface OnItemIndexClickListener {
+    public interface OnItemTitleClickListener {
         void onItemClick(View v, int currentPosition, String indexName);
     }
 

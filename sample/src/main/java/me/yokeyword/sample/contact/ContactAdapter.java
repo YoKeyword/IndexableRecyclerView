@@ -21,17 +21,7 @@ public class ContactAdapter extends IndexableAdapter<UserEntity> {
     }
 
     @Override
-    public String getIndexField(UserEntity data) {
-        return data.getNick();
-    }
-
-    @Override
-    public void setIndexField(UserEntity data, String indexField) {
-        data.setNick(indexField);
-    }
-
-    @Override
-    public RecyclerView.ViewHolder onCreateIndexViewHolder(ViewGroup parent) {
+    public RecyclerView.ViewHolder onCreateTitleViewHolder(ViewGroup parent) {
         View view = mInflater.inflate(R.layout.item_index_contact, parent, false);
         return new IndexVH(view);
     }
@@ -43,7 +33,7 @@ public class ContactAdapter extends IndexableAdapter<UserEntity> {
     }
 
     @Override
-    public void onBindIndexViewHolder(RecyclerView.ViewHolder holder, String indexTitle) {
+    public void onBindTitleViewHolder(RecyclerView.ViewHolder holder, String indexTitle) {
         IndexVH vh = (IndexVH) holder;
         vh.tv.setText(indexTitle);
     }
@@ -65,7 +55,7 @@ public class ContactAdapter extends IndexableAdapter<UserEntity> {
     }
 
     private class ContentVH extends RecyclerView.ViewHolder {
-        TextView tvName,tvMobile;
+        TextView tvName, tvMobile;
 
         public ContentVH(View itemView) {
             super(itemView);
