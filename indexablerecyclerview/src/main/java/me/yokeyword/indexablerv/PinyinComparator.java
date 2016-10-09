@@ -11,8 +11,8 @@ class PinyinComparator<T extends IndexableEntity> implements Comparator<EntityWr
 
     @Override
     public int compare(EntityWrapper<T> lhs, EntityWrapper<T> rhs) {
-        String lhsIndexName = lhs.getIndexField();
-        String rhsIndexName = rhs.getIndexField();
+        String lhsIndexName = lhs.getIndexByField();
+        String rhsIndexName = rhs.getIndexByField();
 
         if (lhsIndexName == null) {
             lhsIndexName = "";

@@ -16,6 +16,8 @@ public abstract class IndexableAdapter<T extends IndexableEntity> {
 
     private OnItemTitleClickListener mTitleClickListener;
     private OnItemContentClickListener mContentClickListener;
+    private OnItemTitleLongClickListener mTitleLongClickListener;
+    private OnItemContentLongClickListener mContentLongClickListener;
 
     public abstract RecyclerView.ViewHolder onCreateTitleViewHolder(ViewGroup parent);
 
@@ -55,6 +57,32 @@ public abstract class IndexableAdapter<T extends IndexableEntity> {
         }
     }
 
+    /**
+     * set Index-ItemView longClick listener
+     */
+    public void setOnItemTitleLongClickListener(OnItemTitleLongClickListener listener) {
+        if (mLayout != null) {
+            mLayout.setOnItemTitleLongClickListener(listener);
+        } else {
+            this.mTitleLongClickListener = listener;
+        }
+    }
+
+    /**
+     * set Content-ItemView longClick listener
+     */
+    public <T> void setOnItemContentLongClickListener(OnItemContentLongClickListener<T> listener) {
+        if (mLayout != null) {
+            mLayout.setOnItemContentLongClickListener(listener);
+        } else {
+            this.mContentLongClickListener = listener;
+        }
+    }
+
+    /**
+     * Notifies the attached observers that the underlying data has been changed
+     * and any View reflecting the data set should refresh itself.
+     */
     public void notifyDataChanged() {
         mLayout.notifyDataChanged();
     }
@@ -90,5 +118,13 @@ public abstract class IndexableAdapter<T extends IndexableEntity> {
 
     public interface OnItemContentClickListener<T> {
         void onItemClick(View v, int originalPosition, int currentPosition, T entity);
+    }
+
+    public interface OnItemTitleLongClickListener {
+        boolean onItemLongClick(View v, int currentPosition, String indexName);
+    }
+
+    public interface OnItemContentLongClickListener<T> {
+        boolean onItemLongClick(View v, int originalPosition, int currentPosition, T entity);
     }
 }

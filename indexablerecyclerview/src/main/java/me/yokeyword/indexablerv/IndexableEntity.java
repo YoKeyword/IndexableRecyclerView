@@ -5,12 +5,12 @@ package me.yokeyword.indexablerv;
  */
 public interface IndexableEntity {
 
-    String getIndexField();
+    String getIndexByField();
 
-    void setIndexField(String indexField);
+    void setIndexByField(String indexField);
 
     /**
      * 不是必须实现
      */
-    void setIndexFieldPinyin(String pinyin);
+    void setIndexByFieldPinyin(String pinyin);
 }

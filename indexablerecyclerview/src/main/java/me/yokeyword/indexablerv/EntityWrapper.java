@@ -10,7 +10,7 @@ class EntityWrapper<T> {
     private String index;
     private String indexTitle;
     private String pinyin;
-    private String indexField;
+    private String indexByField;
     private T data;
     private int originalPosition = -1;
     private int itemType = TYPE_CONTENT;
@@ -49,12 +49,12 @@ class EntityWrapper<T> {
         this.pinyin = pinyin;
     }
 
-    public String getIndexField() {
-        return indexField;
+    public String getIndexByField() {
+        return indexByField;
     }
 
-    void setIndexField(String indexField) {
-        this.indexField = indexField;
+    void setIndexByField(String indexByField) {
+        this.indexByField = indexByField;
     }
 
     T getData() {

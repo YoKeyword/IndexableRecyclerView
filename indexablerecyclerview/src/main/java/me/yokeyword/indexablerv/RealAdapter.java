@@ -20,6 +20,8 @@ class RealAdapter<T extends IndexableEntity> extends RecyclerView.Adapter<Recycl
 
     private IndexableAdapter.OnItemTitleClickListener mTitleClickListener;
     private IndexableAdapter.OnItemContentClickListener<T> mContentClickListener;
+    private IndexableAdapter.OnItemTitleLongClickListener mTitleLongClickListener;
+    private IndexableAdapter.OnItemContentLongClickListener<T> mContentLongClickListener;
 
     void setIndexableAdapter(IndexableAdapter<T> adapter) {
         this.mAdapter = adapter;
@@ -78,6 +80,26 @@ class RealAdapter<T extends IndexableEntity> extends RecyclerView.Adapter<Recycl
                 }
             }
         });
+
+        holder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                int position = holder.getAdapterPosition();
+                EntityWrapper<T> wrapper = mDatasList.get(position);
+                if (viewType == EntityWrapper.TYPE_INDEX && mTitleClickListener != null) {
+                    return mTitleLongClickListener.onItemLongClick(v, position, wrapper.getIndexTitle());
+                } else if (viewType == EntityWrapper.TYPE_CONTENT && mContentClickListener != null) {
+                    return mContentLongClickListener.onItemLongClick(v, wrapper.getOriginalPosition(), position, wrapper.getData());
+                } else {
+                    IndexableHeaderAdapter adapter = mHeaderAdapterMap.get(viewType);
+                    IndexableHeaderAdapter.OnItemHeaderLongClickListener listener = adapter.getOnItemHeaderLongClickListener();
+                    if (listener != null) {
+                        return listener.onItemLongClick(v, position, wrapper.getData());
+                    }
+                }
+                return false;
+            }
+        });
         return holder;
     }
 
@@ -107,5 +129,13 @@ class RealAdapter<T extends IndexableEntity> extends RecyclerView.Adapter<Recycl
 
     void setOnItemContentClickListener(IndexableAdapter.OnItemContentClickListener<T> listener) {
         this.mContentClickListener = listener;
+    }
+
+    void setOnItemTitleLongClickListener(IndexableAdapter.OnItemTitleLongClickListener listener) {
+        this.mTitleLongClickListener = listener;
+    }
+
+    void setOnItemContentLongClickListener(IndexableAdapter.OnItemContentLongClickListener<T> listener) {
+        this.mContentLongClickListener = listener;
     }
 }

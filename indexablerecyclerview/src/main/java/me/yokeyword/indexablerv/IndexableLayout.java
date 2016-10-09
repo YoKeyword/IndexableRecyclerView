@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.res.ColorStateList;
 import android.content.res.TypedArray;
+import android.database.DataSetObserver;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.support.v4.content.ContextCompat;
@@ -59,6 +60,15 @@ public class IndexableLayout extends FrameLayout {
     private float mBarTextSize, mBarTextSpace, mBarWidth;
     private Drawable mBarBg;
 
+    private DataSetObserver mDataSetObserver = new DataSetObserver() {
+        @Override
+        public void onChanged() {
+            if (mRealAdapter != null) {
+                mRealAdapter.notifyDataSetChanged();
+            }
+        }
+    };
+
     public IndexableLayout(Context context) {
         this(context, null);
     }
@@ -85,21 +95,8 @@ public class IndexableLayout extends FrameLayout {
      * add HeaderView Adapter
      */
     public <T> void addHeaderAdapter(IndexableHeaderAdapter<T> adapter) {
+        adapter.registerDataSetObserver(mDataSetObserver);
         mRealAdapter.addIndexableHeaderAdapter(adapter);
-    }
-
-    /**
-     * set Index-ItemView click listener
-     */
-    void setOnItemTitleClickListener(IndexableAdapter.OnItemTitleClickListener listener) {
-        mRealAdapter.setOnItemTitleClickListener(listener);
-    }
-
-    /**
-     * set Content-ItemView click listener
-     */
-    <T> void setOnItemContentClickListener(IndexableAdapter.OnItemContentClickListener<T> listener) {
-        mRealAdapter.setOnItemContentClickListener(listener);
     }
 
     /**
@@ -319,6 +316,34 @@ public class IndexableLayout extends FrameLayout {
         addView(mMDOverlay);
     }
 
+    /**
+     * set Index-ItemView click listener
+     */
+    void setOnItemTitleClickListener(IndexableAdapter.OnItemTitleClickListener listener) {
+        mRealAdapter.setOnItemTitleClickListener(listener);
+    }
+
+    /**
+     * set Content-ItemView click listener
+     */
+    <T> void setOnItemContentClickListener(IndexableAdapter.OnItemContentClickListener<T> listener) {
+        mRealAdapter.setOnItemContentClickListener(listener);
+    }
+
+    /**
+     * set Index-ItemView click listener
+     */
+    void setOnItemTitleLongClickListener(IndexableAdapter.OnItemTitleLongClickListener listener) {
+        mRealAdapter.setOnItemTitleLongClickListener(listener);
+    }
+
+    /**
+     * set Content-ItemView click listener
+     */
+    <T> void setOnItemContentLongClickListener(IndexableAdapter.OnItemContentLongClickListener<T> listener) {
+        mRealAdapter.setOnItemContentLongClickListener(listener);
+    }
+
     void notifyDataChanged() {
         if (mFuture != null) {
             mFuture.cancel(true);
@@ -364,30 +389,30 @@ public class IndexableLayout extends FrameLayout {
             for (int i = 0; i < datas.size(); i++) {
                 EntityWrapper<T> entity = new EntityWrapper<>();
                 T item = datas.get(i);
-                String indexName = item.getIndexField();
+                String indexName = item.getIndexByField();
                 String pinyin = PinyinUtil.getPingYin(indexName);
 
                 // init EntityWrapper
                 if (PinyinUtil.matchingLetter(pinyin)) {
                     entity.setIndex(pinyin.substring(0, 1).toUpperCase());
                     entity.setPinyin(pinyin);
-                    entity.setIndexField(item.getIndexField());
+                    entity.setIndexByField(item.getIndexByField());
                 } else if (PinyinUtil.matchingPolyphone(pinyin)) {
                     entity.setIndex(PinyinUtil.gePolyphoneInitial(pinyin).toUpperCase());
                     entity.setPinyin(PinyinUtil.getPolyphonePinyin(pinyin));
                     String hanzi = PinyinUtil.getPolyphoneHanzi(indexName);
-                    entity.setIndexField(hanzi);
+                    entity.setIndexByField(hanzi);
                     // 把多音字的真实indexField重新赋值
-                    item.setIndexField(hanzi);
+                    item.setIndexByField(hanzi);
                 } else {
                     entity.setIndex(INDEX_SIGN);
                     entity.setPinyin(pinyin);
-                    entity.setIndexField(item.getIndexField());
+                    entity.setIndexByField(item.getIndexByField());
                 }
                 entity.setIndexTitle(entity.getIndex());
                 entity.setData(item);
                 entity.setOriginalPosition(i);
-                item.setIndexFieldPinyin(entity.getPinyin());
+                item.setIndexByFieldPinyin(entity.getPinyin());
 
                 String inital = entity.getIndex();
 
