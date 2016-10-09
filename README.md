@@ -44,7 +44,7 @@ A RecyclerView with indexable, sticky and many other features.
 ````
 
 ### 3步集成
-** 1、实体类实现IndexableEntity**
+**1、实体类实现IndexableEntity**
 ````java
 public class CityEntity implements IndexableEntity {
     ...
@@ -119,7 +119,7 @@ indexableLayout.setOverlayStyle_MaterialDesign(int Color) & setOverlayStyle_Cent
 ````java
 indexableLayout.addHeaderAdapter(IndexableHeaderAdapter adapter)    // 添加HeaderView
 
-// 3个参数分别对应的视图：IndexBar的索引,HeaderTitle,传入的Header数据源 ， 此处的泛型T可以是任何实体类，不需要和主Adapter的类型一样
+// 3个参数分别对应:IndexBar的索引,HeaderTitle,传入的Header数据源,此处泛型T可以是任何实体类,不需要和主Adapter类型一致
 // 如果不想显示某块视图，则传入null即可： 比如不想显示 HeaderTitle， 则indexTitle传入null；
 IndexableHeaderAdapter<T>(String index, String indexTitle, List<T> datas){
     // 需要实现3个方法：
