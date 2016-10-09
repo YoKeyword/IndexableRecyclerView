@@ -86,9 +86,9 @@ class RealAdapter<T extends IndexableEntity> extends RecyclerView.Adapter<Recycl
             public boolean onLongClick(View v) {
                 int position = holder.getAdapterPosition();
                 EntityWrapper<T> wrapper = mDatasList.get(position);
-                if (viewType == EntityWrapper.TYPE_INDEX && mTitleClickListener != null) {
+                if (viewType == EntityWrapper.TYPE_INDEX && mTitleLongClickListener != null) {
                     return mTitleLongClickListener.onItemLongClick(v, position, wrapper.getIndexTitle());
-                } else if (viewType == EntityWrapper.TYPE_CONTENT && mContentClickListener != null) {
+                } else if (viewType == EntityWrapper.TYPE_CONTENT && mContentLongClickListener != null) {
                     return mContentLongClickListener.onItemLongClick(v, wrapper.getOriginalPosition(), position, wrapper.getData());
                 } else {
                     IndexableHeaderAdapter adapter = mHeaderAdapterMap.get(viewType);

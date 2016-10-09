@@ -48,6 +48,7 @@ public class IndexableLayout extends FrameLayout {
 
     private RecyclerView mRecy;
     private IndexBar mIndexBar;
+    private RecyclerView.ViewHolder mStickyViewHolder;
 
     private RealAdapter mRealAdapter;
     private LinearLayoutManager mLayoutManager;
@@ -60,7 +61,9 @@ public class IndexableLayout extends FrameLayout {
     private float mBarTextSize, mBarTextSpace, mBarWidth;
     private Drawable mBarBg;
 
-    private DataSetObserver mDataSetObserver = new DataSetObserver() {
+    private DataSetObserver mDataSetObserver;
+
+    private DataSetObserver mHeaderDataSetObserver = new DataSetObserver() {
         @Override
         public void onChanged() {
             if (mRealAdapter != null) {
@@ -85,17 +88,49 @@ public class IndexableLayout extends FrameLayout {
     /**
      * set RealAdapter
      */
-    public <T extends IndexableEntity> void setAdapter(IndexableAdapter<T> adapter) {
+    public <T extends IndexableEntity> void setAdapter(final IndexableAdapter<T> adapter) {
         this.mIndexableAdapter = adapter;
+
+        if (mDataSetObserver != null) {
+            adapter.unregisterDataSetObserver(mDataSetObserver);
+        }
+        mDataSetObserver = new DataSetObserver() {
+            @Override
+            public void onChanged() {
+                onInvalidated();
+                onDataChanged();
+            }
+
+            @Override
+            public void onInvalidated() {
+                // 用于绑定事件
+                if (adapter.getOnItemTitleClickListener() != null) {
+                    mRealAdapter.setOnItemTitleClickListener(adapter.getOnItemTitleClickListener());
+                }
+                if (adapter.getOnItemTitleLongClickListener() != null) {
+                    mRealAdapter.setOnItemTitleLongClickListener(adapter.getOnItemTitleLongClickListener());
+                }
+                if (adapter.getOnItemContentClickListener() != null) {
+                    mRealAdapter.setOnItemContentClickListener(adapter.getOnItemContentClickListener());
+                }
+                if (adapter.getOnItemContentLongClickListener() != null) {
+                    mRealAdapter.setOnItemContentLongClickListener(adapter.getOnItemContentLongClickListener());
+                }
+            }
+        };
+        adapter.registerDataSetObserver(mDataSetObserver);
+
+
         mRealAdapter.setIndexableAdapter(adapter);
-        adapter.setLayout(this);
+//        adapter.setLayout(this);
+        initStickyView(adapter);
     }
 
     /**
      * add HeaderView Adapter
      */
     public <T> void addHeaderAdapter(IndexableHeaderAdapter<T> adapter) {
-        adapter.registerDataSetObserver(mDataSetObserver);
+        adapter.registerDataSetObserver(mHeaderDataSetObserver);
         mRealAdapter.addIndexableHeaderAdapter(adapter);
     }
 
@@ -195,7 +230,17 @@ public class IndexableLayout extends FrameLayout {
             @Override
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
                 super.onScrolled(recyclerView, dx, dy);
-                mIndexBar.setSelection(mLayoutManager.findFirstVisibleItemPosition());
+                int firstItemPosition = mLayoutManager.findFirstVisibleItemPosition();
+                mIndexBar.setSelection(firstItemPosition);
+
+                // firstPosition所对应的EntityWrapper是否是 ItemType = Index
+                ArrayList<EntityWrapper> list = mRealAdapter.getItems();
+                if (mStickyViewHolder != null && list.size() > firstItemPosition) {
+                    EntityWrapper wrapper = list.get(firstItemPosition);
+                    if (wrapper.getItemType() == EntityWrapper.TYPE_INDEX) {
+                        mIndexableAdapter.onBindTitleViewHolder(mStickyViewHolder, wrapper.getIndexTitle());
+                    }
+                }
             }
         });
 
@@ -215,7 +260,7 @@ public class IndexableLayout extends FrameLayout {
                             if (touchPos == 0) {
                                 mLayoutManager.scrollToPositionWithOffset(0, 0);
                             } else {
-                                mLayoutManager.scrollToPositionWithOffset(mIndexBar.getRecyPosition(), 0);
+                                mLayoutManager.scrollToPositionWithOffset(mIndexBar.getSelectionFirstRecyclerViewPosition(), 0);
                             }
                         }
                         break;
@@ -229,6 +274,44 @@ public class IndexableLayout extends FrameLayout {
             }
         });
     }
+
+    private <T extends IndexableEntity> void initStickyView(final IndexableAdapter<T> adapter) {
+        mStickyViewHolder = adapter.onCreateTitleViewHolder(mRecy);
+        mStickyViewHolder.itemView.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (adapter.getOnItemTitleClickListener() != null) {
+                    int position = mIndexBar.getSelectionFirstRecyclerViewPosition();
+                    ArrayList<EntityWrapper> datas = mRealAdapter.getItems();
+                    if (datas.size() > position && position >= 0) {
+                        adapter.getOnItemTitleClickListener().onItemClick(
+                                v, position, datas.get(position).getIndexTitle());
+                    }
+                }
+            }
+        });
+        mStickyViewHolder.itemView.setOnLongClickListener(new OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                if (adapter.getOnItemTitleLongClickListener() != null) {
+                    int position = mIndexBar.getSelectionFirstRecyclerViewPosition();
+                    ArrayList<EntityWrapper> datas = mRealAdapter.getItems();
+                    if (datas.size() > position && position >= 0) {
+                        return adapter.getOnItemTitleLongClickListener().onItemLongClick(
+                                v, position, datas.get(position).getIndexTitle());
+                    }
+                }
+                return false;
+            }
+        });
+        for (int i = 0; i < getChildCount(); i++) {
+            if (getChildAt(i) == mRecy) {
+                addView(mStickyViewHolder.itemView, i + 1);
+                return;
+            }
+        }
+    }
+
 
     private void showOverlayView(float y, final int touchPos) {
         if (mIndexBar.getIndexList().size() <= touchPos) return;
@@ -316,35 +399,7 @@ public class IndexableLayout extends FrameLayout {
         addView(mMDOverlay);
     }
 
-    /**
-     * set Index-ItemView click listener
-     */
-    void setOnItemTitleClickListener(IndexableAdapter.OnItemTitleClickListener listener) {
-        mRealAdapter.setOnItemTitleClickListener(listener);
-    }
-
-    /**
-     * set Content-ItemView click listener
-     */
-    <T> void setOnItemContentClickListener(IndexableAdapter.OnItemContentClickListener<T> listener) {
-        mRealAdapter.setOnItemContentClickListener(listener);
-    }
-
-    /**
-     * set Index-ItemView click listener
-     */
-    void setOnItemTitleLongClickListener(IndexableAdapter.OnItemTitleLongClickListener listener) {
-        mRealAdapter.setOnItemTitleLongClickListener(listener);
-    }
-
-    /**
-     * set Content-ItemView click listener
-     */
-    <T> void setOnItemContentLongClickListener(IndexableAdapter.OnItemContentLongClickListener<T> listener) {
-        mRealAdapter.setOnItemContentLongClickListener(listener);
-    }
-
-    void notifyDataChanged() {
+    void onDataChanged() {
         if (mFuture != null) {
             mFuture.cancel(true);
         }

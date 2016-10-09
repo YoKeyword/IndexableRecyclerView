@@ -124,7 +124,7 @@ class IndexBar extends View {
         invalidate();
     }
 
-    int getRecyPosition() {
+    int getSelectionFirstRecyclerViewPosition() {
         String index = mIndexList.get(mSelectionPosition);
         if (mMapping.containsKey(index)) {
             return mMapping.get(index);
