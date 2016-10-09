@@ -75,7 +75,7 @@ public class IndexableLayout extends FrameLayout {
     /**
      * set RealAdapter
      */
-    public <T> void setAdapter(IndexableAdapter<T> adapter) {
+    public <T extends IndexableEntity> void setAdapter(IndexableAdapter<T> adapter) {
         this.mIndexableAdapter = adapter;
         mRealAdapter.setIndexableAdapter(adapter);
         adapter.setLayout(this);

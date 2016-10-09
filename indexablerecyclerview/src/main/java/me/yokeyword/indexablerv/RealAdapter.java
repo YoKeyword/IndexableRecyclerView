@@ -11,7 +11,7 @@ import java.util.ArrayList;
  * Created by YoKey on 16/10/6.
  */
 @SuppressWarnings("unchecked")
-class RealAdapter<T> extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+class RealAdapter<T extends IndexableEntity> extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private ArrayList<EntityWrapper<T>> mDatasList = new ArrayList<>();
     private ArrayList<EntityWrapper<T>> mHeaderDatasList = new ArrayList<>();
     private IndexableAdapter<T> mAdapter;
