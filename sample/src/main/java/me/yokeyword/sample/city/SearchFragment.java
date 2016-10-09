@@ -11,12 +11,12 @@ import android.view.ViewGroup;
 import android.widget.Filter;
 import android.widget.Filterable;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import me.yokeyword.sample.R;
+import me.yokeyword.sample.ToastUtil;
 
 /**
  * Demo: 搜索结果显示Fragment
@@ -67,7 +67,7 @@ public class SearchFragment extends Fragment {
                 @Override
                 public void onClick(View v) {
                     int position = holder.getAdapterPosition();
-                    Toast.makeText(getActivity(), "选择了" + items.get(position).getName(), Toast.LENGTH_SHORT).show();
+                   ToastUtil.showShort(getActivity(), "选择了" + items.get(position).getName());
                 }
             });
             return holder;

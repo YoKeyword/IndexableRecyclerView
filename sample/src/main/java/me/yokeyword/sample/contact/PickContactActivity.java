@@ -10,7 +10,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -21,6 +20,7 @@ import me.yokeyword.indexablerv.IndexableHeaderAdapter;
 import me.yokeyword.indexablerv.IndexableLayout;
 import me.yokeyword.indexablerv.SimpleHeaderAdapter;
 import me.yokeyword.sample.R;
+import me.yokeyword.sample.ToastUtil;
 
 /**
  * Created by YoKey on 16/10/8.
@@ -49,14 +49,14 @@ public class PickContactActivity extends AppCompatActivity {
         mAdapter.setOnItemContentClickListener(new IndexableAdapter.OnItemContentClickListener<UserEntity>() {
             @Override
             public void onItemClick(View v, int originalPosition, int currentPosition, UserEntity entity) {
-                Toast.makeText(PickContactActivity.this, "选中:" + entity.getNick() + "  当前位置:" + currentPosition + "  原始所在数组位置:" + originalPosition, Toast.LENGTH_SHORT).show();
+                ToastUtil.showShort(PickContactActivity.this, "选中:" + entity.getNick() + "  当前位置:" + currentPosition + "  原始所在数组位置:" + originalPosition);
             }
         });
 
         mAdapter.setOnItemTitleClickListener(new IndexableAdapter.OnItemTitleClickListener() {
             @Override
             public void onItemClick(View v, int currentPosition, String indexTitle) {
-                Toast.makeText(PickContactActivity.this, "选中:" + indexTitle + "  当前位置:" + currentPosition, Toast.LENGTH_SHORT).show();
+                ToastUtil.showShort(PickContactActivity.this, "选中:" + indexTitle + "  当前位置:" + currentPosition);
             }
         });
 
@@ -70,7 +70,7 @@ public class PickContactActivity extends AppCompatActivity {
         mMenuHeaderAdapter.setOnItemHeaderClickListener(new IndexableHeaderAdapter.OnItemHeaderClickListener<MenuEntity>() {
             @Override
             public void onItemClick(View v, int currentPosition, MenuEntity entity) {
-                Toast.makeText(PickContactActivity.this, entity.getMenuTitle(), Toast.LENGTH_SHORT).show();
+                ToastUtil.showShort(PickContactActivity.this, entity.getMenuTitle());
             }
         });
 
@@ -140,7 +140,7 @@ public class PickContactActivity extends AppCompatActivity {
             holder.img.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Toast.makeText(PickContactActivity.this, "点击Banner", Toast.LENGTH_SHORT).show();
+                    ToastUtil.showShort(PickContactActivity.this, "---点击了Banner---");
                 }
             });
             return holder;
