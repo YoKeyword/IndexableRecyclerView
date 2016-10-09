@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.SearchView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,10 +16,10 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import me.yokeyword.indexablerv.SimpleHeaderAdapter;
 import me.yokeyword.indexablerv.IndexableAdapter;
 import me.yokeyword.indexablerv.IndexableHeaderAdapter;
 import me.yokeyword.indexablerv.IndexableLayout;
+import me.yokeyword.indexablerv.SimpleHeaderAdapter;
 import me.yokeyword.sample.R;
 
 /**
@@ -29,7 +28,7 @@ import me.yokeyword.sample.R;
 public class PickContactActivity extends AppCompatActivity {
     private ContactAdapter mAdapter;
     private MenuHeaderAdapter mMenuHeaderAdapter;
-    private SearchHeaderAdapter mSearchHeaderAdapter;
+    private BannerHeaderAdapter mBannerHeaderAdapter;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -75,9 +74,9 @@ public class PickContactActivity extends AppCompatActivity {
             }
         });
 
-        mSearchHeaderAdapter = new SearchHeaderAdapter(null, null, null);
+        mBannerHeaderAdapter = new BannerHeaderAdapter(null, null, null);
         // 添加 搜索框
-        indexableLayout.addHeaderAdapter(mSearchHeaderAdapter);
+        indexableLayout.addHeaderAdapter(mBannerHeaderAdapter);
     }
 
     /**
@@ -120,12 +119,12 @@ public class PickContactActivity extends AppCompatActivity {
     }
 
     /**
-     * 自定义的搜索Header
+     * 自定义的Banner Header
      */
-    class SearchHeaderAdapter extends IndexableHeaderAdapter {
+    class BannerHeaderAdapter extends IndexableHeaderAdapter {
         private static final int TYPE = 2;
 
-        public SearchHeaderAdapter(String index, String indexTitle, List datas) {
+        public BannerHeaderAdapter(String index, String indexTitle, List datas) {
             super(index, indexTitle, datas);
         }
 
@@ -136,8 +135,14 @@ public class PickContactActivity extends AppCompatActivity {
 
         @Override
         public RecyclerView.ViewHolder onCreateContentViewHolder(ViewGroup parent) {
-            View view = LayoutInflater.from(PickContactActivity.this).inflate(R.layout.header_contact_search, parent, false);
+            View view = LayoutInflater.from(PickContactActivity.this).inflate(R.layout.header_contact_banner, parent, false);
             VH holder = new VH(view);
+            holder.img.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Toast.makeText(PickContactActivity.this, "点击Banner", Toast.LENGTH_SHORT).show();
+                }
+            });
             return holder;
         }
 
@@ -147,11 +152,11 @@ public class PickContactActivity extends AppCompatActivity {
         }
 
         private class VH extends RecyclerView.ViewHolder {
-            private SearchView searchview;
+            ImageView img;
 
             public VH(View itemView) {
                 super(itemView);
-                searchview = (SearchView) itemView.findViewById(R.id.searchview);
+                img = (ImageView) itemView.findViewById(R.id.img);
             }
         }
     }
