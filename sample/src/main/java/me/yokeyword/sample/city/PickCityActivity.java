@@ -23,6 +23,7 @@ import me.yokeyword.sample.ToastUtil;
 public class PickCityActivity extends AppCompatActivity {
     private List<CityEntity> mDatas;
     private SearchFragment mSearchFragment;
+    private SearchView mSearchView;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -32,14 +33,20 @@ public class PickCityActivity extends AppCompatActivity {
 
         mSearchFragment = (SearchFragment) getSupportFragmentManager().findFragmentById(R.id.search_fragment);
         IndexableLayout indexableLayout = (IndexableLayout) findViewById(R.id.indexableLayout);
-        SearchView searchView = (SearchView) findViewById(R.id.searchview);
+        mSearchView = (SearchView) findViewById(R.id.searchview);
 
         // setAdapter
         CityAdapter adapter = new CityAdapter(this);
         indexableLayout.setAdapter(adapter);
         // set Datas
         mDatas = initDatas();
-        adapter.setDatas(mDatas);
+        adapter.setDatas(mDatas, new IndexableAdapter.IndexCallback<CityEntity>() {
+            @Override
+            public void onFinished(List<CityEntity> datas) {
+                // 数据处理完成后回调
+                mSearchFragment.bindDatas(mDatas);
+            }
+        });
 
         // set Listener
         adapter.setOnItemContentClickListener(new IndexableAdapter.OnItemContentClickListener<CityEntity>() {
@@ -80,7 +87,7 @@ public class PickCityActivity extends AppCompatActivity {
         }, 3000);
 
         // 搜索Demo
-        initSearch(searchView);
+        initSearch();
     }
 
     private List<CityEntity> initDatas() {
@@ -109,11 +116,10 @@ public class PickCityActivity extends AppCompatActivity {
         return list;
     }
 
-    private void initSearch(SearchView searchView) {
-        mSearchFragment.setDatas(mDatas);
+    private void initSearch() {
         getSupportFragmentManager().beginTransaction().hide(mSearchFragment).commit();
 
-        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+        mSearchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
                 return false;
@@ -135,5 +141,16 @@ public class PickCityActivity extends AppCompatActivity {
                 return false;
             }
         });
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (!mSearchFragment.isHidden()) {
+            // 隐藏 搜索
+            mSearchView.setQuery(null, false);
+            getSupportFragmentManager().beginTransaction().hide(mSearchFragment).commit();
+            return;
+        }
+        super.onBackPressed();
     }
 }

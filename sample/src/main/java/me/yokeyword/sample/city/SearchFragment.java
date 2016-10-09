@@ -29,6 +29,8 @@ public class SearchFragment extends Fragment {
     private SearchAdapter mAdapter;
     private List<CityEntity> mDatas;
 
+    private String mQueryText;
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -38,19 +40,24 @@ public class SearchFragment extends Fragment {
         return view;
     }
 
-    public void setDatas(List<CityEntity> datas) {
+    public void bindDatas(List<CityEntity> datas) {
         this.mDatas = datas;
         mAdapter = new SearchAdapter();
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         mRecyclerView.setHasFixedSize(true);
         mRecyclerView.setAdapter(mAdapter);
+        if (mQueryText != null) {
+            mAdapter.getFilter().filter(mQueryText);
+        }
     }
 
     /**
      * 根据newText 进行查找, 显示
      */
     public void bindQueryText(String newText) {
-        if (!TextUtils.isEmpty(newText)) {
+        if (mDatas == null) {
+            mQueryText = newText.toLowerCase();
+        } else if (!TextUtils.isEmpty(newText)) {
             mAdapter.getFilter().filter(newText.toLowerCase());
         }
     }
@@ -91,7 +98,6 @@ public class SearchFragment extends Fragment {
             return new Filter() {
                 @Override
                 protected FilterResults performFiltering(CharSequence constraint) {
-                    System.out.println("--->" + constraint);
                     ArrayList<CityEntity> list = new ArrayList<>();
                     for (CityEntity item : mDatas) {
                         if (item.getPinyin().startsWith(constraint.toString()) || item.getName().contains(constraint)) {
@@ -107,8 +113,8 @@ public class SearchFragment extends Fragment {
                 @Override
                 @SuppressWarnings("unchecked")
                 protected void publishResults(CharSequence constraint, FilterResults results) {
-                    items.clear();
                     ArrayList<CityEntity> list = (ArrayList<CityEntity>) results.values;
+                    items.clear();
                     items.addAll(list);
                     if (results.count == 0) {
                         mTvNoResult.setVisibility(View.VISIBLE);
