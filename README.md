@@ -1,9 +1,6 @@
 # Deprecated
-ListView版本不再维护,强烈建议使用Master分支的RecyclerView版本!!!
+## ListView版本不再维护,强烈建议使用Master分支的RecyclerView版本!!!
 
-**轻松实现：选择城市、搜索城市 ， 选择联系人、搜索联系人功能 等需要字母索引的功能**
-
-相关阅读：[谈谈“搜索”，2种场景下的最优解](http://www.jianshu.com/p/b24e69da7bbb)
 
 # Demo演示
 <img src="/gif/demo_city.gif" width="320px"/>
