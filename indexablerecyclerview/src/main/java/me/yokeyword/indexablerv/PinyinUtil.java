@@ -12,7 +12,7 @@ public class PinyinUtil {
     private static final String PATTERN_LETTER = "^[a-zA-Z].*+";
 
     /**
-     * 将字符串中的中文转化为拼音,其他字符不变
+     * Chinese character -> Pinyin
      */
     public static String getPingYin(String inputString) {
         char[] input = inputString.trim().toCharArray();
@@ -24,38 +24,27 @@ public class PinyinUtil {
     }
 
     /**
-     * 是否以字母开头,如果不是, 索引: #
+     * Are start with a letter
+     * @return if return false, index should be #
      */
     static boolean matchingLetter(String inputString) {
         return Pattern.matches(PATTERN_LETTER, inputString);
     }
 
-    /**
-     * 是否以#[a-zA-Z]#开头,用以处理多音字
-     */
     static boolean matchingPolyphone(String inputString) {
         return Pattern.matches(PATTERN_POLYPHONE, inputString);
     }
 
-    /**
-     * 获取多音字的 开头字母
-     */
     static String gePolyphoneInitial(String inputString) {
         return inputString.substring(1, 2);
     }
 
-    /**
-     * 获取多音字的 真实拼音
-     */
-    static String getPolyphonePinyin(String inputString) {
+    static String getPolyphoneRealPinyin(String inputString) {
         String[] splits = inputString.split("#");
         return splits[1];
     }
 
-    /**
-     * 获取多音字的 真实汉字
-     */
-    static String getPolyphoneHanzi(String inputString) {
+    static String getPolyphoneRealHanzi(String inputString) {
         String[] splits = inputString.split("#");
         return splits[2];
     }

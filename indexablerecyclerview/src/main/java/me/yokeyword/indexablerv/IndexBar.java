@@ -71,7 +71,7 @@ class IndexBar extends View {
             mTotalHeight = height;
         }
 
-//        // TODO: 16/10/8  测量
+//        // TODO: 16/10/8  Measure AT_MOST
 //        if (mode == MeasureSpec.AT_MOST) {
 //            int maxWidth = (int) getResources().getDimension(R.dimen.default_indexBar_layout_width);
 //            super.onMeasure(MeasureSpec.makeMeasureSpec(maxWidth, MeasureSpec.EXACTLY), MeasureSpec.makeMeasureSpec(mTotalHeight, MeasureSpec.EXACTLY));
@@ -97,10 +97,7 @@ class IndexBar extends View {
         }
     }
 
-    /**
-     * 根据Y坐标判断 位置
-     */
-    int getPositionForPoint(float y) {
+    int getPositionForPointY(float y) {
         if (mIndexList.size() <= 0) return -1;
 
         int position = (int) (y / mIndexHeight);
@@ -124,7 +121,7 @@ class IndexBar extends View {
         invalidate();
     }
 
-    int getSelectionFirstRecyclerViewPosition() {
+    int getFirstRecyclerViewPositionBySelection() {
         String index = mIndexList.get(mSelectionPosition);
         if (mMapping.containsKey(index)) {
             return mMapping.get(index);
@@ -136,9 +133,6 @@ class IndexBar extends View {
         return mIndexList;
     }
 
-    /**
-     * 绑定Index数据
-     */
     void setDatas(boolean showAllLetter, ArrayList<EntityWrapper> datas) {
         this.mDatas = datas;
 

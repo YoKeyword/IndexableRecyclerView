@@ -17,6 +17,7 @@ public abstract class IndexableAdapter<T extends IndexableEntity> {
 
     private List<T> mDatas = new ArrayList<>();
 
+    private IndexCallback<T> mCallback;
     private OnItemTitleClickListener mTitleClickListener;
     private OnItemContentClickListener mContentClickListener;
     private OnItemTitleLongClickListener mTitleLongClickListener;
@@ -31,6 +32,14 @@ public abstract class IndexableAdapter<T extends IndexableEntity> {
     public abstract void onBindContentViewHolder(RecyclerView.ViewHolder holder, T entity);
 
     public void setDatas(List<T> datas) {
+        setDatas(datas, null);
+    }
+
+    /**
+     * @param callback Register a callback to be invoked when this datas is processed.
+     */
+    public void setDatas(List<T> datas, IndexCallback<T> callback) {
+        this.mCallback = callback;
         mDatas.clear();
         mDatas.addAll(datas);
         notifyDataSetChanged();
@@ -85,6 +94,10 @@ public abstract class IndexableAdapter<T extends IndexableEntity> {
         return mDatas;
     }
 
+    IndexCallback<T> getIndexCallback() {
+        return mCallback;
+    }
+
     OnItemTitleClickListener getOnItemTitleClickListener() {
         return mTitleClickListener;
     }
@@ -107,6 +120,10 @@ public abstract class IndexableAdapter<T extends IndexableEntity> {
 
     void unregisterDataSetObserver(DataSetObserver observer) {
         mDataSetObservable.unregisterObserver(observer);
+    }
+
+    public interface IndexCallback<T> {
+        void onFinished(List<T> datas);
     }
 
     public interface OnItemTitleClickListener {

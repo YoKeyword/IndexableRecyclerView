@@ -104,7 +104,7 @@ public class IndexableLayout extends FrameLayout {
 
             @Override
             public void onInvalidated() {
-                // 用于绑定事件
+                // bind listeners
                 if (adapter.getOnItemTitleClickListener() != null) {
                     mRealAdapter.setOnItemTitleClickListener(adapter.getOnItemTitleClickListener());
                 }
@@ -123,7 +123,6 @@ public class IndexableLayout extends FrameLayout {
 
 
         mRealAdapter.setIndexableAdapter(adapter);
-//        adapter.setLayout(this);
         initStickyView(adapter);
     }
 
@@ -265,7 +264,7 @@ public class IndexableLayout extends FrameLayout {
         mIndexBar.setOnTouchListener(new OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
-                int touchPos = mIndexBar.getPositionForPoint(event.getY());
+                int touchPos = mIndexBar.getPositionForPointY(event.getY());
                 if (touchPos < 0) return true;
 
                 switch (event.getAction()) {
@@ -278,7 +277,7 @@ public class IndexableLayout extends FrameLayout {
                             if (touchPos == 0) {
                                 mLayoutManager.scrollToPositionWithOffset(0, 0);
                             } else {
-                                mLayoutManager.scrollToPositionWithOffset(mIndexBar.getSelectionFirstRecyclerViewPosition(), 0);
+                                mLayoutManager.scrollToPositionWithOffset(mIndexBar.getFirstRecyclerViewPositionBySelection(), 0);
                             }
                         }
                         break;
@@ -299,7 +298,7 @@ public class IndexableLayout extends FrameLayout {
             @Override
             public void onClick(View v) {
                 if (adapter.getOnItemTitleClickListener() != null) {
-                    int position = mIndexBar.getSelectionFirstRecyclerViewPosition();
+                    int position = mIndexBar.getFirstRecyclerViewPositionBySelection();
                     ArrayList<EntityWrapper> datas = mRealAdapter.getItems();
                     if (datas.size() > position && position >= 0) {
                         adapter.getOnItemTitleClickListener().onItemClick(
@@ -312,7 +311,7 @@ public class IndexableLayout extends FrameLayout {
             @Override
             public boolean onLongClick(View v) {
                 if (adapter.getOnItemTitleLongClickListener() != null) {
-                    int position = mIndexBar.getSelectionFirstRecyclerViewPosition();
+                    int position = mIndexBar.getFirstRecyclerViewPositionBySelection();
                     ArrayList<EntityWrapper> datas = mRealAdapter.getItems();
                     if (datas.size() > position && position >= 0) {
                         return adapter.getOnItemTitleLongClickListener().onItemLongClick(
@@ -372,16 +371,6 @@ public class IndexableLayout extends FrameLayout {
                 mCenterOverlay.setText(index);
             }
         }
-//        if (mOnIndexSelectedListener != null) {
-//            mListView.post(new Runnable() {
-//                @Override
-//                public void run() {
-//                    int position = mListView.getFirstVisiblePosition();
-//                    String realIndexTitle = mAdapter.getItemTitle(position);
-//                    mOnIndexSelectedListener.onSelection(touchPos, realIndexTitle);
-//                }
-//            });
-//        }
     }
 
     private void initCenterOverlay() {
@@ -445,7 +434,7 @@ public class IndexableLayout extends FrameLayout {
     /**
      * List<T> -> List<Indexable<T>
      */
-    private <T extends IndexableEntity> ArrayList<EntityWrapper<T>> transform(List<T> datas) {
+    private <T extends IndexableEntity> ArrayList<EntityWrapper<T>> transform(final List<T> datas) {
         try {
             TreeMap<String, List<EntityWrapper<T>>> map = new TreeMap<>(new Comparator<String>() {
                 @Override
@@ -472,8 +461,8 @@ public class IndexableLayout extends FrameLayout {
                     entity.setIndexByField(item.getIndexByField());
                 } else if (PinyinUtil.matchingPolyphone(pinyin)) {
                     entity.setIndex(PinyinUtil.gePolyphoneInitial(pinyin).toUpperCase());
-                    entity.setPinyin(PinyinUtil.getPolyphonePinyin(pinyin));
-                    String hanzi = PinyinUtil.getPolyphoneHanzi(indexName);
+                    entity.setPinyin(PinyinUtil.getPolyphoneRealPinyin(pinyin));
+                    String hanzi = PinyinUtil.getPolyphoneRealHanzi(indexName);
                     entity.setIndexByField(hanzi);
                     // 把多音字的真实indexField重新赋值
                     item.setIndexByField(hanzi);
@@ -499,6 +488,15 @@ public class IndexableLayout extends FrameLayout {
                 }
 
                 list.add(entity);
+            }
+
+            if (mIndexableAdapter.getIndexCallback() != null) {
+                post(new Runnable() {
+                    @Override
+                    public void run() {
+                        mIndexableAdapter.getIndexCallback().onFinished(datas);
+                    }
+                });
             }
 
             ArrayList<EntityWrapper<T>> list = new ArrayList<>();

@@ -9,8 +9,5 @@ public interface IndexableEntity {
 
     void setIndexByField(String indexField);
 
-    /**
-     * 不是必须实现
-     */
     void setIndexByFieldPinyin(String pinyin);
 }

@@ -41,7 +41,7 @@ class PinyinComparator<T extends IndexableEntity> implements Comparator<EntityWr
         if (indexName.length() < (index + 1)) return "";
         String firstWord;
         if (PinyinUtil.matchingPolyphone(indexName)) {
-            firstWord = PinyinUtil.getPingYin(PinyinUtil.getPolyphoneHanzi(indexName).substring(index, index + 1));
+            firstWord = PinyinUtil.getPingYin(PinyinUtil.getPolyphoneRealHanzi(indexName).substring(index, index + 1));
         } else {
             firstWord = PinyinUtil.getPingYin(indexName.substring(index, index + 1));
         }
