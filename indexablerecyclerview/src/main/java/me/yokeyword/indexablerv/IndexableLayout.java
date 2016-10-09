@@ -48,6 +48,8 @@ public class IndexableLayout extends FrameLayout {
 
     private RecyclerView mRecy;
     private IndexBar mIndexBar;
+
+    private boolean mSticyEnable = true;
     private RecyclerView.ViewHolder mStickyViewHolder;
     private String mStickyTitle;
 
@@ -122,7 +124,9 @@ public class IndexableLayout extends FrameLayout {
 
         adapter.registerDataSetObserver(mDataSetObserver);
         mRealAdapter.setIndexableAdapter(adapter);
-        initStickyView(adapter);
+        if (mSticyEnable) {
+            initStickyView(adapter);
+        }
     }
 
     /**
@@ -131,6 +135,13 @@ public class IndexableLayout extends FrameLayout {
     public <T> void addHeaderAdapter(IndexableHeaderAdapter<T> adapter) {
         adapter.registerDataSetObserver(mHeaderDataSetObserver);
         mRealAdapter.addIndexableHeaderAdapter(adapter);
+    }
+
+    /**
+     * set Sticky Enable
+     */
+    public void setStickyEnable(boolean enable) {
+        this.mSticyEnable = enable;
     }
 
     /**
@@ -233,13 +244,14 @@ public class IndexableLayout extends FrameLayout {
                 int firstItemPosition = mLayoutManager.findFirstVisibleItemPosition();
                 mIndexBar.setSelection(firstItemPosition);
 
-                // firstPosition所对应的EntityWrapper是否是 ItemType = Index
+                if (!mSticyEnable) return;
                 ArrayList<EntityWrapper> list = mRealAdapter.getItems();
                 if (mStickyViewHolder != null && list.size() > firstItemPosition) {
                     EntityWrapper wrapper = list.get(firstItemPosition);
                     String wrapperTitle = wrapper.getIndexTitle();
 
-                    if (wrapperTitle == null && mStickyViewHolder.itemView.getVisibility() == VISIBLE && dy < 0) {
+                    // hide -> show
+                    if (wrapperTitle == null && mStickyViewHolder.itemView.getVisibility() == VISIBLE) {
                         mStickyTitle = null;
                         mStickyViewHolder.itemView.setVisibility(INVISIBLE);
                     }
@@ -251,21 +263,21 @@ public class IndexableLayout extends FrameLayout {
                             if (nextTitleView.getTop() <= mStickyViewHolder.itemView.getHeight() && wrapperTitle != null) {
                                 mStickyViewHolder.itemView.setTranslationY(nextTitleView.getTop() - mStickyViewHolder.itemView.getHeight());
                             }
-                            if (wrapperTitle != null && !wrapperTitle.equals(mStickyTitle)) {
-                                mStickyTitle = wrapperTitle;
-                                mIndexableAdapter.onBindTitleViewHolder(mStickyViewHolder, wrapperTitle);
-                            }
+                            // hide -> show
+                            stickyNewViewHolder(wrapperTitle);
                         } else if (mStickyViewHolder.itemView.getTranslationY() != 0) {
                             mStickyViewHolder.itemView.setTranslationY(0);
                         }
                     }
 
-                    if (wrapper.getItemType() == EntityWrapper.TYPE_TITLE && wrapperTitle != null && !wrapperTitle.equals(mStickyTitle)) {
-                        if (mStickyViewHolder.itemView.getVisibility() != VISIBLE && dy > 0) {
-                            mStickyViewHolder.itemView.setVisibility(VISIBLE);
+                    // hide -> show
+                    if (wrapper.getItemType() == EntityWrapper.TYPE_TITLE) {
+                        stickyNewViewHolder(wrapperTitle);
+                    } else if (dy < 0 && mStickyViewHolder.itemView.getVisibility() != VISIBLE) {
+                        View nextTitleView = mLayoutManager.findViewByPosition(firstItemPosition);
+                        if (nextTitleView.getBottom() >= mStickyViewHolder.itemView.getHeight()) {
+                            stickyNewViewHolder(wrapperTitle);
                         }
-                        mStickyTitle = wrapperTitle;
-                        mIndexableAdapter.onBindTitleViewHolder(mStickyViewHolder, wrapperTitle);
                     }
                 }
             }
@@ -300,6 +312,16 @@ public class IndexableLayout extends FrameLayout {
                 return true;
             }
         });
+    }
+
+    private void stickyNewViewHolder(String wrapperTitle) {
+        if (wrapperTitle != null && !wrapperTitle.equals(mStickyTitle)) {
+            if (mStickyViewHolder.itemView.getVisibility() != VISIBLE) {
+                mStickyViewHolder.itemView.setVisibility(VISIBLE);
+            }
+            mStickyTitle = wrapperTitle;
+            mIndexableAdapter.onBindTitleViewHolder(mStickyViewHolder, wrapperTitle);
+        }
     }
 
     private <T extends IndexableEntity> void initStickyView(final IndexableAdapter<T> adapter) {
