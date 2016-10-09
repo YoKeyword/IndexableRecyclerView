@@ -70,7 +70,6 @@ public class CityEntity implements IndexableEntity {
 
 **2、继承IndexAdapter**
 ````java
-// 注意:这里从0.6版本开始由原来的IndexBarAdapter 改为 IndexableAdapter
 public class CityAdapter extends IndexableAdapter<CityEntity> {
     @Override
     public RecyclerView.ViewHolder onCreateTitleViewHolder(ViewGroup parent) {
@@ -105,17 +104,17 @@ adapter.setOnItemContentClickListener(listener);
 ````
 
 # 拓展
-### 设置 索引悬浮提示框 风格
+### 1、设置 索引悬浮提示框 风格
 ````java
 // 前者Material Design风格右侧气泡 ， 后者 居中 IOS风格气泡
 indexableLayout.setOverlayStyle_MaterialDesign(int Color) & setOverlayStyle_Center()
 ````
 
-### 多音字处理
+### 2、多音字处理
 多音字需要手动处理:
 例如城市排序时, 拼音转化库默认重庆为zhongqing, 对于这种情况**你需要手动将源数据的 '重庆' 修改 为'#chongqing#重庆'**, 库会根据正则表达式进行对应的辨别处理(即 #多音字拼音#汉字 的格式)
 
-### 自定义HeaderView
+### 3、自定义HeaderView
 ````java
 indexableLayout.addHeaderAdapter(IndexableHeaderAdapter adapter)    // 添加HeaderView
 
