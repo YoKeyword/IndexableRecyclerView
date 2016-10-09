@@ -119,9 +119,8 @@ public class IndexableLayout extends FrameLayout {
                 }
             }
         };
+
         adapter.registerDataSetObserver(mDataSetObserver);
-
-
         mRealAdapter.setIndexableAdapter(adapter);
         initStickyView(adapter);
     }
@@ -230,6 +229,7 @@ public class IndexableLayout extends FrameLayout {
             @Override
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
                 super.onScrolled(recyclerView, dx, dy);
+
                 int firstItemPosition = mLayoutManager.findFirstVisibleItemPosition();
                 mIndexBar.setSelection(firstItemPosition);
 
@@ -237,25 +237,35 @@ public class IndexableLayout extends FrameLayout {
                 ArrayList<EntityWrapper> list = mRealAdapter.getItems();
                 if (mStickyViewHolder != null && list.size() > firstItemPosition) {
                     EntityWrapper wrapper = list.get(firstItemPosition);
+                    String wrapperTitle = wrapper.getIndexTitle();
+
+                    if (wrapperTitle == null && mStickyViewHolder.itemView.getVisibility() == VISIBLE && dy < 0) {
+                        mStickyTitle = null;
+                        mStickyViewHolder.itemView.setVisibility(INVISIBLE);
+                    }
+
                     if (firstItemPosition + 1 < list.size()) {
                         EntityWrapper nextWrapper = list.get(firstItemPosition + 1);
                         View nextTitleView = mLayoutManager.findViewByPosition(firstItemPosition + 1);
                         if (nextWrapper.getItemType() == EntityWrapper.TYPE_TITLE) {
-                            if (nextTitleView.getTop() <= mStickyViewHolder.itemView.getHeight()) {
+                            if (nextTitleView.getTop() <= mStickyViewHolder.itemView.getHeight() && wrapperTitle != null) {
                                 mStickyViewHolder.itemView.setTranslationY(nextTitleView.getTop() - mStickyViewHolder.itemView.getHeight());
                             }
-                            if (!wrapper.getIndexTitle().equals(mStickyTitle)) {
-                                mStickyTitle = wrapper.getIndexTitle();
-                                mIndexableAdapter.onBindTitleViewHolder(mStickyViewHolder, wrapper.getIndexTitle());
+                            if (wrapperTitle != null && !wrapperTitle.equals(mStickyTitle)) {
+                                mStickyTitle = wrapperTitle;
+                                mIndexableAdapter.onBindTitleViewHolder(mStickyViewHolder, wrapperTitle);
                             }
                         } else if (mStickyViewHolder.itemView.getTranslationY() != 0) {
                             mStickyViewHolder.itemView.setTranslationY(0);
                         }
                     }
 
-                    if (wrapper.getItemType() == EntityWrapper.TYPE_TITLE && !wrapper.getIndexTitle().equals(mStickyTitle)) {
-                        mStickyTitle = wrapper.getIndexTitle();
-                        mIndexableAdapter.onBindTitleViewHolder(mStickyViewHolder, wrapper.getIndexTitle());
+                    if (wrapper.getItemType() == EntityWrapper.TYPE_TITLE && wrapperTitle != null && !wrapperTitle.equals(mStickyTitle)) {
+                        if (mStickyViewHolder.itemView.getVisibility() != VISIBLE && dy > 0) {
+                            mStickyViewHolder.itemView.setVisibility(VISIBLE);
+                        }
+                        mStickyTitle = wrapperTitle;
+                        mIndexableAdapter.onBindTitleViewHolder(mStickyViewHolder, wrapperTitle);
                     }
                 }
             }
@@ -323,6 +333,7 @@ public class IndexableLayout extends FrameLayout {
         });
         for (int i = 0; i < getChildCount(); i++) {
             if (getChildAt(i) == mRecy) {
+                mStickyViewHolder.itemView.setVisibility(INVISIBLE);
                 addView(mStickyViewHolder.itemView, i + 1);
                 return;
             }
