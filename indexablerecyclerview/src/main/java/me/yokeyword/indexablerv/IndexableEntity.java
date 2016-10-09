@@ -5,9 +5,9 @@ package me.yokeyword.indexablerv;
  */
 public interface IndexableEntity {
 
-    String getIndexByField();
+    String getFieldIndexBy();
 
-    void setIndexByField(String indexField);
+    void setFieldIndexBy(String indexField);
 
-    void setIndexByFieldPinyin(String pinyin);
+    void setFieldPinyinIndexBy(String pinyin);
 }

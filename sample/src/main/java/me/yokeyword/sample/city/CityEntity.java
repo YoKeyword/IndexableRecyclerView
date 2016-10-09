@@ -42,17 +42,17 @@ public class CityEntity implements IndexableEntity {
     }
 
     @Override
-    public String getIndexByField() {
+    public String getFieldIndexBy() {
         return name;
     }
 
     @Override
-    public void setIndexByField(String indexByField) {
+    public void setFieldIndexBy(String indexByField) {
         this.name = indexByField;
     }
 
     @Override
-    public void setIndexByFieldPinyin(String pinyin) {
+    public void setFieldPinyinIndexBy(String pinyin) {
         this.pinyin = pinyin;
     }
 }

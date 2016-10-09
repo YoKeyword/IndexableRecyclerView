@@ -40,17 +40,17 @@ public class UserEntity implements IndexableEntity {
     }
 
     @Override
-    public String getIndexByField() {
+    public String getFieldIndexBy() {
         return nick;
     }
 
     @Override
-    public void setIndexByField(String indexField) {
+    public void setFieldIndexBy(String indexField) {
         this.nick = indexField;
     }
 
     @Override
-    public void setIndexByFieldPinyin(String pinyin) {
+    public void setFieldPinyinIndexBy(String pinyin) {
         // 需要用到拼音时(比如:搜索), 可增添pinyin字段 this.pinyin  = pinyin
         // 见 CityEntity
     }

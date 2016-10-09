@@ -484,30 +484,30 @@ public class IndexableLayout extends FrameLayout {
             for (int i = 0; i < datas.size(); i++) {
                 EntityWrapper<T> entity = new EntityWrapper<>();
                 T item = datas.get(i);
-                String indexName = item.getIndexByField();
+                String indexName = item.getFieldIndexBy();
                 String pinyin = PinyinUtil.getPingYin(indexName);
 
                 // init EntityWrapper
                 if (PinyinUtil.matchingLetter(pinyin)) {
                     entity.setIndex(pinyin.substring(0, 1).toUpperCase());
                     entity.setPinyin(pinyin);
-                    entity.setIndexByField(item.getIndexByField());
+                    entity.setIndexByField(item.getFieldIndexBy());
                 } else if (PinyinUtil.matchingPolyphone(pinyin)) {
                     entity.setIndex(PinyinUtil.gePolyphoneInitial(pinyin).toUpperCase());
                     entity.setPinyin(PinyinUtil.getPolyphoneRealPinyin(pinyin));
                     String hanzi = PinyinUtil.getPolyphoneRealHanzi(indexName);
                     entity.setIndexByField(hanzi);
                     // 把多音字的真实indexField重新赋值
-                    item.setIndexByField(hanzi);
+                    item.setFieldIndexBy(hanzi);
                 } else {
                     entity.setIndex(INDEX_SIGN);
                     entity.setPinyin(pinyin);
-                    entity.setIndexByField(item.getIndexByField());
+                    entity.setIndexByField(item.getFieldIndexBy());
                 }
                 entity.setIndexTitle(entity.getIndex());
                 entity.setData(item);
                 entity.setOriginalPosition(i);
-                item.setIndexByFieldPinyin(entity.getPinyin());
+                item.setFieldPinyinIndexBy(entity.getPinyin());
 
                 String inital = entity.getIndex();
 
