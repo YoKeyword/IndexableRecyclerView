@@ -458,6 +458,11 @@ public class IndexableLayout extends FrameLayout {
                         if (mCenterOverlay == null && mMDOverlay == null) {
                             initCenterOverlay();
                         }
+
+                        if (mIndexableAdapter.getIndexCallback() != null) {
+                            mIndexableAdapter.getIndexCallback().onFinished(datas);
+                        }
+
                     }
                 });
             }
@@ -521,15 +526,6 @@ public class IndexableLayout extends FrameLayout {
                 }
 
                 list.add(entity);
-            }
-
-            if (mIndexableAdapter.getIndexCallback() != null) {
-                post(new Runnable() {
-                    @Override
-                    public void run() {
-                        mIndexableAdapter.getIndexCallback().onFinished(datas);
-                    }
-                });
             }
 
             ArrayList<EntityWrapper<T>> list = new ArrayList<>();
