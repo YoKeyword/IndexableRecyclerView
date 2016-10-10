@@ -5,6 +5,7 @@ import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SearchView;
 import android.view.View;
+import android.widget.ProgressBar;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -24,6 +25,7 @@ public class PickCityActivity extends AppCompatActivity {
     private List<CityEntity> mDatas;
     private SearchFragment mSearchFragment;
     private SearchView mSearchView;
+    private ProgressBar mProgressBar;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -34,6 +36,7 @@ public class PickCityActivity extends AppCompatActivity {
         mSearchFragment = (SearchFragment) getSupportFragmentManager().findFragmentById(R.id.search_fragment);
         IndexableLayout indexableLayout = (IndexableLayout) findViewById(R.id.indexableLayout);
         mSearchView = (SearchView) findViewById(R.id.searchview);
+        mProgressBar = (ProgressBar) findViewById(R.id.progress);
 
         // setAdapter
         CityAdapter adapter = new CityAdapter(this);
@@ -45,6 +48,7 @@ public class PickCityActivity extends AppCompatActivity {
             public void onFinished(List<CityEntity> datas) {
                 // 数据处理完成后回调
                 mSearchFragment.bindDatas(mDatas);
+                mProgressBar.setVisibility(View.GONE);
             }
         });
 
