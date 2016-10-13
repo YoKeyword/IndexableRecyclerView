@@ -67,10 +67,14 @@ class RealAdapter<T extends IndexableEntity> extends RecyclerView.Adapter<Recycl
             public void onClick(View v) {
                 int position = holder.getAdapterPosition();
                 EntityWrapper<T> wrapper = mDatasList.get(position);
-                if (viewType == EntityWrapper.TYPE_TITLE && mTitleClickListener != null) {
-                    mTitleClickListener.onItemClick(v, position, wrapper.getIndexTitle());
-                } else if (viewType == EntityWrapper.TYPE_CONTENT && mContentClickListener != null) {
-                    mContentClickListener.onItemClick(v, wrapper.getOriginalPosition(), position, wrapper.getData());
+                if (viewType == EntityWrapper.TYPE_TITLE) {
+                    if (mTitleClickListener != null) {
+                        mTitleClickListener.onItemClick(v, position, wrapper.getIndexTitle());
+                    }
+                } else if (viewType == EntityWrapper.TYPE_CONTENT) {
+                    if (mContentClickListener != null) {
+                        mContentClickListener.onItemClick(v, wrapper.getOriginalPosition(), position, wrapper.getData());
+                    }
                 } else {
                     IndexableHeaderAdapter adapter = mHeaderAdapterMap.get(viewType);
                     IndexableHeaderAdapter.OnItemHeaderClickListener listener = adapter.getOnItemHeaderClickListener();
@@ -86,15 +90,21 @@ class RealAdapter<T extends IndexableEntity> extends RecyclerView.Adapter<Recycl
             public boolean onLongClick(View v) {
                 int position = holder.getAdapterPosition();
                 EntityWrapper<T> wrapper = mDatasList.get(position);
-                if (viewType == EntityWrapper.TYPE_TITLE && mTitleLongClickListener != null) {
-                    return mTitleLongClickListener.onItemLongClick(v, position, wrapper.getIndexTitle());
-                } else if (viewType == EntityWrapper.TYPE_CONTENT && mContentLongClickListener != null) {
-                    return mContentLongClickListener.onItemLongClick(v, wrapper.getOriginalPosition(), position, wrapper.getData());
+                if (viewType == EntityWrapper.TYPE_TITLE) {
+                    if (mTitleLongClickListener != null) {
+                        return mTitleLongClickListener.onItemLongClick(v, position, wrapper.getIndexTitle());
+                    }
+                } else if (viewType == EntityWrapper.TYPE_CONTENT) {
+                    if (mContentLongClickListener != null) {
+                        return mContentLongClickListener.onItemLongClick(v, wrapper.getOriginalPosition(), position, wrapper.getData());
+                    }
                 } else {
                     IndexableHeaderAdapter adapter = mHeaderAdapterMap.get(viewType);
-                    IndexableHeaderAdapter.OnItemHeaderLongClickListener listener = adapter.getOnItemHeaderLongClickListener();
-                    if (listener != null) {
-                        return listener.onItemLongClick(v, position, wrapper.getData());
+                    if (adapter != null) {
+                        IndexableHeaderAdapter.OnItemHeaderLongClickListener listener = adapter.getOnItemHeaderLongClickListener();
+                        if (listener != null) {
+                            return listener.onItemLongClick(v, position, wrapper.getData());
+                        }
                     }
                 }
                 return false;

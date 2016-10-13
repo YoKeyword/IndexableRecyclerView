@@ -20,7 +20,7 @@ public abstract class IndexableHeaderAdapter<T> {
     private OnItemHeaderLongClickListener<T> mLongListener;
 
     /**
-     * 不想显示哪个就传null, 数据源传null时,代表add一个普通的View
+     * 不想显示哪个就传null
      *
      * @param index      IndexBar的字母索引
      * @param indexTitle IndexTitle
