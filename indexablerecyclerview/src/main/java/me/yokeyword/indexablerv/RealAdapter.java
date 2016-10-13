@@ -77,9 +77,11 @@ class RealAdapter<T extends IndexableEntity> extends RecyclerView.Adapter<Recycl
                     }
                 } else {
                     IndexableHeaderAdapter adapter = mHeaderAdapterMap.get(viewType);
-                    IndexableHeaderAdapter.OnItemHeaderClickListener listener = adapter.getOnItemHeaderClickListener();
-                    if (listener != null) {
-                        listener.onItemClick(v, position, wrapper.getData());
+                    if (adapter != null) {
+                        IndexableHeaderAdapter.OnItemHeaderClickListener listener = adapter.getOnItemHeaderClickListener();
+                        if (listener != null) {
+                            listener.onItemClick(v, position, wrapper.getData());
+                        }
                     }
                 }
             }

@@ -1,7 +1,5 @@
 package me.yokeyword.indexablerv;
 
-import android.database.DataSetObservable;
-import android.database.DataSetObserver;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,11 +7,19 @@ import android.view.ViewGroup;
 import java.util.ArrayList;
 import java.util.List;
 
+import me.yokeyword.indexablerv.database.IndexableDataSetObservable;
+import me.yokeyword.indexablerv.database.IndexableDataSetObserver;
+
 /**
  * Created by YoKey on 16/10/6.
  */
 public abstract class IndexableAdapter<T extends IndexableEntity> {
-    private final DataSetObservable mDataSetObservable = new DataSetObservable();
+    static final int TYPE_ALL = 0;
+    static final int TYPE_CLICK_TITLE = 1;
+    static final int TYPE_CLICK_CONTENT = 2;
+    static final int TYPE_LONG_CLICK_TITLE = 3;
+    static final int TYPE_LONG_CLICK_CONTENT = 4;
+    private final IndexableDataSetObservable mDataSetObservable = new IndexableDataSetObservable();
 
     private List<T> mDatas = new ArrayList<>();
 
@@ -42,7 +48,7 @@ public abstract class IndexableAdapter<T extends IndexableEntity> {
         this.mCallback = callback;
         mDatas.clear();
         mDatas.addAll(datas);
-        notifyDataSetChanged();
+        notifyInited();
     }
 
     /**
@@ -50,7 +56,7 @@ public abstract class IndexableAdapter<T extends IndexableEntity> {
      */
     public void setOnItemTitleClickListener(OnItemTitleClickListener listener) {
         this.mTitleClickListener = listener;
-        notifySetListener();
+        notifySetListener(TYPE_CLICK_TITLE);
     }
 
     /**
@@ -58,7 +64,7 @@ public abstract class IndexableAdapter<T extends IndexableEntity> {
      */
     public void setOnItemContentClickListener(OnItemContentClickListener<T> listener) {
         this.mContentClickListener = listener;
-        notifySetListener();
+        notifySetListener(TYPE_CLICK_CONTENT);
     }
 
     /**
@@ -66,7 +72,7 @@ public abstract class IndexableAdapter<T extends IndexableEntity> {
      */
     public void setOnItemTitleLongClickListener(OnItemTitleLongClickListener listener) {
         this.mTitleLongClickListener = listener;
-        notifySetListener();
+        notifySetListener(TYPE_LONG_CLICK_TITLE);
     }
 
     /**
@@ -74,7 +80,7 @@ public abstract class IndexableAdapter<T extends IndexableEntity> {
      */
     public void setOnItemContentLongClickListener(OnItemContentLongClickListener<T> listener) {
         this.mContentLongClickListener = listener;
-        notifySetListener();
+        notifySetListener(TYPE_LONG_CLICK_CONTENT);
     }
 
     /**
@@ -85,9 +91,12 @@ public abstract class IndexableAdapter<T extends IndexableEntity> {
         mDataSetObservable.notifyChanged();
     }
 
-    private void notifySetListener() {
-        // set listeners
-        mDataSetObservable.notifyInvalidated();
+    private void notifyInited() {
+        mDataSetObservable.notifyInited();
+    }
+
+    private void notifySetListener(int type) {
+        mDataSetObservable.notifySetListener(type);
     }
 
     List<T> getItems() {
@@ -114,11 +123,11 @@ public abstract class IndexableAdapter<T extends IndexableEntity> {
         return mContentLongClickListener;
     }
 
-    void registerDataSetObserver(DataSetObserver observer) {
+    void registerDataSetObserver(IndexableDataSetObserver observer) {
         mDataSetObservable.registerObserver(observer);
     }
 
-    void unregisterDataSetObserver(DataSetObserver observer) {
+    void unregisterDataSetObserver(IndexableDataSetObserver observer) {
         mDataSetObservable.unregisterObserver(observer);
     }
 

@@ -30,6 +30,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
 import me.yokeyword.indexablerecyclerview.R;
+import me.yokeyword.indexablerv.database.IndexableDataSetObserver;
 
 /**
  * RecyclerView + IndexBar
@@ -64,7 +65,7 @@ public class IndexableLayout extends FrameLayout {
     private float mBarTextSize, mBarTextSpace, mBarWidth;
     private Drawable mBarBg;
 
-    private DataSetObserver mDataSetObserver;
+    private IndexableDataSetObserver mDataSetObserver;
 
     private DataSetObserver mHeaderDataSetObserver = new DataSetObserver() {
         @Override
@@ -97,26 +98,34 @@ public class IndexableLayout extends FrameLayout {
         if (mDataSetObserver != null) {
             adapter.unregisterDataSetObserver(mDataSetObserver);
         }
-        mDataSetObserver = new DataSetObserver() {
+        mDataSetObserver = new IndexableDataSetObserver() {
+
             @Override
-            public void onChanged() {
-                onInvalidated();
+            public void onInited() {
+                onSetListener(IndexableAdapter.TYPE_ALL);
                 onDataChanged();
             }
 
             @Override
-            public void onInvalidated() {
-                // bind listeners
-                if (adapter.getOnItemTitleClickListener() != null) {
+            public void onChanged() {
+                if (mRealAdapter != null) {
+                    mRealAdapter.notifyDataSetChanged();
+                }
+            }
+
+            @Override
+            public void onSetListener(int type) {
+                // set listeners
+                if ((type == IndexableAdapter.TYPE_CLICK_TITLE || type == IndexableAdapter.TYPE_ALL) && adapter.getOnItemTitleClickListener() != null) {
                     mRealAdapter.setOnItemTitleClickListener(adapter.getOnItemTitleClickListener());
                 }
-                if (adapter.getOnItemTitleLongClickListener() != null) {
+                if ((type == IndexableAdapter.TYPE_LONG_CLICK_TITLE || type == IndexableAdapter.TYPE_ALL) && adapter.getOnItemTitleLongClickListener() != null) {
                     mRealAdapter.setOnItemTitleLongClickListener(adapter.getOnItemTitleLongClickListener());
                 }
-                if (adapter.getOnItemContentClickListener() != null) {
+                if ((type == IndexableAdapter.TYPE_CLICK_CONTENT || type == IndexableAdapter.TYPE_ALL) && adapter.getOnItemContentClickListener() != null) {
                     mRealAdapter.setOnItemContentClickListener(adapter.getOnItemContentClickListener());
                 }
-                if (adapter.getOnItemContentLongClickListener() != null) {
+                if ((type == IndexableAdapter.TYPE_LONG_CLICK_CONTENT || type == IndexableAdapter.TYPE_ALL) && adapter.getOnItemContentLongClickListener() != null) {
                     mRealAdapter.setOnItemContentLongClickListener(adapter.getOnItemContentLongClickListener());
                 }
             }
