@@ -67,6 +67,8 @@ public class IndexableLayout extends FrameLayout {
 
     private IndexableDataSetObserver mDataSetObserver;
 
+    private boolean mFastCompare;
+
     private DataSetObserver mHeaderDataSetObserver = new DataSetObserver() {
         @Override
         public void onChanged() {
@@ -144,6 +146,13 @@ public class IndexableLayout extends FrameLayout {
     public <T> void addHeaderAdapter(IndexableHeaderAdapter<T> adapter) {
         adapter.registerDataSetObserver(mHeaderDataSetObserver);
         mRealAdapter.addIndexableHeaderAdapter(adapter);
+    }
+
+    /**
+     * use InitCompararator(Sort by first letter)
+     */
+    public void setFastCompare(boolean fastCompare) {
+        this.mFastCompare = fastCompare;
     }
 
     /**
@@ -539,7 +548,13 @@ public class IndexableLayout extends FrameLayout {
 
             ArrayList<EntityWrapper<T>> list = new ArrayList<>();
             for (List<EntityWrapper<T>> indexableEntities : map.values()) {
-                Collections.sort(indexableEntities, new PinyinComparator<T>());
+                Comparator comparator;
+                if (mFastCompare) {
+                    comparator = new InitialComparator<T>();
+                } else {
+                    comparator = new PinyinComparator<T>();
+                }
+                Collections.sort(indexableEntities, comparator);
                 list.addAll(indexableEntities);
             }
             return list;
