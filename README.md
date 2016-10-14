@@ -114,7 +114,7 @@ indexableLayout.setOverlayStyle_MaterialDesign(int Color) & setOverlayStyle_Cent
 多音字需要手动处理:
 例如城市排序时, 拼音转化库默认重庆为zhongqing, 对于这种情况**你需要手动将源数据的 '重庆' 修改 为'#chongqing#重庆'**, 库会根据正则表达式进行对应的辨别处理(即 #多音字拼音#汉字 的格式)
 
-### 3、自定义HeaderView
+### 3、添加自定义HeaderView
 ````java
 indexableLayout.addHeaderAdapter(IndexableHeaderAdapter adapter)    // 添加HeaderView
 
@@ -129,6 +129,13 @@ IndexableHeaderAdapter<T>(String index, String indexTitle, List<T> datas){
 
 // 如果想添加的HeaderView，和主Adapter的布局完全一致，则可以使用:
 new SimpleHeaderAdapter(IndexableAdapter<T> adapter, String index, String indexTitle, List<T> datas);
+````
+
+### 4、更改排序规则
+默认根据**全拼音排序**，可根据需求更改为**按首字母排序**:
+````java
+// 排序规则设置为：只按首字母  （默认全拼音排序,false）  效率很高，是默认的10倍左右。
+indexableLayout.setFastCompare(true);
 ````
 
 > 更多细节使用，参见Demo
