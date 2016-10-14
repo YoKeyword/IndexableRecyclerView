@@ -43,6 +43,10 @@ public class PickCityActivity extends AppCompatActivity {
         indexableLayout.setAdapter(adapter);
         // set Datas
         mDatas = initDatas();
+
+        // 快速排序。  排序规则设置为：只按首字母  （默认全拼音排序）  效率很高，是默认的10倍左右。  按需开启～
+//        indexableLayout.setFastCompare(true);
+
         adapter.setDatas(mDatas, new IndexableAdapter.IndexCallback<CityEntity>() {
             @Override
             public void onFinished(List<CityEntity> datas) {
