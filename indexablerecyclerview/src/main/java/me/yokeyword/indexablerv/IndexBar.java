@@ -136,11 +136,11 @@ class IndexBar extends View {
     void setDatas(boolean showAllLetter, ArrayList<EntityWrapper> datas) {
         this.mDatas = datas;
 
-        ArrayList<String> tempList = null;
+        ArrayList<String> tempHeaderList = null;
         if (showAllLetter) {
             mIndexList = Arrays.asList(getResources().getStringArray(R.array.indexable_letter));
             mIndexList = new ArrayList<>(mIndexList);
-            tempList = new ArrayList<>();
+            tempHeaderList = new ArrayList<>();
         }
         for (int i = 0; i < datas.size(); i++) {
             EntityWrapper wrapper = datas.get(i);
@@ -152,8 +152,12 @@ class IndexBar extends View {
                     } else {
                         if (IndexableLayout.INDEX_SIGN.equals(index)) {
                             mIndexList.add(IndexableLayout.INDEX_SIGN);
-                        } else if (mIndexList.indexOf(index) < 0 && tempList.indexOf(index) < 0) {
-                            tempList.add(index);
+                        } else if (mIndexList.indexOf(index) < 0) {
+                            if (wrapper.getHeaderFooterType() == EntityWrapper.TYPE_HEADER && tempHeaderList.indexOf(index) < 0) {
+                                tempHeaderList.add(index);
+                            } else if (wrapper.getHeaderFooterType() == EntityWrapper.TYPE_FOOTER) {
+                                mIndexList.add(index);
+                            }
                         }
                     }
                     if (!mMapping.containsKey(index)) {
@@ -163,7 +167,7 @@ class IndexBar extends View {
             }
         }
         if (showAllLetter) {
-            mIndexList.addAll(0, tempList);
+            mIndexList.addAll(0, tempHeaderList);
         }
         requestLayout();
     }

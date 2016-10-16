@@ -69,7 +69,7 @@ public class IndexableLayout extends FrameLayout {
 
     private boolean mFastCompare;
 
-    private DataSetObserver mHeaderDataSetObserver = new DataSetObserver() {
+    private DataSetObserver mHeaderFooterDataSetObserver = new DataSetObserver() {
         @Override
         public void onChanged() {
             if (mRealAdapter != null) {
@@ -144,8 +144,16 @@ public class IndexableLayout extends FrameLayout {
      * add HeaderView Adapter
      */
     public <T> void addHeaderAdapter(IndexableHeaderAdapter<T> adapter) {
-        adapter.registerDataSetObserver(mHeaderDataSetObserver);
+        adapter.registerDataSetObserver(mHeaderFooterDataSetObserver);
         mRealAdapter.addIndexableHeaderAdapter(adapter);
+    }
+
+    /**
+     * add FooterView Adapter
+     */
+    public <T> void addFooterAdapter(IndexableFooterAdapter<T> adapter) {
+        adapter.registerDataSetObserver(mHeaderFooterDataSetObserver);
+        mRealAdapter.addIndexableFooterAdapter(adapter);
     }
 
     /**

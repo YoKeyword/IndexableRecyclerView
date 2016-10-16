@@ -14,9 +14,11 @@ import java.util.ArrayList;
 class RealAdapter<T extends IndexableEntity> extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private ArrayList<EntityWrapper<T>> mDatasList = new ArrayList<>();
     private ArrayList<EntityWrapper<T>> mHeaderDatasList = new ArrayList<>();
+    private ArrayList<EntityWrapper<T>> mFooterDatasList = new ArrayList<>();
     private IndexableAdapter<T> mAdapter;
 
     private SparseArray<IndexableHeaderAdapter> mHeaderAdapterMap = new SparseArray<>();
+    private SparseArray<IndexableFooterAdapter> mFooterAdapterMap = new SparseArray<>();
 
     private IndexableAdapter.OnItemTitleClickListener mTitleClickListener;
     private IndexableAdapter.OnItemContentClickListener<T> mContentClickListener;
@@ -33,10 +35,17 @@ class RealAdapter<T extends IndexableEntity> extends RecyclerView.Adapter<Recycl
         notifyDataSetChanged();
     }
 
+    void addIndexableFooterAdapter(IndexableFooterAdapter adapter) {
+        mFooterDatasList.addAll(adapter.getDatas());
+        mFooterAdapterMap.put(adapter.getItemViewType(), adapter);
+        notifyDataSetChanged();
+    }
+
     void addDatas(ArrayList<EntityWrapper<T>> datas) {
         mDatasList.clear();
         mDatasList.addAll(mHeaderDatasList);
         mDatasList.addAll(datas);
+        mDatasList.addAll(mFooterDatasList);
         notifyDataSetChanged();
     }
 
@@ -58,7 +67,12 @@ class RealAdapter<T extends IndexableEntity> extends RecyclerView.Adapter<Recycl
         } else if (viewType == EntityWrapper.TYPE_CONTENT) {
             holder = mAdapter.onCreateContentViewHolder(parent);
         } else {
-            IndexableHeaderAdapter adapter = mHeaderAdapterMap.get(viewType);
+            AbstractHeaderFooterAdapter adapter;
+            if (mHeaderAdapterMap.indexOfKey(viewType) >= 0) {
+                adapter = mHeaderAdapterMap.get(viewType);
+            } else {
+                adapter = mFooterAdapterMap.get(viewType);
+            }
             holder = adapter.onCreateContentViewHolder(parent);
         }
 
@@ -76,9 +90,15 @@ class RealAdapter<T extends IndexableEntity> extends RecyclerView.Adapter<Recycl
                         mContentClickListener.onItemClick(v, wrapper.getOriginalPosition(), position, wrapper.getData());
                     }
                 } else {
-                    IndexableHeaderAdapter adapter = mHeaderAdapterMap.get(viewType);
+                    AbstractHeaderFooterAdapter adapter;
+                    if (mHeaderAdapterMap.indexOfKey(viewType) >= 0) {
+                        adapter = mHeaderAdapterMap.get(viewType);
+                    } else {
+                        adapter = mFooterAdapterMap.get(viewType);
+                    }
+
                     if (adapter != null) {
-                        IndexableHeaderAdapter.OnItemHeaderClickListener listener = adapter.getOnItemHeaderClickListener();
+                        AbstractHeaderFooterAdapter.OnItemClickListener listener = adapter.getOnItemClickListener();
                         if (listener != null) {
                             listener.onItemClick(v, position, wrapper.getData());
                         }
@@ -101,9 +121,15 @@ class RealAdapter<T extends IndexableEntity> extends RecyclerView.Adapter<Recycl
                         return mContentLongClickListener.onItemLongClick(v, wrapper.getOriginalPosition(), position, wrapper.getData());
                     }
                 } else {
-                    IndexableHeaderAdapter adapter = mHeaderAdapterMap.get(viewType);
+                    AbstractHeaderFooterAdapter adapter;
+                    if (mHeaderAdapterMap.indexOfKey(viewType) >= 0) {
+                        adapter = mHeaderAdapterMap.get(viewType);
+                    } else {
+                        adapter = mFooterAdapterMap.get(viewType);
+                    }
+
                     if (adapter != null) {
-                        IndexableHeaderAdapter.OnItemHeaderLongClickListener listener = adapter.getOnItemHeaderLongClickListener();
+                        AbstractHeaderFooterAdapter.OnItemLongClickListener listener = adapter.getOnItemLongClickListener();
                         if (listener != null) {
                             return listener.onItemLongClick(v, position, wrapper.getData());
                         }
@@ -125,7 +151,12 @@ class RealAdapter<T extends IndexableEntity> extends RecyclerView.Adapter<Recycl
         } else if (viewType == EntityWrapper.TYPE_CONTENT) {
             mAdapter.onBindContentViewHolder(holder, item.getData());
         } else {
-            IndexableHeaderAdapter adapter = mHeaderAdapterMap.get(viewType);
+            AbstractHeaderFooterAdapter adapter;
+            if (mHeaderAdapterMap.indexOfKey(viewType) >= 0) {
+                adapter = mHeaderAdapterMap.get(viewType);
+            } else {
+                adapter = mFooterAdapterMap.get(viewType);
+            }
             adapter.onBindContentViewHolder(holder, item.getData());
         }
     }

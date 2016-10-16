@@ -7,6 +7,9 @@ class EntityWrapper<T> {
     static final int TYPE_TITLE = Integer.MAX_VALUE - 1;
     static final int TYPE_CONTENT = Integer.MAX_VALUE;
 
+    static final int TYPE_HEADER = 1;
+    static final int TYPE_FOOTER = 2;
+
     private String index;
     private String indexTitle;
     private String pinyin;
@@ -14,6 +17,7 @@ class EntityWrapper<T> {
     private T data;
     private int originalPosition = -1;
     private int itemType = TYPE_CONTENT;
+    private int headerFooterType;
 
     EntityWrapper() {
     }
@@ -33,15 +37,15 @@ class EntityWrapper<T> {
         this.index = index;
     }
 
-    public String getIndexTitle() {
+    String getIndexTitle() {
         return indexTitle;
     }
 
-    public void setIndexTitle(String indexTitle) {
+    void setIndexTitle(String indexTitle) {
         this.indexTitle = indexTitle;
     }
 
-    public String getPinyin() {
+    String getPinyin() {
         return pinyin;
     }
 
@@ -49,7 +53,7 @@ class EntityWrapper<T> {
         this.pinyin = pinyin;
     }
 
-    public String getIndexByField() {
+    String getIndexByField() {
         return indexByField;
     }
 
@@ -65,7 +69,7 @@ class EntityWrapper<T> {
         this.data = data;
     }
 
-    public int getOriginalPosition() {
+    int getOriginalPosition() {
         return originalPosition;
     }
 
@@ -79,5 +83,13 @@ class EntityWrapper<T> {
 
     void setItemType(int itemType) {
         this.itemType = itemType;
+    }
+
+    public int getHeaderFooterType() {
+        return headerFooterType;
+    }
+
+    void setHeaderFooterType(int headerFooterType) {
+        this.headerFooterType = headerFooterType;
     }
 }
