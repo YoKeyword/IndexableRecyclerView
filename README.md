@@ -12,7 +12,7 @@ A RecyclerView with indexable, sticky and many other features.
 # 特性
 1、根据数据源，自动**排序生成**字母索引Bar(非字母开头,索引为"#",另可自由定制)，以及HeaderTitle
 
-2、非常自由的 添加各种HeaderView，包括自定义索引，HeaderTitle，各种View等等
+2、非常自由的 添加各种HeaderView／FooterView，包括自定义索引，HeaderTitle，各种View等等
 
 3、HeaderTitle是粘性的（Sticky）
 
