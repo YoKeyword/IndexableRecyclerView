@@ -13,12 +13,12 @@ import java.util.List;
  * Created by YoKey on 16/10/16.
  */
 
-public abstract class AbstractHeaderFooterAdapter<T> {
+abstract class AbstractHeaderFooterAdapter<T> {
     private final DataSetObservable mDataSetObservable = new DataSetObservable();
 
     ArrayList<EntityWrapper<T>> mEntityWrapperList = new ArrayList<>();
-    private OnItemClickListener<T> mListener;
-    private OnItemLongClickListener<T> mLongListener;
+    protected OnItemClickListener<T> mListener;
+    protected OnItemLongClickListener<T> mLongListener;
 
     /**
      * 不想显示哪个就传null
@@ -65,20 +65,6 @@ public abstract class AbstractHeaderFooterAdapter<T> {
         mDataSetObservable.notifyChanged();
     }
 
-    /**
-     * set Content-ItemView click listener
-     */
-    public void setOnItemClickListener(OnItemClickListener<T> listener) {
-        this.mListener = listener;
-    }
-
-    /**
-     * set Content-ItemView longClick listener
-     */
-    public void setOnItemLongClickListener(OnItemLongClickListener<T> listener) {
-        this.mLongListener = listener;
-    }
-
     OnItemClickListener<T> getOnItemClickListener() {
         return mListener;
     }
@@ -105,11 +91,11 @@ public abstract class AbstractHeaderFooterAdapter<T> {
         mDataSetObservable.unregisterObserver(observer);
     }
 
-    public interface OnItemClickListener<T> {
+    interface OnItemClickListener<T> {
         void onItemClick(View v, int currentPosition, T entity);
     }
 
-    public interface OnItemLongClickListener<T> {
+    interface OnItemLongClickListener<T> {
         boolean onItemLongClick(View v, int currentPosition, T entity);
     }
 }
