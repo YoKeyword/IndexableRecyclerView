@@ -22,11 +22,15 @@ A RecyclerView with indexable, sticky and many other features.
 
 6、使用[TinyPinyin](https://github.com/promeG/TinyPinyin)代替Pinyin4j.jar库，体积更小，拼音转化速度提升4倍！
 
+# 更新日志
+### 1.0.4
+添加FooterView功能
+
 # 如何使用
 ### gradle
 项目下app的build.gradle中依赖：
 ````xml
- compile 'me.yokeyword:indexablerecyclerview:1.0.3'
+ compile 'me.yokeyword:indexablerecyclerview:1.0.4'
 
  compile 'com.android.support:recyclerview-v7:你使用的版本号'
 ````
@@ -114,9 +118,10 @@ indexableLayout.setOverlayStyle_MaterialDesign(int Color) & setOverlayStyle_Cent
 多音字需要手动处理:
 例如城市排序时, 拼音转化库默认重庆为zhongqing, 对于这种情况**你需要手动将源数据的 '重庆' 修改 为'#chongqing#重庆'**, 库会根据正则表达式进行对应的辨别处理(即 #多音字拼音#汉字 的格式)
 
-### 3、添加自定义HeaderView
+### 3、添加自定义HeaderView，FooterView
 ````java
 indexableLayout.addHeaderAdapter(IndexableHeaderAdapter adapter)    // 添加HeaderView
+indexableLayout.addFooterAdapter(IndexableFooterAdapter adapter)    // 添加FooterView
 
 // 3个参数分别对应:IndexBar的索引,HeaderTitle,传入的Header数据源,此处泛型T可以是任何实体类,不需要和主Adapter类型一致
 // 如果不想显示某块视图，则传入null即可： 比如不想显示 HeaderTitle， 则indexTitle传入null；
