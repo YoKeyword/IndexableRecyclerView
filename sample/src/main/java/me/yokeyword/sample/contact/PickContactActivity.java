@@ -18,6 +18,7 @@ import java.util.List;
 import me.yokeyword.indexablerv.IndexableAdapter;
 import me.yokeyword.indexablerv.IndexableHeaderAdapter;
 import me.yokeyword.indexablerv.IndexableLayout;
+import me.yokeyword.indexablerv.SimpleFooterAdapter;
 import me.yokeyword.indexablerv.SimpleHeaderAdapter;
 import me.yokeyword.sample.R;
 import me.yokeyword.sample.ToastUtil;
@@ -52,7 +53,7 @@ public class PickContactActivity extends AppCompatActivity {
                 if (originalPosition >= 0) {
                     ToastUtil.showShort(PickContactActivity.this, "选中:" + entity.getNick() + "  当前位置:" + currentPosition + "  原始所在数组位置:" + originalPosition);
                 } else {
-                    ToastUtil.showShort(PickContactActivity.this, "选中Header:" + entity.getNick() + "  当前位置:" + currentPosition);
+                    ToastUtil.showShort(PickContactActivity.this, "选中Header/Footer:" + entity.getNick() + "  当前位置:" + currentPosition);
                 }
             }
         });
@@ -84,6 +85,9 @@ public class PickContactActivity extends AppCompatActivity {
         mBannerHeaderAdapter = new BannerHeaderAdapter(null, null, bannerList);
         // 添加 Banner
         indexableLayout.addHeaderAdapter(mBannerHeaderAdapter);
+
+        // FooterView
+        indexableLayout.addFooterAdapter(new SimpleFooterAdapter<>(mAdapter, "尾", "我是FooterView", initFavDatas()));
     }
 
     /**
