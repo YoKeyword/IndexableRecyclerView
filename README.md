@@ -3,7 +3,8 @@ A RecyclerView with indexable, sticky and many other features.
 
 **轻松实现：选择城市，选择联系人等需要索引的功能**
 
-> 替代之前的IndexableStickyListView(移至该[分支](https://github.com/YoKeyword/IndexableRecyclerView/tree/listview)),进行大幅度重构，性能优化，更易使用的API，更易拓展的HeaderView等等！
+> 替代之前的IndexableStickyListView(移至该[分支](https://github.com/YoKeyword/IndexableRecyclerView/tree/listview)),进行大幅度重构，性能优化，更易使用的API，更易拓展的HeaderView/FooterView等等！
+重构历程可以看这篇文章：[［设计模式］记一次开源库的重构历程](http://www.jianshu.com/p/2ee8706c346b)
 
 # Demo演示
 <img src="/gif/demo_city.gif" width="320px"/>
