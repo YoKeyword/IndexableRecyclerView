@@ -23,7 +23,6 @@
         app:queryHint="请输入关键字"/>
 
     <FrameLayout
-        android:id="@+id/fl_container"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
@@ -42,10 +41,16 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"/>
 
-        <ProgressBar
+        <FrameLayout
             android:id="@+id/progress"
-            android:layout_width="56dp"
-            android:layout_height="56dp"
-            android:layout_gravity="center"/>
+            android:layout_width="match_parent"
+            android:background="@android:color/white"
+            android:layout_height="match_parent">
+
+            <ProgressBar
+                android:layout_width="56dp"
+                android:layout_height="56dp"
+                android:layout_gravity="center"/>
+        </FrameLayout>
     </FrameLayout>
 </LinearLayout>
