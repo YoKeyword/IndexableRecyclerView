@@ -13,8 +13,8 @@ public abstract class IndexableHeaderAdapter<T> extends AbstractHeaderFooterAdap
     }
 
     @Override
-    void initHeaderFooterType(EntityWrapper wrapper) {
-        wrapper.setHeaderFooterType(EntityWrapper.TYPE_HEADER);
+    int getHeaderFooterType() {
+        return EntityWrapper.TYPE_HEADER;
     }
 
     /**

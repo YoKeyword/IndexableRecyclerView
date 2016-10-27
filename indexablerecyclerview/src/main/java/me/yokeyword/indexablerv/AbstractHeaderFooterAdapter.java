@@ -48,7 +48,7 @@ abstract class AbstractHeaderFooterAdapter<T> {
         EntityWrapper<T> wrapper = new EntityWrapper<>();
         wrapper.setIndex(mIndex);
         wrapper.setIndexTitle(mIndexTitle);
-        initHeaderFooterType(wrapper);
+        wrapper.setHeaderFooterType(getHeaderFooterType());
         mEntityWrapperList.add(wrapper);
         return wrapper;
     }
@@ -71,16 +71,11 @@ abstract class AbstractHeaderFooterAdapter<T> {
         int size = mEntityWrapperList.size();
 
         EntityWrapper<T> wrapper = wrapEntity();
-        if (mIndexTitle != null) {
-            wrapper.setItemType(EntityWrapper.TYPE_TITLE);
-        } else {
-            wrapper.setItemType(getItemViewType());
-        }
-
+        wrapper.setItemType(getItemViewType());
         wrapper.setData(data);
 
         if (size > 0) {
-            mDataSetObservable.notifyAdd(mEntityWrapperList.get(size - 1), wrapper);
+            mDataSetObservable.notifyAdd(getHeaderFooterType() == EntityWrapper.TYPE_HEADER, mEntityWrapperList.get(size - 1), wrapper);
         }
     }
 
@@ -88,13 +83,15 @@ abstract class AbstractHeaderFooterAdapter<T> {
         for (EntityWrapper wrapper : mEntityWrapperList) {
             if (wrapper.getData() == data) {
                 mEntityWrapperList.remove(wrapper);
-                mDataSetObservable.notifyRemove(wrapper);
+                mDataSetObservable.notifyRemove(getHeaderFooterType() == EntityWrapper.TYPE_HEADER, wrapper);
                 return;
             }
         }
     }
 
-     abstract void initHeaderFooterType(EntityWrapper wrapper);
+    int getHeaderFooterType() {
+        return EntityWrapper.TYPE_HEADER;
+    }
 
 //    public void addData(int position, T data) {
 //        // TODO: 16/10/27

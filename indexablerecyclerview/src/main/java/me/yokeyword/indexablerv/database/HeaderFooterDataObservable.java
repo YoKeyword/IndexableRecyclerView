@@ -42,26 +42,26 @@ public class HeaderFooterDataObservable extends Observable<HeaderFooterDataObser
         }
     }
 
-    public void notifyAdd(Object preData, Object data) {
+    public void notifyAdd(boolean header, Object preData, Object data) {
         synchronized (mObservers) {
             // since onChanged() is implemented by the app, it could do anything, including
             // removing itself from {@link mObservers} - and that could cause problems if
             // an iterator is used on the ArrayList {@link mObservers}.
             // to avoid such problems, just march thru the list in the reverse order.
             for (int i = mObservers.size() - 1; i >= 0; i--) {
-                mObservers.get(i).onAdd(preData, data);
+                mObservers.get(i).onAdd(header, preData, data);
             }
         }
     }
 
-    public void notifyRemove(Object object) {
+    public void notifyRemove(boolean header, Object object) {
         synchronized (mObservers) {
             // since onChanged() is implemented by the app, it could do anything, including
             // removing itself from {@link mObservers} - and that could cause problems if
             // an iterator is used on the ArrayList {@link mObservers}.
             // to avoid such problems, just march thru the list in the reverse order.
             for (int i = mObservers.size() - 1; i >= 0; i--) {
-                mObservers.get(i).onRemove(object);
+                mObservers.get(i).onRemove(header, object);
             }
         }
     }

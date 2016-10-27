@@ -206,23 +206,35 @@ class RealAdapter<T extends IndexableEntity> extends RecyclerView.Adapter<Recycl
         this.mContentLongClickListener = listener;
     }
 
-    void addHeaderData(EntityWrapper preData, EntityWrapper data) {
-        for (int i = 0; i < mHeaderDatasList.size(); i++) {
-            EntityWrapper wrapper = mHeaderDatasList.get(i);
+    void addHeaderFooterData(boolean header, EntityWrapper preData, EntityWrapper data) {
+        processAddHeaderFooterData(header ? mHeaderDatasList : mFooterDatasList, preData, data);
+    }
+
+    private void processAddHeaderFooterData(ArrayList<EntityWrapper<T>> list, EntityWrapper preData, EntityWrapper data) {
+        for (int i = 0; i < list.size(); i++) {
+            EntityWrapper wrapper = list.get(i);
             if (wrapper == preData) {
-                mHeaderDatasList.add(i + 1, data);
-                mDatasList.add(i + 1, data);
+                int index = i + 1;
+                list.add(index, data);
+                if (list == mFooterDatasList) {
+                    index += mDatasList.size() - mFooterDatasList.size() + 1;
+                }
+                mDatasList.add(index, data);
                 notifyItemChanged(i + 1);
                 return;
             }
         }
     }
 
-    void removeHeaderData(EntityWrapper data) {
-        for (int i = 0; i < mHeaderDatasList.size(); i++) {
-            EntityWrapper wrapper = mHeaderDatasList.get(i);
+    void removeHeaderFooterData(boolean header, EntityWrapper data) {
+        processremoveHeaderFooterData(header ? mHeaderDatasList : mFooterDatasList, data);
+    }
+
+    private void processremoveHeaderFooterData(ArrayList<EntityWrapper<T>> list, EntityWrapper data) {
+        for (int i = 0; i < list.size(); i++) {
+            EntityWrapper wrapper = list.get(i);
             if (wrapper == data) {
-                mHeaderDatasList.remove(data);
+                list.remove(data);
                 mDatasList.remove(data);
                 notifyItemRemoved(i);
                 return;

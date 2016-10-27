@@ -12,11 +12,11 @@ public class HeaderFooterDataObserver<T> {
         // Do nothing
     }
 
-    public void onAdd(T preData, T data) {
+    public void onAdd(boolean header, T preData, T data) {
         // Do nothing
     }
 
-    public void onRemove(T object) {
+    public void onRemove(boolean header, T object) {
         // Do nothing
     }
 //

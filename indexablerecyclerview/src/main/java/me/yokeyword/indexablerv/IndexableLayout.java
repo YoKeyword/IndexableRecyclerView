@@ -80,15 +80,15 @@ public class IndexableLayout extends FrameLayout {
         }
 
         @Override
-        public void onAdd(EntityWrapper preData, EntityWrapper data) {
+        public void onAdd(boolean header, EntityWrapper preData, EntityWrapper data) {
             if (mRealAdapter == null) return;
-            mRealAdapter.addHeaderData(preData, data);
+            mRealAdapter.addHeaderFooterData(header, preData, data);
         }
 
         @Override
-        public void onRemove(EntityWrapper data) {
+        public void onRemove(boolean header, EntityWrapper data) {
             if (mRealAdapter == null) return;
-            mRealAdapter.removeHeaderData(data);
+            mRealAdapter.removeHeaderFooterData(header, data);
         }
     };
 
