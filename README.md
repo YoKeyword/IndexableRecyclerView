@@ -25,7 +25,11 @@ A RecyclerView with indexable, sticky and many other features.
 
 # 更新日志
 ### 1.0.5
-添加removeHeader/FooterAdapter(); header/footerAdapter.addData(),removeData()
+为HeaderView/FooterView添加:
+* `indexableLayout.removeHeaderAdapter();`  
+* `headerAdapter.addData()`
+* `headerAdapter.removeData()`
+
 ### 1.0.4
 添加FooterView功能
 
