@@ -1,7 +1,5 @@
 package me.yokeyword.indexablerv;
 
-import android.database.DataSetObservable;
-import android.database.DataSetObserver;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,16 +7,21 @@ import android.view.ViewGroup;
 import java.util.ArrayList;
 import java.util.List;
 
+import me.yokeyword.indexablerv.database.HeaderFooterDataObservable;
+import me.yokeyword.indexablerv.database.HeaderFooterDataObserver;
+
 /**
  * Created by YoKey on 16/10/16.
  */
 
 abstract class AbstractHeaderFooterAdapter<T> {
-    private final DataSetObservable mDataSetObservable = new DataSetObservable();
+    private final HeaderFooterDataObservable mDataSetObservable = new HeaderFooterDataObservable();
 
     ArrayList<EntityWrapper<T>> mEntityWrapperList = new ArrayList<>();
     protected OnItemClickListener<T> mListener;
     protected OnItemLongClickListener<T> mLongListener;
+
+    private String mIndex, mIndexTitle;
 
     /**
      * 不想显示哪个就传null
@@ -28,25 +31,24 @@ abstract class AbstractHeaderFooterAdapter<T> {
      * @param datas      数据源
      */
     public AbstractHeaderFooterAdapter(String index, String indexTitle, List<T> datas) {
+        this.mIndex = index;
+        this.mIndexTitle = indexTitle;
+
         if (indexTitle != null) {
-            EntityWrapper<T> wrapper = wrapEntity(index, indexTitle);
+            EntityWrapper<T> wrapper = wrapEntity();
             wrapper.setItemType(EntityWrapper.TYPE_TITLE);
         }
-        if (datas == null) {
-            EntityWrapper<T> wrapper = wrapEntity(index, indexTitle);
-            wrapper.setItemType(getItemViewType());
-        } else {
-            for (int i = 0; i < datas.size(); i++) {
-                EntityWrapper<T> wrapper = wrapEntity(index, indexTitle);
-                wrapper.setData(datas.get(i));
-            }
+        for (int i = 0; i < datas.size(); i++) {
+            EntityWrapper<T> wrapper = wrapEntity();
+            wrapper.setData(datas.get(i));
         }
     }
 
-    private EntityWrapper<T> wrapEntity(String index, String indexTitle) {
+    private EntityWrapper<T> wrapEntity() {
         EntityWrapper<T> wrapper = new EntityWrapper<>();
-        wrapper.setIndex(index);
-        wrapper.setIndexTitle(indexTitle);
+        wrapper.setIndex(mIndex);
+        wrapper.setIndexTitle(mIndexTitle);
+        initHeaderFooterType(wrapper);
         mEntityWrapperList.add(wrapper);
         return wrapper;
     }
@@ -64,6 +66,51 @@ abstract class AbstractHeaderFooterAdapter<T> {
     public void notifyDataSetChanged() {
         mDataSetObservable.notifyChanged();
     }
+
+    public void addData(T data) {
+        int size = mEntityWrapperList.size();
+
+        EntityWrapper<T> wrapper = wrapEntity();
+        if (mIndexTitle != null) {
+            wrapper.setItemType(EntityWrapper.TYPE_TITLE);
+        } else {
+            wrapper.setItemType(getItemViewType());
+        }
+
+        wrapper.setData(data);
+
+        if (size > 0) {
+            mDataSetObservable.notifyAdd(mEntityWrapperList.get(size - 1), wrapper);
+        }
+    }
+
+    public void removeData(T data) {
+        for (EntityWrapper wrapper : mEntityWrapperList) {
+            if (wrapper.getData() == data) {
+                mEntityWrapperList.remove(wrapper);
+                mDataSetObservable.notifyRemove(wrapper);
+                return;
+            }
+        }
+    }
+
+     abstract void initHeaderFooterType(EntityWrapper wrapper);
+
+//    public void addData(int position, T data) {
+//        // TODO: 16/10/27
+//    }
+//
+//    public void addDatas(List<T> datas) {
+//        // TODO: 16/10/27
+//    }
+//
+//    public void addDatas(int position, List<T> datas) {
+//        // TODO: 16/10/27
+//    }
+
+//    public void removeAll(List<T> datas) {
+//        // TODO: 16/10/27
+//    }
 
     OnItemClickListener<T> getOnItemClickListener() {
         return mListener;
@@ -83,11 +130,11 @@ abstract class AbstractHeaderFooterAdapter<T> {
         return mEntityWrapperList;
     }
 
-    void registerDataSetObserver(DataSetObserver observer) {
+    void registerDataSetObserver(HeaderFooterDataObserver observer) {
         mDataSetObservable.registerObserver(observer);
     }
 
-    void unregisterDataSetObserver(DataSetObserver observer) {
+    void unregisterDataSetObserver(HeaderFooterDataObserver observer) {
         mDataSetObservable.unregisterObserver(observer);
     }
 

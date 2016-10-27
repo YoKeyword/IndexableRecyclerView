@@ -10,10 +10,11 @@ public abstract class IndexableFooterAdapter<T> extends AbstractHeaderFooterAdap
 
     public IndexableFooterAdapter(String index, String indexTitle, List<T> datas) {
         super(index, indexTitle, datas);
+    }
 
-        for (EntityWrapper wrapper : mEntityWrapperList) {
-            wrapper.setHeaderFooterType(EntityWrapper.TYPE_FOOTER);
-        }
+    @Override
+    void initHeaderFooterType(EntityWrapper wrapper) {
+        wrapper.setHeaderFooterType(EntityWrapper.TYPE_FOOTER);
     }
 
     /**

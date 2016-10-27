@@ -4,9 +4,10 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.res.ColorStateList;
 import android.content.res.TypedArray;
-import android.database.DataSetObserver;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
+import android.os.Handler;
+import android.os.Looper;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewCompat;
 import android.support.v7.widget.LinearLayoutManager;
@@ -30,7 +31,8 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
 import me.yokeyword.indexablerecyclerview.R;
-import me.yokeyword.indexablerv.database.IndexableDataSetObserver;
+import me.yokeyword.indexablerv.database.DataObserver;
+import me.yokeyword.indexablerv.database.HeaderFooterDataObserver;
 
 /**
  * RecyclerView + IndexBar
@@ -65,16 +67,28 @@ public class IndexableLayout extends FrameLayout {
     private float mBarTextSize, mBarTextSpace, mBarWidth;
     private Drawable mBarBg;
 
-    private IndexableDataSetObserver mDataSetObserver;
+    private DataObserver mDataSetObserver;
 
     private boolean mFastCompare;
+    private Handler mHandler;
 
-    private DataSetObserver mHeaderFooterDataSetObserver = new DataSetObserver() {
+    private HeaderFooterDataObserver<EntityWrapper> mHeaderFooterDataSetObserver = new HeaderFooterDataObserver<EntityWrapper>() {
         @Override
         public void onChanged() {
-            if (mRealAdapter != null) {
-                mRealAdapter.notifyDataSetChanged();
-            }
+            if (mRealAdapter == null) return;
+            mRealAdapter.notifyDataSetChanged();
+        }
+
+        @Override
+        public void onAdd(EntityWrapper preData, EntityWrapper data) {
+            if (mRealAdapter == null) return;
+            mRealAdapter.addHeaderData(preData, data);
+        }
+
+        @Override
+        public void onRemove(EntityWrapper data) {
+            if (mRealAdapter == null) return;
+            mRealAdapter.removeHeaderData(data);
         }
     };
 
@@ -100,7 +114,7 @@ public class IndexableLayout extends FrameLayout {
         if (mDataSetObserver != null) {
             adapter.unregisterDataSetObserver(mDataSetObserver);
         }
-        mDataSetObserver = new IndexableDataSetObserver() {
+        mDataSetObserver = new DataObserver() {
 
             @Override
             public void onInited() {
@@ -149,11 +163,33 @@ public class IndexableLayout extends FrameLayout {
     }
 
     /**
+     * removeData HeaderView Adapter
+     */
+    public <T> void removeHeaderAdapter(IndexableHeaderAdapter<T> adapter) {
+        try {
+            adapter.unregisterDataSetObserver(mHeaderFooterDataSetObserver);
+            mRealAdapter.removeIndexableHeaderAdapter(adapter);
+        } catch (Exception ignored) {
+        }
+    }
+
+    /**
      * add FooterView Adapter
      */
     public <T> void addFooterAdapter(IndexableFooterAdapter<T> adapter) {
         adapter.registerDataSetObserver(mHeaderFooterDataSetObserver);
         mRealAdapter.addIndexableFooterAdapter(adapter);
+    }
+
+    /**
+     * removeData FooterView Adapter
+     */
+    public <T> void removeFooterAdapter(IndexableFooterAdapter<T> adapter) {
+        try {
+            adapter.unregisterDataSetObserver(mHeaderFooterDataSetObserver);
+            mRealAdapter.removeIndexableFooterAdapter(adapter);
+        } catch (Exception ignored) {
+        }
     }
 
     /**
@@ -475,10 +511,10 @@ public class IndexableLayout extends FrameLayout {
                 final ArrayList<EntityWrapper> datas = transform(mIndexableAdapter.getItems());
                 if (datas == null) return;
 
-                post(new Runnable() {
+                getSafeHandler().post(new Runnable() {
                     @Override
                     public void run() {
-                        mRealAdapter.addDatas(datas);
+                        mRealAdapter.setDatas(datas);
                         mIndexBar.setDatas(mShowAllLetter, mRealAdapter.getItems());
 
                         if (mCenterOverlay == null && mMDOverlay == null) {
@@ -570,6 +606,13 @@ public class IndexableLayout extends FrameLayout {
             e.printStackTrace();
             return null;
         }
+    }
+
+    private Handler getSafeHandler() {
+        if (mHandler == null) {
+            mHandler = new Handler(Looper.getMainLooper());
+        }
+        return mHandler;
     }
 
     @Override

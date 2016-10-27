@@ -19,14 +19,14 @@ package me.yokeyword.indexablerv.database;
 import android.database.Observable;
 
 /**
- * A specialization of {@link Observable} for {@link IndexableDataSetObserver}
+ * A specialization of {@link Observable} for {@link DataObserver}
  * that provides methods for sending notifications to a list of
- * {@link IndexableDataSetObserver} objects.
+ * {@link DataObserver} objects.
  */
-public class IndexableDataSetObservable extends Observable<IndexableDataSetObserver> {
+public class DataObservable extends Observable<DataObserver> {
 
     /**
-     * Invokes {@link IndexableDataSetObserver#onInited()}  on each observer.
+     * Invokes {@link DataObserver#onInited()}  on each observer.
      * Called when the data set is no longer valid and cannot be queried again,
      * such as when the data set has been closed.
      */
@@ -39,7 +39,7 @@ public class IndexableDataSetObservable extends Observable<IndexableDataSetObser
     }
 
     /**
-     * Invokes {@link IndexableDataSetObserver#onChanged} on each observer.
+     * Invokes {@link DataObserver#onChanged} on each observer.
      * Called when the contents of the data set have changed.  The recipient
      * will obtain the new contents the next time it queries the data set.
      */
@@ -56,7 +56,7 @@ public class IndexableDataSetObservable extends Observable<IndexableDataSetObser
     }
 
     /**
-     * Invokes {@link IndexableDataSetObserver#onSetListener(int)} on each observer.
+     * Invokes {@link DataObserver#onSetListener(int)} on each observer.
      * Called when the data set is no longer valid and cannot be queried again,
      * such as when the data set has been closed.
      */

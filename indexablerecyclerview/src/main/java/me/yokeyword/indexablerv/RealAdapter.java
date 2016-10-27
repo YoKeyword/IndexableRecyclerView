@@ -13,6 +13,7 @@ import java.util.ArrayList;
 @SuppressWarnings("unchecked")
 class RealAdapter<T extends IndexableEntity> extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private ArrayList<EntityWrapper<T>> mDatasList = new ArrayList<>();
+    private ArrayList<EntityWrapper<T>> mDatas;
     private ArrayList<EntityWrapper<T>> mHeaderDatasList = new ArrayList<>();
     private ArrayList<EntityWrapper<T>> mFooterDatasList = new ArrayList<>();
     private IndexableAdapter<T> mAdapter;
@@ -31,21 +32,44 @@ class RealAdapter<T extends IndexableEntity> extends RecyclerView.Adapter<Recycl
 
     void addIndexableHeaderAdapter(IndexableHeaderAdapter adapter) {
         mHeaderDatasList.addAll(0, adapter.getDatas());
+        mDatasList.addAll(0, adapter.getDatas());
         mHeaderAdapterMap.put(adapter.getItemViewType(), adapter);
+        notifyDataSetChanged();
+    }
+
+    void removeIndexableHeaderAdapter(IndexableHeaderAdapter adapter) {
+        mHeaderDatasList.removeAll(adapter.getDatas());
+        if (mDatasList.size() > 0) {
+            mDatasList.removeAll(adapter.getDatas());
+        }
+        mHeaderAdapterMap.remove(adapter.getItemViewType());
         notifyDataSetChanged();
     }
 
     void addIndexableFooterAdapter(IndexableFooterAdapter adapter) {
         mFooterDatasList.addAll(adapter.getDatas());
+        mDatasList.addAll(adapter.getDatas());
         mFooterAdapterMap.put(adapter.getItemViewType(), adapter);
         notifyDataSetChanged();
     }
 
-    void addDatas(ArrayList<EntityWrapper<T>> datas) {
-        mDatasList.clear();
-        mDatasList.addAll(mHeaderDatasList);
-        mDatasList.addAll(datas);
-        mDatasList.addAll(mFooterDatasList);
+    void removeIndexableFooterAdapter(IndexableFooterAdapter adapter) {
+        mFooterDatasList.removeAll(adapter.getDatas());
+        if (mDatasList.size() > 0) {
+            mDatasList.removeAll(adapter.getDatas());
+        }
+        mFooterAdapterMap.remove(adapter.getItemViewType());
+        notifyDataSetChanged();
+    }
+
+    void setDatas(ArrayList<EntityWrapper<T>> datas) {
+        if (mDatas != null && mDatasList.size() > mHeaderDatasList.size() + mFooterDatasList.size()) {
+            mDatasList.removeAll(mDatas);
+        }
+
+        this.mDatas = datas;
+
+        mDatasList.addAll(mHeaderDatasList.size(), datas);
         notifyDataSetChanged();
     }
 
@@ -180,5 +204,29 @@ class RealAdapter<T extends IndexableEntity> extends RecyclerView.Adapter<Recycl
 
     void setOnItemContentLongClickListener(IndexableAdapter.OnItemContentLongClickListener<T> listener) {
         this.mContentLongClickListener = listener;
+    }
+
+    void addHeaderData(EntityWrapper preData, EntityWrapper data) {
+        for (int i = 0; i < mHeaderDatasList.size(); i++) {
+            EntityWrapper wrapper = mHeaderDatasList.get(i);
+            if (wrapper == preData) {
+                mHeaderDatasList.add(i + 1, data);
+                mDatasList.add(i + 1, data);
+                notifyItemChanged(i + 1);
+                return;
+            }
+        }
+    }
+
+    void removeHeaderData(EntityWrapper data) {
+        for (int i = 0; i < mHeaderDatasList.size(); i++) {
+            EntityWrapper wrapper = mHeaderDatasList.get(i);
+            if (wrapper == data) {
+                mHeaderDatasList.remove(data);
+                mDatasList.remove(data);
+                notifyItemRemoved(i);
+                return;
+            }
+        }
     }
 }

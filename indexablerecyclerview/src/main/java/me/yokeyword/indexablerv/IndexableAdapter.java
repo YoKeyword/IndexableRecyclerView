@@ -7,8 +7,8 @@ import android.view.ViewGroup;
 import java.util.ArrayList;
 import java.util.List;
 
-import me.yokeyword.indexablerv.database.IndexableDataSetObservable;
-import me.yokeyword.indexablerv.database.IndexableDataSetObserver;
+import me.yokeyword.indexablerv.database.DataObservable;
+import me.yokeyword.indexablerv.database.DataObserver;
 
 /**
  * Created by YoKey on 16/10/6.
@@ -19,7 +19,7 @@ public abstract class IndexableAdapter<T extends IndexableEntity> {
     static final int TYPE_CLICK_CONTENT = 2;
     static final int TYPE_LONG_CLICK_TITLE = 3;
     static final int TYPE_LONG_CLICK_CONTENT = 4;
-    private final IndexableDataSetObservable mDataSetObservable = new IndexableDataSetObservable();
+    private final DataObservable mDataSetObservable = new DataObservable();
 
     private List<T> mDatas = new ArrayList<>();
 
@@ -123,11 +123,11 @@ public abstract class IndexableAdapter<T extends IndexableEntity> {
         return mContentLongClickListener;
     }
 
-    void registerDataSetObserver(IndexableDataSetObserver observer) {
+    void registerDataSetObserver(DataObserver observer) {
         mDataSetObservable.registerObserver(observer);
     }
 
-    void unregisterDataSetObserver(IndexableDataSetObserver observer) {
+    void unregisterDataSetObserver(DataObserver observer) {
         mDataSetObservable.unregisterObserver(observer);
     }
 
