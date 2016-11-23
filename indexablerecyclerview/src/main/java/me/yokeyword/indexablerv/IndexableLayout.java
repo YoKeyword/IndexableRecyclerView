@@ -316,6 +316,8 @@ public class IndexableLayout extends FrameLayout {
                     if (wrapperTitle == null && mStickyViewHolder.itemView.getVisibility() == VISIBLE) {
                         mStickyTitle = null;
                         mStickyViewHolder.itemView.setVisibility(INVISIBLE);
+                    } else {
+                        stickyNewViewHolder(wrapperTitle);
                     }
 
                     if (firstItemPosition + 1 < list.size()) {
@@ -325,20 +327,8 @@ public class IndexableLayout extends FrameLayout {
                             if (nextTitleView.getTop() <= mStickyViewHolder.itemView.getHeight() && wrapperTitle != null) {
                                 mStickyViewHolder.itemView.setTranslationY(nextTitleView.getTop() - mStickyViewHolder.itemView.getHeight());
                             }
-                            // hide -> show
-                            stickyNewViewHolder(wrapperTitle);
                         } else if (mStickyViewHolder.itemView.getTranslationY() != 0) {
                             mStickyViewHolder.itemView.setTranslationY(0);
-                        }
-                    }
-
-                    // hide -> show
-                    if (wrapper.getItemType() == EntityWrapper.TYPE_TITLE) {
-                        stickyNewViewHolder(wrapperTitle);
-                    } else if (dy < 0 && mStickyViewHolder.itemView.getVisibility() != VISIBLE) {
-                        View nextTitleView = mLayoutManager.findViewByPosition(firstItemPosition);
-                        if (nextTitleView.getBottom() >= mStickyViewHolder.itemView.getHeight()) {
-                            stickyNewViewHolder(wrapperTitle);
                         }
                     }
                 }
@@ -377,10 +367,12 @@ public class IndexableLayout extends FrameLayout {
     }
 
     private void stickyNewViewHolder(String wrapperTitle) {
-        if (wrapperTitle != null && !wrapperTitle.equals(mStickyTitle)) {
+        if ((wrapperTitle != null && !wrapperTitle.equals(mStickyTitle))) {
+
             if (mStickyViewHolder.itemView.getVisibility() != VISIBLE) {
                 mStickyViewHolder.itemView.setVisibility(VISIBLE);
             }
+
             mStickyTitle = wrapperTitle;
             mIndexableAdapter.onBindTitleViewHolder(mStickyViewHolder, wrapperTitle);
         }
