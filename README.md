@@ -150,8 +150,9 @@ new SimpleHeaderAdapter(IndexableAdapter<T> adapter, String index, String indexT
 ### 4、更改排序规则
 默认根据**全拼音排序**，可根据需求更改为**按首字母排序**:
 ````java
-// 排序规则设置为：只按首字母  （默认全拼音排序,false）  效率很高，是默认的10倍左右。
-indexableLayout.setFastCompare(true);
+// 设置排序规则： 
+// MODE_FAST:按首字母排序（默认）；MODE_ALL_LETTERS:全字母比较，效率较低； MODE_NONE:字母模块内不排序，效率最高
+indexableLayout.setCompareMode(@CompareMode int mode);
 ````
 
 > 更多细节使用，参见Demo
