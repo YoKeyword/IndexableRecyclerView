@@ -8,6 +8,7 @@ import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.Handler;
 import android.os.Looper;
+import android.support.annotation.IntDef;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewCompat;
 import android.support.v7.widget.LinearLayoutManager;
@@ -21,6 +22,8 @@ import android.view.WindowManager;
 import android.widget.FrameLayout;
 import android.widget.TextView;
 
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -40,6 +43,13 @@ import me.yokeyword.indexablerv.database.HeaderFooterDataObserver;
  */
 @SuppressWarnings("unchecked")
 public class IndexableLayout extends FrameLayout {
+    // 快速排序，只比对首字母(默认)
+    public static final int MODE_FAST = 0;
+    // 全字母比较排序, 效率最低
+    public static final int MODE_ALL_LETTERS = 1;
+    // 每个字母模块内：无需排序，效率最高
+    public static final int MODE_NONE = 2;
+
     private static int PADDING_RIGHT_OVERLAY;
     static final String INDEX_SIGN = "#";
 
@@ -69,7 +79,7 @@ public class IndexableLayout extends FrameLayout {
 
     private DataObserver mDataSetObserver;
 
-    private boolean mFastCompare;
+    private int mCompareMode = MODE_FAST;
     private Handler mHandler;
 
     private HeaderFooterDataObserver<EntityWrapper> mHeaderFooterDataSetObserver = new HeaderFooterDataObserver<EntityWrapper>() {
@@ -193,10 +203,24 @@ public class IndexableLayout extends FrameLayout {
     }
 
     /**
-     * use InitCompararator(Sort by first letter)
+     * set sort-mode
+     * Deprecated {@link #setCompareMode(int)}
      */
+    @Deprecated
     public void setFastCompare(boolean fastCompare) {
-        this.mFastCompare = fastCompare;
+        setCompareMode(fastCompare ? MODE_FAST : MODE_ALL_LETTERS);
+    }
+
+    @IntDef({MODE_FAST, MODE_ALL_LETTERS, MODE_NONE})
+    @Retention(RetentionPolicy.SOURCE)
+    @interface CompareMode {
+    }
+
+    /**
+     * set sort-mode
+     */
+    public void setCompareMode(@CompareMode int mode) {
+        this.mCompareMode = mode;
     }
 
     /**
@@ -509,10 +533,6 @@ public class IndexableLayout extends FrameLayout {
                         mRealAdapter.setDatas(datas);
                         mIndexBar.setDatas(mShowAllLetter, mRealAdapter.getItems());
 
-                        if (mCenterOverlay == null && mMDOverlay == null) {
-                            initCenterOverlay();
-                        }
-
                         if (mIndexableAdapter.getIndexCallback() != null) {
                             mIndexableAdapter.getIndexCallback().onFinished(datas);
                         }
@@ -585,12 +605,13 @@ public class IndexableLayout extends FrameLayout {
             ArrayList<EntityWrapper<T>> list = new ArrayList<>();
             for (List<EntityWrapper<T>> indexableEntities : map.values()) {
                 Comparator comparator;
-                if (mFastCompare) {
+                if (mCompareMode == MODE_FAST) {
                     comparator = new InitialComparator<T>();
-                } else {
+                    Collections.sort(indexableEntities, comparator);
+                } else if (mCompareMode == MODE_ALL_LETTERS) {
                     comparator = new PinyinComparator<T>();
+                    Collections.sort(indexableEntities, comparator);
                 }
-                Collections.sort(indexableEntities, comparator);
                 list.addAll(indexableEntities);
             }
             return list;

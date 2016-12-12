@@ -46,6 +46,9 @@ public class PickContactActivity extends AppCompatActivity {
         // set Material Design OverlayView
         indexableLayout.setOverlayStyle_MaterialDesign(Color.RED);
 
+        // 全字母排序。  排序规则设置为：每个字母都会进行比较排序；速度较慢
+        indexableLayout.setCompareMode(IndexableLayout.MODE_ALL_LETTERS);
+
         // set Listener
         mAdapter.setOnItemContentClickListener(new IndexableAdapter.OnItemContentClickListener<UserEntity>() {
             @Override
