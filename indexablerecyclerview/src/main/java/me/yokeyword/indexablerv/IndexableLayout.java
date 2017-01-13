@@ -302,7 +302,6 @@ public class IndexableLayout extends FrameLayout {
         }
 
         mRecy = new RecyclerView(context);
-        mIndexBar = new IndexBar(context);
         mRecy.setVerticalScrollBarEnabled(false);
         mRecy.setOverScrollMode(View.OVER_SCROLL_NEVER);
         addView(mRecy, new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
