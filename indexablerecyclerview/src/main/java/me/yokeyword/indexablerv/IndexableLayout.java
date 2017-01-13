@@ -11,6 +11,7 @@ import android.os.Looper;
 import android.support.annotation.IntDef;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewCompat;
+import android.support.v7.widget.AppCompatTextView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
@@ -500,9 +501,9 @@ public class IndexableLayout extends FrameLayout {
     }
 
     private void initMDOverlay(int color) {
-        mMDOverlay = new TextView(mContext);
+        mMDOverlay = new AppCompatTextView(mContext);
         mMDOverlay.setBackgroundResource(R.drawable.indexable_bg_md_overlay);
-        ViewCompat.setBackgroundTintList(mMDOverlay, ColorStateList.valueOf(color));
+        ((AppCompatTextView) mMDOverlay).setSupportBackgroundTintList(ColorStateList.valueOf(color));
         mMDOverlay.setSingleLine();
         mMDOverlay.setTextColor(Color.WHITE);
         mMDOverlay.setTextSize(38);
