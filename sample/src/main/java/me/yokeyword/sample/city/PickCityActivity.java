@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import me.yokeyword.indexablerv.EntityWrapper;
 import me.yokeyword.indexablerv.IndexableAdapter;
 import me.yokeyword.indexablerv.IndexableLayout;
 import me.yokeyword.indexablerv.SimpleHeaderAdapter;
@@ -49,7 +50,7 @@ public class PickCityActivity extends AppCompatActivity {
 
         adapter.setDatas(mDatas, new IndexableAdapter.IndexCallback<CityEntity>() {
             @Override
-            public void onFinished(List<CityEntity> datas) {
+            public void onFinished(List<EntityWrapper<CityEntity>> datas) {
                 // 数据处理完成后回调
                 mSearchFragment.bindDatas(mDatas);
                 mProgressBar.setVisibility(View.GONE);

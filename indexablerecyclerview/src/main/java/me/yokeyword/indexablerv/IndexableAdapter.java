@@ -132,7 +132,7 @@ public abstract class IndexableAdapter<T extends IndexableEntity> {
     }
 
     public interface IndexCallback<T> {
-        void onFinished(List<T> datas);
+        void onFinished(List<EntityWrapper<T>> datas);
     }
 
     public interface OnItemTitleClickListener {

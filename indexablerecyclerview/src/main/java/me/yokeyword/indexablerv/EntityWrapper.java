@@ -3,7 +3,7 @@ package me.yokeyword.indexablerv;
 /**
  * Created by YoKey on 16/10/6.
  */
-class EntityWrapper<T> {
+public class EntityWrapper<T> {
     static final int TYPE_TITLE = Integer.MAX_VALUE - 1;
     static final int TYPE_CONTENT = Integer.MAX_VALUE;
 
@@ -61,7 +61,7 @@ class EntityWrapper<T> {
         this.indexByField = indexByField;
     }
 
-    T getData() {
+    public T getData() {
         return data;
     }
 
@@ -69,7 +69,7 @@ class EntityWrapper<T> {
         this.data = data;
     }
 
-    int getOriginalPosition() {
+    public int getOriginalPosition() {
         return originalPosition;
     }
 
@@ -85,11 +85,27 @@ class EntityWrapper<T> {
         this.itemType = itemType;
     }
 
-    public int getHeaderFooterType() {
+    int getHeaderFooterType() {
         return headerFooterType;
     }
 
     void setHeaderFooterType(int headerFooterType) {
         this.headerFooterType = headerFooterType;
+    }
+
+    public boolean isTitle(){
+        return itemType == TYPE_TITLE;
+    }
+
+    public boolean isContent(){
+        return itemType == TYPE_CONTENT;
+    }
+
+    public boolean isHeader(){
+        return headerFooterType == TYPE_HEADER;
+    }
+
+    public boolean isFooter(){
+        return headerFooterType == TYPE_FOOTER;
     }
 }
