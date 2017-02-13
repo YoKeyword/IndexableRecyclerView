@@ -41,7 +41,7 @@ A RecyclerView with indexable, sticky and many other features.
 ### gradle
 项目下app的build.gradle中依赖：
 ````xml
- compile 'me.yokeyword:indexablerecyclerview:1.0.9'
+ compile 'me.yokeyword:indexablerecyclerview:1.1.0'
  compile 'com.android.support:appcompat-v7:你使用的版本号'
  compile 'com.android.support:recyclerview-v7:你使用的版本号'
 ````
