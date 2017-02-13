@@ -627,10 +627,4 @@ public class IndexableLayout extends FrameLayout {
         }
         return mHandler;
     }
-
-    @Override
-    protected void onDetachedFromWindow() {
-        super.onDetachedFromWindow();
-        mRecy.setAdapter(null);
-    }
 }
