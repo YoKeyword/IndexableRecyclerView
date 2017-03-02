@@ -24,17 +24,20 @@ A RecyclerView with indexable, sticky and many other features.
 6、使用[TinyPinyin](https://github.com/promeG/TinyPinyin)代替Pinyin4j.jar库，体积更小，拼音转化速度提升4倍！
 
 # 更新日志
-### 1.2.0
+1.2.0
 * 支持GridLayoutManager! (感谢[guodongAndroid](https://github.com/guodongAndroid))
 
-### 1.0.7
+1.1.x
+* 优化
+
+1.0.7
 * 默认不再显示左侧的悬浮气泡
 * 默认排序方式改为快速排序，提供一个MODE_NONE的排序方式
 
-### 1.0.6
+1.0.6
 * 修复滑动过快时，StickyView显示的字母可能不正确的问题
 
-### 1.0.5
+1.0.5
 为HeaderView/FooterView添加:
 * `indexableLayout.removeHeaderAdapter();`  
 * `headerAdapter.addData()`
