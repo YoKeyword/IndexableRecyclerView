@@ -3,6 +3,8 @@ package me.yokeyword.sample.city;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.SearchView;
 import android.view.View;
 import android.widget.FrameLayout;
@@ -38,6 +40,10 @@ public class PickCityActivity extends AppCompatActivity {
         IndexableLayout indexableLayout = (IndexableLayout) findViewById(R.id.indexableLayout);
         mSearchView = (SearchView) findViewById(R.id.searchview);
         mProgressBar = (FrameLayout) findViewById(R.id.progress);
+
+
+//        indexableLayout.setLayoutManager(new LinearLayoutManager(this));
+        indexableLayout.setLayoutManager(new GridLayoutManager(this, 3));
 
         // setAdapter
         CityAdapter adapter = new CityAdapter(this);

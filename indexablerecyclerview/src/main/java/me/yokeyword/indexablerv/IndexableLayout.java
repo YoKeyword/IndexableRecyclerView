@@ -12,6 +12,7 @@ import android.support.annotation.IntDef;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewCompat;
 import android.support.v7.widget.AppCompatTextView;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
@@ -68,7 +69,8 @@ public class IndexableLayout extends FrameLayout {
     private String mStickyTitle;
 
     private RealAdapter mRealAdapter;
-    private LinearLayoutManager mLayoutManager;
+    private LinearLayoutManager mLinearLayoutManager;
+    private GridLayoutManager mGridLayoutManager;
 
     private IndexableAdapter mIndexableAdapter;
 
@@ -118,8 +120,14 @@ public class IndexableLayout extends FrameLayout {
 
     /**
      * set RealAdapter
+     * {@link #setLayoutManager(RecyclerView.LayoutManager)}
      */
     public <T extends IndexableEntity> void setAdapter(final IndexableAdapter<T> adapter) {
+
+        if (mGridLayoutManager == null && mLinearLayoutManager == null) {
+            throw new NullPointerException("U should set the LayoutManager first");
+        }
+
         this.mIndexableAdapter = adapter;
 
         if (mDataSetObserver != null) {
@@ -313,12 +321,36 @@ public class IndexableLayout extends FrameLayout {
         addView(mIndexBar, params);
 
         mRealAdapter = new RealAdapter();
-        mLayoutManager = new LinearLayoutManager(context);
-        mRecy.setLayoutManager(mLayoutManager);
         mRecy.setHasFixedSize(true);
         mRecy.setAdapter(mRealAdapter);
 
         initListener();
+    }
+
+    /**
+     *  {@link #setAdapter(IndexableAdapter)}
+     * @param layoutManager One of LinearLayoutManager and GridLayoutManager
+     */
+    public void setLayoutManager(RecyclerView.LayoutManager layoutManager) {
+        if (layoutManager instanceof GridLayoutManager) {
+            mGridLayoutManager = (GridLayoutManager) layoutManager;
+            mGridLayoutManager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
+                @Override
+                public int getSpanSize(int position) {
+                    int spanSize = 0;
+                    if (mRealAdapter.getItemViewType(position) == EntityWrapper.TYPE_TITLE) {
+                        spanSize = mGridLayoutManager.getSpanCount();
+                    } else if (mRealAdapter.getItemViewType(position) == EntityWrapper.TYPE_CONTENT) {
+                        spanSize = 1;
+                    }
+                    return spanSize;
+                }
+            });
+            mRecy.setLayoutManager(mGridLayoutManager);
+        } else if (layoutManager instanceof LinearLayoutManager) {
+            mLinearLayoutManager = (LinearLayoutManager) layoutManager;
+            mRecy.setLayoutManager(mLinearLayoutManager);
+        }
     }
 
     private void initListener() {
@@ -327,7 +359,13 @@ public class IndexableLayout extends FrameLayout {
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
                 super.onScrolled(recyclerView, dx, dy);
 
-                int firstItemPosition = mLayoutManager.findFirstVisibleItemPosition();
+                int firstItemPosition = 0;
+                if (mLinearLayoutManager != null) {
+                    firstItemPosition = mLinearLayoutManager.findFirstVisibleItemPosition();
+                } else if (mGridLayoutManager != null) {
+                    firstItemPosition = mGridLayoutManager.findFirstVisibleItemPosition();
+                }
+
                 mIndexBar.setSelection(firstItemPosition);
 
                 if (!mSticyEnable) return;
@@ -335,9 +373,15 @@ public class IndexableLayout extends FrameLayout {
                 if (mStickyViewHolder != null && list.size() > firstItemPosition) {
                     EntityWrapper wrapper = list.get(firstItemPosition);
                     String wrapperTitle = wrapper.getIndexTitle();
-                    if (EntityWrapper.TYPE_TITLE == wrapper.getItemType()) {
-                        mLayoutManager.findViewByPosition(firstItemPosition).setVisibility(INVISIBLE);
-                    }
+
+//                    if (EntityWrapper.TYPE_TITLE == wrapper.getItemType()) {
+//                        if (mLinearLayoutManager != null) {
+//                            mLinearLayoutManager.findViewByPosition(firstItemPosition).setVisibility(INVISIBLE);
+//                        } else if (mGridLayoutManager != null) {
+//                            mGridLayoutManager.findViewByPosition(firstItemPosition).setVisibility(INVISIBLE);
+//                        }
+//                    }
+
                     // hide -> show
                     if (wrapperTitle == null && mStickyViewHolder.itemView.getVisibility() == VISIBLE) {
                         mStickyTitle = null;
@@ -346,20 +390,55 @@ public class IndexableLayout extends FrameLayout {
                         stickyNewViewHolder(wrapperTitle);
                     }
 
-                    if (firstItemPosition + 1 < list.size()) {
-                        EntityWrapper nextWrapper = list.get(firstItemPosition + 1);
-                        View nextTitleView = mLayoutManager.findViewByPosition(firstItemPosition + 1);
-                        if (nextWrapper.getItemType() == EntityWrapper.TYPE_TITLE) {
-                            if (nextTitleView.getTop() <= mStickyViewHolder.itemView.getHeight() && wrapperTitle != null) {
-                                mStickyViewHolder.itemView.setTranslationY(nextTitleView.getTop() - mStickyViewHolder.itemView.getHeight());
+                    // LinearLayoutManager
+                    if (mLinearLayoutManager != null) {
+                        if (firstItemPosition + 1 < list.size()) {
+                            EntityWrapper nextWrapper = list.get(firstItemPosition + 1);
+                            View nextTitleView = mLinearLayoutManager.findViewByPosition(firstItemPosition + 1);
+                            if (nextWrapper.getItemType() == EntityWrapper.TYPE_TITLE) {
+                                if (nextTitleView.getTop() <= mStickyViewHolder.itemView.getHeight() && wrapperTitle != null) {
+                                    mStickyViewHolder.itemView.setTranslationY(nextTitleView.getTop() - mStickyViewHolder.itemView.getHeight());
+                                }
+                            } else if (mStickyViewHolder.itemView.getTranslationY() != 0) {
+                                mStickyViewHolder.itemView.setTranslationY(0);
                             }
-                            if (INVISIBLE == nextTitleView.getVisibility()) {
-                                nextTitleView.setVisibility(VISIBLE);
-                            }
-                        } else if (mStickyViewHolder.itemView.getTranslationY() != 0) {
-                            mStickyViewHolder.itemView.setTranslationY(0);
                         }
+
+//                        View nextTitleView = mLinearLayoutManager.findViewByPosition(firstItemPosition);
+//                        if (INVISIBLE == nextTitleView.getVisibility()) {
+//                            nextTitleView.setVisibility(VISIBLE);
+//                        }
                     }
+
+                    // GirdLayoutManager
+                    if (mGridLayoutManager != null) {
+                        if (firstItemPosition + mGridLayoutManager.getSpanCount() < list.size()) {
+                            for (int i = firstItemPosition + 1; i <= firstItemPosition + mGridLayoutManager.getSpanCount(); i++) {
+                                EntityWrapper nextWrapper = list.get(i);
+                                View nextTitleView = mGridLayoutManager.findViewByPosition(i);
+                                if (nextWrapper.getItemType() == EntityWrapper.TYPE_TITLE) {
+                                    if (nextTitleView.getTop() <= mStickyViewHolder.itemView.getHeight() && wrapperTitle != null) {
+                                        mStickyViewHolder.itemView.setTranslationY(nextTitleView.getTop() - mStickyViewHolder.itemView.getHeight());
+                                    }
+                                    break;
+                                } else if (mStickyViewHolder.itemView.getTranslationY() != 0) {
+                                    mStickyViewHolder.itemView.setTranslationY(0);
+                                }
+                            }
+
+                            // 注意与上边的for循环，起点不同
+//                            for (int i = firstItemPosition; i <= firstItemPosition + mGridLayoutManager.getSpanCount(); i++) {
+//                                EntityWrapper nextWrapper = list.get(i);
+//                                View nextTitleView = mGridLayoutManager.findViewByPosition(i);
+//                                if (nextWrapper.getItemType() == EntityWrapper.TYPE_TITLE) {
+//                                    if (INVISIBLE == nextTitleView.getVisibility()) {
+//                                        nextTitleView.setVisibility(VISIBLE);
+//                                    }
+//                                }
+//                            }
+
+                        }
+                    } // end GridLayoutManager
                 }
             }
         });
@@ -378,9 +457,17 @@ public class IndexableLayout extends FrameLayout {
                         if (touchPos != mIndexBar.getSelectionPosition()) {
                             mIndexBar.setSelectionPosition(touchPos);
                             if (touchPos == 0) {
-                                mLayoutManager.scrollToPositionWithOffset(0, 0);
+                                if (mLinearLayoutManager != null) {
+                                    mLinearLayoutManager.scrollToPositionWithOffset(0, 0);
+                                } else if (mGridLayoutManager != null) {
+                                    mGridLayoutManager.scrollToPositionWithOffset(0, 0);
+                                }
                             } else {
-                                mLayoutManager.scrollToPositionWithOffset(mIndexBar.getFirstRecyclerViewPositionBySelection(), 0);
+                                if (mLinearLayoutManager != null) {
+                                    mLinearLayoutManager.scrollToPositionWithOffset(mIndexBar.getFirstRecyclerViewPositionBySelection(), 0);
+                                } else if (mGridLayoutManager != null) {
+                                    mGridLayoutManager.scrollToPositionWithOffset(mIndexBar.getFirstRecyclerViewPositionBySelection(), 0);
+                                }
                             }
                         }
                         break;

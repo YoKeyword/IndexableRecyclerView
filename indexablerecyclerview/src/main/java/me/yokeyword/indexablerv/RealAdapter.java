@@ -139,10 +139,14 @@ class RealAdapter<T extends IndexableEntity> extends RecyclerView.Adapter<Recycl
                 if (viewType == EntityWrapper.TYPE_TITLE) {
                     if (mTitleLongClickListener != null) {
                         return mTitleLongClickListener.onItemLongClick(v, position, wrapper.getIndexTitle());
+                    } else {
+                        return true;
                     }
                 } else if (viewType == EntityWrapper.TYPE_CONTENT) {
                     if (mContentLongClickListener != null) {
                         return mContentLongClickListener.onItemLongClick(v, wrapper.getOriginalPosition(), position, wrapper.getData());
+                    } else {
+                        return true;
                     }
                 } else {
                     AbstractHeaderFooterAdapter adapter;

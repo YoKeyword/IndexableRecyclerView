@@ -4,6 +4,8 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -37,6 +39,9 @@ public class PickContactActivity extends AppCompatActivity {
         setContentView(R.layout.activity_pick_contact);
         getSupportActionBar().setTitle("联系人");
         IndexableLayout indexableLayout = (IndexableLayout) findViewById(R.id.indexableLayout);
+
+        indexableLayout.setLayoutManager(new LinearLayoutManager(this));
+//        indexableLayout.setLayoutManager(new GridLayoutManager(this, 3));
 
         // setAdapter
         mAdapter = new ContactAdapter(this);
