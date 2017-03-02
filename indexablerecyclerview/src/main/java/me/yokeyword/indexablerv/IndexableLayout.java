@@ -335,7 +335,9 @@ public class IndexableLayout extends FrameLayout {
                 if (mStickyViewHolder != null && list.size() > firstItemPosition) {
                     EntityWrapper wrapper = list.get(firstItemPosition);
                     String wrapperTitle = wrapper.getIndexTitle();
-
+                    if (EntityWrapper.TYPE_TITLE == wrapper.getItemType()) {
+                        mLayoutManager.findViewByPosition(firstItemPosition).setVisibility(INVISIBLE);
+                    }
                     // hide -> show
                     if (wrapperTitle == null && mStickyViewHolder.itemView.getVisibility() == VISIBLE) {
                         mStickyTitle = null;
@@ -350,6 +352,9 @@ public class IndexableLayout extends FrameLayout {
                         if (nextWrapper.getItemType() == EntityWrapper.TYPE_TITLE) {
                             if (nextTitleView.getTop() <= mStickyViewHolder.itemView.getHeight() && wrapperTitle != null) {
                                 mStickyViewHolder.itemView.setTranslationY(nextTitleView.getTop() - mStickyViewHolder.itemView.getHeight());
+                            }
+                            if (INVISIBLE == nextTitleView.getVisibility()) {
+                                nextTitleView.setVisibility(VISIBLE);
                             }
                         } else if (mStickyViewHolder.itemView.getTranslationY() != 0) {
                             mStickyViewHolder.itemView.setTranslationY(0);

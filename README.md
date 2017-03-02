@@ -24,6 +24,9 @@ A RecyclerView with indexable, sticky and many other features.
 6、使用[TinyPinyin](https://github.com/promeG/TinyPinyin)代替Pinyin4j.jar库，体积更小，拼音转化速度提升4倍！
 
 # 更新日志
+### 1.1.0,1.1.1
+* 优化
+
 ### 1.0.7
 * 默认不再显示左侧的悬浮气泡
 * 默认排序方式改为快速排序，提供一个MODE_NONE的排序方式
@@ -41,7 +44,7 @@ A RecyclerView with indexable, sticky and many other features.
 ### gradle
 项目下app的build.gradle中依赖：
 ````xml
- compile 'me.yokeyword:indexablerecyclerview:1.1.0'
+ compile 'me.yokeyword:indexablerecyclerview:1.1.1'
  compile 'com.android.support:appcompat-v7:你使用的版本号'
  compile 'com.android.support:recyclerview-v7:你使用的版本号'
 ````

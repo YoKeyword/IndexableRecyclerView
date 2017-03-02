@@ -14,5 +14,6 @@ android {
 
 dependencies {
     compile 'com.github.promeg:tinypinyin:1.0.0'
+    provided 'com.android.support:appcompat-v7:24.2.1'
     provided 'com.android.support:recyclerview-v7:24.2.1'
 }
