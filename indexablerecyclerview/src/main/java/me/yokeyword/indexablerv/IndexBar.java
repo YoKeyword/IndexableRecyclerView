@@ -135,6 +135,8 @@ class IndexBar extends View {
 
     void setDatas(boolean showAllLetter, ArrayList<EntityWrapper> datas) {
         this.mDatas = datas;
+        this.mIndexList.clear();
+        this.mMapping.clear();
 
         ArrayList<String> tempHeaderList = null;
         if (showAllLetter) {

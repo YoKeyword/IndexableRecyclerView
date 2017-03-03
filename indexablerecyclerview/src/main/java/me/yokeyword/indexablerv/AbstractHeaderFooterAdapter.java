@@ -9,6 +9,8 @@ import java.util.List;
 
 import me.yokeyword.indexablerv.database.HeaderFooterDataObservable;
 import me.yokeyword.indexablerv.database.HeaderFooterDataObserver;
+import me.yokeyword.indexablerv.database.IndexBarDataObservable;
+import me.yokeyword.indexablerv.database.IndexBarDataObserver;
 
 /**
  * Created by YoKey on 16/10/16.
@@ -16,6 +18,7 @@ import me.yokeyword.indexablerv.database.HeaderFooterDataObserver;
 
 abstract class AbstractHeaderFooterAdapter<T> {
     private final HeaderFooterDataObservable mDataSetObservable = new HeaderFooterDataObservable();
+    private final IndexBarDataObservable mIndexBarDataSetObservable = new IndexBarDataObservable();
 
     ArrayList<EntityWrapper<T>> mEntityWrapperList = new ArrayList<>();
     protected OnItemClickListener<T> mListener;
@@ -85,6 +88,7 @@ abstract class AbstractHeaderFooterAdapter<T> {
 
         if (size > 0) {
             mDataSetObservable.notifyAdd(getHeaderFooterType() == EntityWrapper.TYPE_HEADER, mEntityWrapperList.get(size - 1), wrapper);
+            mIndexBarDataSetObservable.notifyChanged();
         }
     }
 
@@ -93,6 +97,7 @@ abstract class AbstractHeaderFooterAdapter<T> {
             if (wrapper.getData() == data) {
                 mEntityWrapperList.remove(wrapper);
                 mDataSetObservable.notifyRemove(getHeaderFooterType() == EntityWrapper.TYPE_HEADER, wrapper);
+                mIndexBarDataSetObservable.notifyChanged();
                 return;
             }
         }
@@ -114,6 +119,7 @@ abstract class AbstractHeaderFooterAdapter<T> {
 
         if (size > 0) {
             mDataSetObservable.notifyAdd(getHeaderFooterType() == EntityWrapper.TYPE_HEADER, mEntityWrapperList.get(position - 1), wrapper);
+            mIndexBarDataSetObservable.notifyChanged();
         }
     }
 
@@ -162,6 +168,14 @@ abstract class AbstractHeaderFooterAdapter<T> {
 
     void unregisterDataSetObserver(HeaderFooterDataObserver observer) {
         mDataSetObservable.unregisterObserver(observer);
+    }
+
+    void registerIndexBarDataSetObserver(IndexBarDataObserver observer) {
+        mIndexBarDataSetObservable.registerObserver(observer);
+    }
+
+    void unregisterIndexBarDataSetObserver(IndexBarDataObserver observer) {
+        mIndexBarDataSetObservable.unregisterObserver(observer);
     }
 
     interface OnItemClickListener<T> {

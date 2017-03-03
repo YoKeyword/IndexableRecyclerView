@@ -8,6 +8,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.SearchView;
 import android.view.View;
 import android.widget.FrameLayout;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -29,6 +30,7 @@ public class PickCityActivity extends AppCompatActivity {
     private SearchFragment mSearchFragment;
     private SearchView mSearchView;
     private FrameLayout mProgressBar;
+    private SimpleHeaderAdapter mHotCityAdapter;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -88,12 +90,16 @@ public class PickCityActivity extends AppCompatActivity {
         // 添加 HeaderView DefaultHeaderAdapter接收一个IndexableAdapter, 使其布局以及点击事件和IndexableAdapter一致
         // 如果想自定义布局,点击事件, 可传入 new IndexableHeaderAdapter
 
+        mHotCityAdapter = new SimpleHeaderAdapter<>(adapter, "热", "热门城市", iniyHotCityDatas());
         // 热门城市
-        indexableLayout.addHeaderAdapter(new SimpleHeaderAdapter<>(adapter, "热", "热门城市", iniyHotCityDatas()));
+        indexableLayout.addHeaderAdapter(mHotCityAdapter);
         // 定位
         final List<CityEntity> gpsCity = iniyGPSCityDatas();
         final SimpleHeaderAdapter gpsHeaderAdapter = new SimpleHeaderAdapter<>(adapter, "定", "当前城市", gpsCity);
         indexableLayout.addHeaderAdapter(gpsHeaderAdapter);
+
+        // 显示真实索引
+//        indexableLayout.showAllLetter(false);
 
         // 模拟定位
         indexableLayout.postDelayed(new Runnable() {
@@ -106,6 +112,17 @@ public class PickCityActivity extends AppCompatActivity {
 
         // 搜索Demo
         initSearch();
+    }
+
+    // 更新数据点击事件
+    public void update(View view) {
+        List<CityEntity> list = new ArrayList<>();
+        list.add(new CityEntity("杭州市"));
+        list.add(new CityEntity("北京市"));
+        list.add(new CityEntity("上海市"));
+        list.add(new CityEntity("广州市"));
+        mHotCityAdapter.addDatas(list);
+        Toast.makeText(this, "更新数据", Toast.LENGTH_SHORT).show();
     }
 
     private List<CityEntity> initDatas() {

@@ -38,6 +38,7 @@ import java.util.concurrent.Future;
 import me.yokeyword.indexablerecyclerview.R;
 import me.yokeyword.indexablerv.database.DataObserver;
 import me.yokeyword.indexablerv.database.HeaderFooterDataObserver;
+import me.yokeyword.indexablerv.database.IndexBarDataObserver;
 
 /**
  * RecyclerView + IndexBar
@@ -102,6 +103,13 @@ public class IndexableLayout extends FrameLayout {
         public void onRemove(boolean header, EntityWrapper data) {
             if (mRealAdapter == null) return;
             mRealAdapter.removeHeaderFooterData(header, data);
+        }
+    };
+
+    private IndexBarDataObserver mIndexBarDataSetObserver = new IndexBarDataObserver() {
+        @Override
+        public void onChanged() {
+            mIndexBar.setDatas(mShowAllLetter, mRealAdapter.getItems());
         }
     };
 
@@ -178,6 +186,7 @@ public class IndexableLayout extends FrameLayout {
      */
     public <T> void addHeaderAdapter(IndexableHeaderAdapter<T> adapter) {
         adapter.registerDataSetObserver(mHeaderFooterDataSetObserver);
+        adapter.registerIndexBarDataSetObserver(mIndexBarDataSetObserver);
         mRealAdapter.addIndexableHeaderAdapter(adapter);
     }
 
@@ -187,6 +196,7 @@ public class IndexableLayout extends FrameLayout {
     public <T> void removeHeaderAdapter(IndexableHeaderAdapter<T> adapter) {
         try {
             adapter.unregisterDataSetObserver(mHeaderFooterDataSetObserver);
+            adapter.unregisterIndexBarDataSetObserver(mIndexBarDataSetObserver);
             mRealAdapter.removeIndexableHeaderAdapter(adapter);
         } catch (Exception ignored) {
         }
@@ -197,6 +207,7 @@ public class IndexableLayout extends FrameLayout {
      */
     public <T> void addFooterAdapter(IndexableFooterAdapter<T> adapter) {
         adapter.registerDataSetObserver(mHeaderFooterDataSetObserver);
+        adapter.registerIndexBarDataSetObserver(mIndexBarDataSetObserver);
         mRealAdapter.addIndexableFooterAdapter(adapter);
     }
 
@@ -206,6 +217,7 @@ public class IndexableLayout extends FrameLayout {
     public <T> void removeFooterAdapter(IndexableFooterAdapter<T> adapter) {
         try {
             adapter.unregisterDataSetObserver(mHeaderFooterDataSetObserver);
+            adapter.unregisterIndexBarDataSetObserver(mIndexBarDataSetObserver);
             mRealAdapter.removeIndexableFooterAdapter(adapter);
         } catch (Exception ignored) {
         }
