@@ -63,6 +63,7 @@ public class IndexableLayout extends FrameLayout {
 
     private RecyclerView mRecy;
     private IndexBar mIndexBar;
+    private View mLastInvisibleRecyclerViewItemView;
 
     private boolean mSticyEnable = true;
     private RecyclerView.ViewHolder mStickyViewHolder;
@@ -374,13 +375,17 @@ public class IndexableLayout extends FrameLayout {
                     EntityWrapper wrapper = list.get(firstItemPosition);
                     String wrapperTitle = wrapper.getIndexTitle();
 
-//                    if (EntityWrapper.TYPE_TITLE == wrapper.getItemType()) {
-//                        if (mLinearLayoutManager != null) {
-//                            mLinearLayoutManager.findViewByPosition(firstItemPosition).setVisibility(INVISIBLE);
-//                        } else if (mGridLayoutManager != null) {
-//                            mGridLayoutManager.findViewByPosition(firstItemPosition).setVisibility(INVISIBLE);
-//                        }
-//                    }
+                    if (EntityWrapper.TYPE_TITLE == wrapper.getItemType()) {
+                        if (mLinearLayoutManager != null) {
+                            if (mLastInvisibleRecyclerViewItemView != null) {
+                                mLastInvisibleRecyclerViewItemView.setVisibility(VISIBLE);
+                            }
+                            mLastInvisibleRecyclerViewItemView = mLinearLayoutManager.findViewByPosition(firstItemPosition);
+                            mLastInvisibleRecyclerViewItemView.setVisibility(INVISIBLE);
+                        } else if (mGridLayoutManager != null) {
+                            mGridLayoutManager.findViewByPosition(firstItemPosition).setVisibility(INVISIBLE);
+                        }
+                    }
 
                     // hide -> show
                     if (wrapperTitle == null && mStickyViewHolder.itemView.getVisibility() == VISIBLE) {
@@ -399,15 +404,13 @@ public class IndexableLayout extends FrameLayout {
                                 if (nextTitleView.getTop() <= mStickyViewHolder.itemView.getHeight() && wrapperTitle != null) {
                                     mStickyViewHolder.itemView.setTranslationY(nextTitleView.getTop() - mStickyViewHolder.itemView.getHeight());
                                 }
+                                if (INVISIBLE == nextTitleView.getVisibility()) {
+                                    nextTitleView.setVisibility(VISIBLE);
+                                }
                             } else if (mStickyViewHolder.itemView.getTranslationY() != 0) {
                                 mStickyViewHolder.itemView.setTranslationY(0);
                             }
                         }
-
-//                        View nextTitleView = mLinearLayoutManager.findViewByPosition(firstItemPosition);
-//                        if (INVISIBLE == nextTitleView.getVisibility()) {
-//                            nextTitleView.setVisibility(VISIBLE);
-//                        }
                     }
 
                     // GirdLayoutManager
