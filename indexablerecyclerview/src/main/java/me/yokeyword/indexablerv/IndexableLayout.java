@@ -383,14 +383,17 @@ public class IndexableLayout extends FrameLayout {
                     String wrapperTitle = wrapper.getIndexTitle();
 
                     if (EntityWrapper.TYPE_TITLE == wrapper.getItemType()) {
+                        if (mLastInvisibleRecyclerViewItemView != null && mLastInvisibleRecyclerViewItemView.getVisibility() == INVISIBLE) {
+                            mLastInvisibleRecyclerViewItemView.setVisibility(VISIBLE);
+                            mLastInvisibleRecyclerViewItemView = null;
+                        }
                         if (mLinearLayoutManager != null) {
-                            if (mLastInvisibleRecyclerViewItemView != null) {
-                                mLastInvisibleRecyclerViewItemView.setVisibility(VISIBLE);
-                            }
                             mLastInvisibleRecyclerViewItemView = mLinearLayoutManager.findViewByPosition(firstItemPosition);
-                            mLastInvisibleRecyclerViewItemView.setVisibility(INVISIBLE);
                         } else if (mGridLayoutManager != null) {
-                            mGridLayoutManager.findViewByPosition(firstItemPosition).setVisibility(INVISIBLE);
+                            mLastInvisibleRecyclerViewItemView = mGridLayoutManager.findViewByPosition(firstItemPosition);
+                        }
+                        if (mLastInvisibleRecyclerViewItemView != null) {
+                            mLastInvisibleRecyclerViewItemView.setVisibility(INVISIBLE);
                         }
                     }
 
@@ -432,23 +435,16 @@ public class IndexableLayout extends FrameLayout {
                                     if (nextTitleView.getTop() <= mStickyViewHolder.itemView.getHeight() && wrapperTitle != null) {
                                         mStickyViewHolder.itemView.setTranslationY(nextTitleView.getTop() - mStickyViewHolder.itemView.getHeight());
                                     }
+                                    if (INVISIBLE == nextTitleView.getVisibility()) {
+                                        //特殊情况：手指向下滑动的时候，需要及时把成为第二个可见View的TitleView设置Visible，
+                                        // 这样才能配合StickyView制造两个TitleView切换的动画。
+                                        nextTitleView.setVisibility(VISIBLE);
+                                    }
                                     break;
                                 } else if (mStickyViewHolder.itemView.getTranslationY() != 0) {
                                     mStickyViewHolder.itemView.setTranslationY(0);
                                 }
                             }
-
-                            // 注意与上边的for循环，起点不同
-//                            for (int i = firstItemPosition; i <= firstItemPosition + mGridLayoutManager.getSpanCount(); i++) {
-//                                EntityWrapper nextWrapper = list.get(i);
-//                                View nextTitleView = mGridLayoutManager.findViewByPosition(i);
-//                                if (nextWrapper.getItemType() == EntityWrapper.TYPE_TITLE) {
-//                                    if (INVISIBLE == nextTitleView.getVisibility()) {
-//                                        nextTitleView.setVisibility(VISIBLE);
-//                                    }
-//                                }
-//                            }
-
                         }
                     } // end GridLayoutManager
                 }
