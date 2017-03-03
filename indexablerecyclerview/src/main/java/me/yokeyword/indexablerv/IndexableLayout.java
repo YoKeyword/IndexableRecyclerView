@@ -63,6 +63,13 @@ public class IndexableLayout extends FrameLayout {
 
     private RecyclerView mRecy;
     private IndexBar mIndexBar;
+    /**
+     * 保存正在Invisible的ItemView
+     * <p>
+     * 使用mLastInvisibleRecyclerViewItemView来保存当前Invisible的ItemView，
+     * 每次有新的ItemView需要Invisible的时候，把旧的Invisible的ItemView设为Visible。
+     * 这样就修复了View复用导致的Invisible状态传递的问题。
+     */
     private View mLastInvisibleRecyclerViewItemView;
 
     private boolean mSticyEnable = true;
@@ -405,6 +412,8 @@ public class IndexableLayout extends FrameLayout {
                                     mStickyViewHolder.itemView.setTranslationY(nextTitleView.getTop() - mStickyViewHolder.itemView.getHeight());
                                 }
                                 if (INVISIBLE == nextTitleView.getVisibility()) {
+                                    //特殊情况：手指向下滑动的时候，需要及时把成为第二个可见View的TitleView设置Visible，
+                                    // 这样才能配合StickyView制造两个TitleView切换的动画。
                                     nextTitleView.setVisibility(VISIBLE);
                                 }
                             } else if (mStickyViewHolder.itemView.getTranslationY() != 0) {
