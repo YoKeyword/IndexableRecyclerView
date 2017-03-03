@@ -224,7 +224,7 @@ class RealAdapter<T extends IndexableEntity> extends RecyclerView.Adapter<Recycl
                     index += mDatasList.size() - mFooterDatasList.size() + 1;
                 }
                 mDatasList.add(index, data);
-                notifyItemChanged(i + 1);
+                notifyItemInserted(i + 1);
                 return;
             }
         }

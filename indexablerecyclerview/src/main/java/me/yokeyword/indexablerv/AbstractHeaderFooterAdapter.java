@@ -53,6 +53,15 @@ abstract class AbstractHeaderFooterAdapter<T> {
         return wrapper;
     }
 
+    private EntityWrapper<T> wrapEntity(int pos) {
+        EntityWrapper<T> wrapper = new EntityWrapper<>();
+        wrapper.setIndex(mIndex);
+        wrapper.setIndexTitle(mIndexTitle);
+        wrapper.setHeaderFooterType(getHeaderFooterType());
+        mEntityWrapperList.add(pos, wrapper);
+        return wrapper;
+    }
+
     public abstract int getItemViewType();
 
     public abstract RecyclerView.ViewHolder onCreateContentViewHolder(ViewGroup parent);
@@ -93,17 +102,37 @@ abstract class AbstractHeaderFooterAdapter<T> {
         return EntityWrapper.TYPE_HEADER;
     }
 
-//    public void addData(int position, T data) {
-//        // TODO: 16/10/27
-//    }
-//
-//    public void addDatas(List<T> datas) {
-//        // TODO: 16/10/27
-//    }
-//
-//    public void addDatas(int position, List<T> datas) {
-//        // TODO: 16/10/27
-//    }
+    public void addData(int position, T data) {
+        int size = mEntityWrapperList.size();
+        if (position > size) {
+            return;
+        }
+
+        EntityWrapper<T> wrapper = wrapEntity(position);
+        wrapper.setItemType(getItemViewType());
+        wrapper.setData(data);
+
+        if (size > 0) {
+            mDataSetObservable.notifyAdd(getHeaderFooterType() == EntityWrapper.TYPE_HEADER, mEntityWrapperList.get(position - 1), wrapper);
+        }
+    }
+
+    public void addDatas(List<T> datas) {
+        for (int i = 0; i < datas.size(); i++) {
+            addData(datas.get(i));
+        }
+    }
+
+    public void addDatas(int position, List<T> datas) {
+        int size = mEntityWrapperList.size();
+        if (position > size) {
+            return;
+        }
+
+        for (int i = datas.size() - 1; i >= 0 ; i--) {
+            addData(position, datas.get(i));
+        }
+    }
 
 //    public void removeAll(List<T> datas) {
 //        // TODO: 16/10/27
