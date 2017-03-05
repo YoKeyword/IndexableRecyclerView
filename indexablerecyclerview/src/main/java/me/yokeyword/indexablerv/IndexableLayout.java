@@ -64,6 +64,14 @@ public class IndexableLayout extends FrameLayout {
 
     private RecyclerView mRecy;
     private IndexBar mIndexBar;
+    /**
+     * 保存正在Invisible的ItemView
+     * <p>
+     * 使用mLastInvisibleRecyclerViewItemView来保存当前Invisible的ItemView，
+     * 每次有新的ItemView需要Invisible的时候，把旧的Invisible的ItemView设为Visible。
+     * 这样就修复了View复用导致的Invisible状态传递的问题。
+     */
+    private View mLastInvisibleRecyclerViewItemView;
 
     private boolean mSticyEnable = true;
     private RecyclerView.ViewHolder mStickyViewHolder;
@@ -386,13 +394,20 @@ public class IndexableLayout extends FrameLayout {
                     EntityWrapper wrapper = list.get(firstItemPosition);
                     String wrapperTitle = wrapper.getIndexTitle();
 
-//                    if (EntityWrapper.TYPE_TITLE == wrapper.getItemType()) {
-//                        if (mLinearLayoutManager != null) {
-//                            mLinearLayoutManager.findViewByPosition(firstItemPosition).setVisibility(INVISIBLE);
-//                        } else if (mGridLayoutManager != null) {
-//                            mGridLayoutManager.findViewByPosition(firstItemPosition).setVisibility(INVISIBLE);
-//                        }
-//                    }
+                    if (EntityWrapper.TYPE_TITLE == wrapper.getItemType()) {
+                        if (mLastInvisibleRecyclerViewItemView != null && mLastInvisibleRecyclerViewItemView.getVisibility() == INVISIBLE) {
+                            mLastInvisibleRecyclerViewItemView.setVisibility(VISIBLE);
+                            mLastInvisibleRecyclerViewItemView = null;
+                        }
+                        if (mLinearLayoutManager != null) {
+                            mLastInvisibleRecyclerViewItemView = mLinearLayoutManager.findViewByPosition(firstItemPosition);
+                        } else if (mGridLayoutManager != null) {
+                            mLastInvisibleRecyclerViewItemView = mGridLayoutManager.findViewByPosition(firstItemPosition);
+                        }
+                        if (mLastInvisibleRecyclerViewItemView != null) {
+                            mLastInvisibleRecyclerViewItemView.setVisibility(INVISIBLE);
+                        }
+                    }
 
                     // hide -> show
                     if (wrapperTitle == null && mStickyViewHolder.itemView.getVisibility() == VISIBLE) {
@@ -411,15 +426,15 @@ public class IndexableLayout extends FrameLayout {
                                 if (nextTitleView.getTop() <= mStickyViewHolder.itemView.getHeight() && wrapperTitle != null) {
                                     mStickyViewHolder.itemView.setTranslationY(nextTitleView.getTop() - mStickyViewHolder.itemView.getHeight());
                                 }
+                                if (INVISIBLE == nextTitleView.getVisibility()) {
+                                    //特殊情况：手指向下滑动的时候，需要及时把成为第二个可见View的TitleView设置Visible，
+                                    // 这样才能配合StickyView制造两个TitleView切换的动画。
+                                    nextTitleView.setVisibility(VISIBLE);
+                                }
                             } else if (mStickyViewHolder.itemView.getTranslationY() != 0) {
                                 mStickyViewHolder.itemView.setTranslationY(0);
                             }
                         }
-
-//                        View nextTitleView = mLinearLayoutManager.findViewByPosition(firstItemPosition);
-//                        if (INVISIBLE == nextTitleView.getVisibility()) {
-//                            nextTitleView.setVisibility(VISIBLE);
-//                        }
                     }
 
                     // GirdLayoutManager
@@ -432,23 +447,16 @@ public class IndexableLayout extends FrameLayout {
                                     if (nextTitleView.getTop() <= mStickyViewHolder.itemView.getHeight() && wrapperTitle != null) {
                                         mStickyViewHolder.itemView.setTranslationY(nextTitleView.getTop() - mStickyViewHolder.itemView.getHeight());
                                     }
+                                    if (INVISIBLE == nextTitleView.getVisibility()) {
+                                        //特殊情况：手指向下滑动的时候，需要及时把成为第二个可见View的TitleView设置Visible，
+                                        // 这样才能配合StickyView制造两个TitleView切换的动画。
+                                        nextTitleView.setVisibility(VISIBLE);
+                                    }
                                     break;
                                 } else if (mStickyViewHolder.itemView.getTranslationY() != 0) {
                                     mStickyViewHolder.itemView.setTranslationY(0);
                                 }
                             }
-
-                            // 注意与上边的for循环，起点不同
-//                            for (int i = firstItemPosition; i <= firstItemPosition + mGridLayoutManager.getSpanCount(); i++) {
-//                                EntityWrapper nextWrapper = list.get(i);
-//                                View nextTitleView = mGridLayoutManager.findViewByPosition(i);
-//                                if (nextWrapper.getItemType() == EntityWrapper.TYPE_TITLE) {
-//                                    if (INVISIBLE == nextTitleView.getVisibility()) {
-//                                        nextTitleView.setVisibility(VISIBLE);
-//                                    }
-//                                }
-//                            }
-
                         }
                     } // end GridLayoutManager
                 }
