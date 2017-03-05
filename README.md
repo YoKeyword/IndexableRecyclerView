@@ -24,8 +24,11 @@ A RecyclerView with indexable, sticky and many other features.
 6、使用[TinyPinyin](https://github.com/promeG/TinyPinyin)代替Pinyin4j.jar库，体积更小，拼音转化速度提升4倍！
 
 # 更新日志
+1.2.2
+* 添加几个通知刷新机制，待完善
+
 1.2.0
-* 支持GridLayoutManager! (感谢[guodongAndroid](https://github.com/guodongAndroid))
+* 支持GridLayoutManager，完善通知机制! (感谢[guodongAndroid](https://github.com/guodongAndroid))
 
 1.1.x
 * 优化
@@ -34,12 +37,9 @@ A RecyclerView with indexable, sticky and many other features.
 * 默认不再显示左侧的悬浮气泡
 * 默认排序方式改为快速排序，提供一个MODE_NONE的排序方式
 
-1.0.6
-* 修复滑动过快时，StickyView显示的字母可能不正确的问题
-
 1.0.5
 为HeaderView/FooterView添加:
-* `indexableLayout.removeHeaderAdapter();`  
+* `indexableLayout.removeHeaderAdapter();`
 * `headerAdapter.addData()`
 * `headerAdapter.removeData()`
 
@@ -47,7 +47,7 @@ A RecyclerView with indexable, sticky and many other features.
 ### gradle
 项目下app的build.gradle中依赖：
 ````xml
- compile 'me.yokeyword:indexablerecyclerview:1.2.0'
+ compile 'me.yokeyword:indexablerecyclerview:1.2.2'
  compile 'com.android.support:appcompat-v7:你使用的版本号'
  compile 'com.android.support:recyclerview-v7:你使用的版本号'
 ````
