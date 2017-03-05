@@ -28,7 +28,7 @@ A RecyclerView with indexable, sticky and many other features.
 * 添加几个通知刷新机制，待完善
 
 1.2.0
-* 支持GridLayoutManager，完善通知机制! (感谢[guodongAndroid](https://github.com/guodongAndroid))
+* 支持GridLayoutManager! (感谢[guodongAndroid](https://github.com/guodongAndroid))
 
 1.1.x
 * 优化
