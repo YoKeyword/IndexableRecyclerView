@@ -4,7 +4,6 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.view.ViewGroup;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import me.yokeyword.indexablerv.database.DataObservable;
@@ -21,7 +20,7 @@ public abstract class IndexableAdapter<T extends IndexableEntity> {
     static final int TYPE_LONG_CLICK_CONTENT = 4;
     private final DataObservable mDataSetObservable = new DataObservable();
 
-    private List<T> mDatas = new ArrayList<>();
+    private List<T> mDatas;
 
     private IndexCallback<T> mCallback;
     private OnItemTitleClickListener mTitleClickListener;
@@ -46,8 +45,7 @@ public abstract class IndexableAdapter<T extends IndexableEntity> {
      */
     public void setDatas(List<T> datas, IndexCallback<T> callback) {
         this.mCallback = callback;
-        mDatas.clear();
-        mDatas.addAll(datas);
+        mDatas = datas;
         notifyInited();
     }
 
@@ -88,7 +86,8 @@ public abstract class IndexableAdapter<T extends IndexableEntity> {
      * and any View reflecting the data set should refresh itself.
      */
     public void notifyDataSetChanged() {
-        mDataSetObservable.notifyChanged();
+        mDataSetObservable.notifyInited();
+//        mDataSetObservable.notifyChanged();
     }
 
     private void notifyInited() {
