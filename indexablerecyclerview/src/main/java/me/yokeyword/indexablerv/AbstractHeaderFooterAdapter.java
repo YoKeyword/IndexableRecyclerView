@@ -109,16 +109,16 @@ abstract class AbstractHeaderFooterAdapter<T> {
 
     public void addData(int position, T data) {
         int size = mEntityWrapperList.size();
-        if (position > size) {
+        if (position >= size) {
             return;
         }
 
-        EntityWrapper<T> wrapper = wrapEntity(position);
+        EntityWrapper<T> wrapper = wrapEntity(position + 1);
         wrapper.setItemType(getItemViewType());
         wrapper.setData(data);
 
         if (size > 0) {
-            mDataSetObservable.notifyAdd(getHeaderFooterType() == EntityWrapper.TYPE_HEADER, mEntityWrapperList.get(position - 1), wrapper);
+            mDataSetObservable.notifyAdd(getHeaderFooterType() == EntityWrapper.TYPE_HEADER, mEntityWrapperList.get(position), wrapper);
             mIndexBarDataSetObservable.notifyChanged();
         }
     }
@@ -131,11 +131,11 @@ abstract class AbstractHeaderFooterAdapter<T> {
 
     public void addDatas(int position, List<T> datas) {
         int size = mEntityWrapperList.size();
-        if (position > size) {
+        if (position >= size) {
             return;
         }
 
-        for (int i = datas.size() - 1; i >= 0 ; i--) {
+        for (int i = datas.size() - 1; i >= 0; i--) {
             addData(position, datas.get(i));
         }
     }
