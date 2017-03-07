@@ -175,6 +175,9 @@ class RealAdapter<T extends IndexableEntity> extends RecyclerView.Adapter<Recycl
 
         int viewType = getItemViewType(position);
         if (viewType == EntityWrapper.TYPE_TITLE) {
+            if (View.INVISIBLE == holder.itemView.getVisibility()) {
+                holder.itemView.setVisibility(View.VISIBLE);
+            }
             mAdapter.onBindTitleViewHolder(holder, item.getIndexTitle());
         } else if (viewType == EntityWrapper.TYPE_CONTENT) {
             mAdapter.onBindContentViewHolder(holder, item.getData());
