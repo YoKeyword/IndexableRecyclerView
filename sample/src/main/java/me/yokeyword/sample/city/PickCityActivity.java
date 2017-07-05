@@ -4,7 +4,6 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.SearchView;
 import android.view.View;
 import android.widget.FrameLayout;
@@ -45,7 +44,7 @@ public class PickCityActivity extends AppCompatActivity {
 
 
 //        indexableLayout.setLayoutManager(new LinearLayoutManager(this));
-        indexableLayout.setLayoutManager(new GridLayoutManager(this, 3));
+        indexableLayout.setLayoutManager(new GridLayoutManager(this, 2));
 
         // setAdapter
         CityAdapter adapter = new CityAdapter(this);
