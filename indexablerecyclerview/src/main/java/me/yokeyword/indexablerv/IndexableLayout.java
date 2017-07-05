@@ -78,8 +78,7 @@ public class IndexableLayout extends FrameLayout {
     private String mStickyTitle;
 
     private RealAdapter mRealAdapter;
-    private LinearLayoutManager mLinearLayoutManager;
-    private GridLayoutManager mGridLayoutManager;
+    private RecyclerView.LayoutManager mLayoutManager;
 
     private IndexableAdapter mIndexableAdapter;
 
@@ -140,8 +139,8 @@ public class IndexableLayout extends FrameLayout {
      */
     public <T extends IndexableEntity> void setAdapter(final IndexableAdapter<T> adapter) {
 
-        if (mGridLayoutManager == null && mLinearLayoutManager == null) {
-            throw new NullPointerException("U should set the LayoutManager first");
+        if (mLayoutManager == null) {
+            throw new NullPointerException("You must set the LayoutManager first");
         }
 
         this.mIndexableAdapter = adapter;
@@ -348,29 +347,32 @@ public class IndexableLayout extends FrameLayout {
     }
 
     /**
-     *  {@link #setAdapter(IndexableAdapter)}
+     * {@link #setAdapter(IndexableAdapter)}
+     *
      * @param layoutManager One of LinearLayoutManager and GridLayoutManager
      */
     public void setLayoutManager(RecyclerView.LayoutManager layoutManager) {
+        if (layoutManager == null)
+            throw new NullPointerException("LayoutManager == null");
+
+        mLayoutManager = layoutManager;
         if (layoutManager instanceof GridLayoutManager) {
-            mGridLayoutManager = (GridLayoutManager) layoutManager;
-            mGridLayoutManager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
+            final GridLayoutManager gridLayoutManager = (GridLayoutManager) layoutManager;
+            gridLayoutManager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
                 @Override
                 public int getSpanSize(int position) {
                     int spanSize = 0;
                     if (mRealAdapter.getItemViewType(position) == EntityWrapper.TYPE_TITLE) {
-                        spanSize = mGridLayoutManager.getSpanCount();
+                        spanSize = gridLayoutManager.getSpanCount();
                     } else if (mRealAdapter.getItemViewType(position) == EntityWrapper.TYPE_CONTENT) {
                         spanSize = 1;
                     }
                     return spanSize;
                 }
             });
-            mRecy.setLayoutManager(mGridLayoutManager);
-        } else if (layoutManager instanceof LinearLayoutManager) {
-            mLinearLayoutManager = (LinearLayoutManager) layoutManager;
-            mRecy.setLayoutManager(mLinearLayoutManager);
         }
+
+        mRecy.setLayoutManager(mLayoutManager);
     }
 
     private void initListener() {
@@ -378,96 +380,19 @@ public class IndexableLayout extends FrameLayout {
             @Override
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
                 super.onScrolled(recyclerView, dx, dy);
-
-                int firstItemPosition = 0;
-                if (mLinearLayoutManager != null) {
-                    firstItemPosition = mLinearLayoutManager.findFirstVisibleItemPosition();
-                } else if (mGridLayoutManager != null) {
-                    firstItemPosition = mGridLayoutManager.findFirstVisibleItemPosition();
-                }
-
-                mIndexBar.setSelection(firstItemPosition);
-
-                if (!mSticyEnable) return;
-                ArrayList<EntityWrapper> list = mRealAdapter.getItems();
-                if (mStickyViewHolder != null && list.size() > firstItemPosition) {
-                    EntityWrapper wrapper = list.get(firstItemPosition);
-                    String wrapperTitle = wrapper.getIndexTitle();
-
-                    if (EntityWrapper.TYPE_TITLE == wrapper.getItemType()) {
-                        if (mLastInvisibleRecyclerViewItemView != null && mLastInvisibleRecyclerViewItemView.getVisibility() == INVISIBLE) {
-                            mLastInvisibleRecyclerViewItemView.setVisibility(VISIBLE);
-                            mLastInvisibleRecyclerViewItemView = null;
-                        }
-                        if (mLinearLayoutManager != null) {
-                            mLastInvisibleRecyclerViewItemView = mLinearLayoutManager.findViewByPosition(firstItemPosition);
-                        } else if (mGridLayoutManager != null) {
-                            mLastInvisibleRecyclerViewItemView = mGridLayoutManager.findViewByPosition(firstItemPosition);
-                        }
-                        if (mLastInvisibleRecyclerViewItemView != null) {
-                            mLastInvisibleRecyclerViewItemView.setVisibility(INVISIBLE);
-                        }
-                    }
-
-                    // hide -> show
-                    if (wrapperTitle == null && mStickyViewHolder.itemView.getVisibility() == VISIBLE) {
-                        mStickyTitle = null;
-                        mStickyViewHolder.itemView.setVisibility(INVISIBLE);
-                    } else {
-                        stickyNewViewHolder(wrapperTitle);
-                    }
-
-                    // LinearLayoutManager
-                    if (mLinearLayoutManager != null) {
-                        if (firstItemPosition + 1 < list.size()) {
-                            EntityWrapper nextWrapper = list.get(firstItemPosition + 1);
-                            View nextTitleView = mLinearLayoutManager.findViewByPosition(firstItemPosition + 1);
-                            if (nextWrapper.getItemType() == EntityWrapper.TYPE_TITLE) {
-                                if (nextTitleView.getTop() <= mStickyViewHolder.itemView.getHeight() && wrapperTitle != null) {
-                                    mStickyViewHolder.itemView.setTranslationY(nextTitleView.getTop() - mStickyViewHolder.itemView.getHeight());
-                                }
-                                if (INVISIBLE == nextTitleView.getVisibility()) {
-                                    //特殊情况：手指向下滑动的时候，需要及时把成为第二个可见View的TitleView设置Visible，
-                                    // 这样才能配合StickyView制造两个TitleView切换的动画。
-                                    nextTitleView.setVisibility(VISIBLE);
-                                }
-                            } else if (mStickyViewHolder.itemView.getTranslationY() != 0) {
-                                mStickyViewHolder.itemView.setTranslationY(0);
-                            }
-                        }
-                    }
-
-                    // GirdLayoutManager
-                    if (mGridLayoutManager != null) {
-                        if (firstItemPosition + mGridLayoutManager.getSpanCount() < list.size()) {
-                            for (int i = firstItemPosition + 1; i <= firstItemPosition + mGridLayoutManager.getSpanCount(); i++) {
-                                EntityWrapper nextWrapper = list.get(i);
-                                View nextTitleView = mGridLayoutManager.findViewByPosition(i);
-                                if (nextWrapper.getItemType() == EntityWrapper.TYPE_TITLE) {
-                                    if (nextTitleView.getTop() <= mStickyViewHolder.itemView.getHeight() && wrapperTitle != null) {
-                                        mStickyViewHolder.itemView.setTranslationY(nextTitleView.getTop() - mStickyViewHolder.itemView.getHeight());
-                                    }
-                                    if (INVISIBLE == nextTitleView.getVisibility()) {
-                                        //特殊情况：手指向下滑动的时候，需要及时把成为第二个可见View的TitleView设置Visible，
-                                        // 这样才能配合StickyView制造两个TitleView切换的动画。
-                                        nextTitleView.setVisibility(VISIBLE);
-                                    }
-                                    break;
-                                } else if (mStickyViewHolder.itemView.getTranslationY() != 0) {
-                                    mStickyViewHolder.itemView.setTranslationY(0);
-                                }
-                            }
-                        }
-                    } // end GridLayoutManager
-                }
+                processScrollListener();
             }
         });
 
         mIndexBar.setOnTouchListener(new OnTouchListener() {
+
             @Override
             public boolean onTouch(View v, MotionEvent event) {
                 int touchPos = mIndexBar.getPositionForPointY(event.getY());
                 if (touchPos < 0) return true;
+
+                if (!(mLayoutManager instanceof LinearLayoutManager)) return true;
+                LinearLayoutManager linearLayoutManager = (LinearLayoutManager) mLayoutManager;
 
                 switch (event.getAction()) {
                     case MotionEvent.ACTION_DOWN:
@@ -476,18 +401,11 @@ public class IndexableLayout extends FrameLayout {
 
                         if (touchPos != mIndexBar.getSelectionPosition()) {
                             mIndexBar.setSelectionPosition(touchPos);
+
                             if (touchPos == 0) {
-                                if (mLinearLayoutManager != null) {
-                                    mLinearLayoutManager.scrollToPositionWithOffset(0, 0);
-                                } else if (mGridLayoutManager != null) {
-                                    mGridLayoutManager.scrollToPositionWithOffset(0, 0);
-                                }
+                                linearLayoutManager.scrollToPositionWithOffset(0, 0);
                             } else {
-                                if (mLinearLayoutManager != null) {
-                                    mLinearLayoutManager.scrollToPositionWithOffset(mIndexBar.getFirstRecyclerViewPositionBySelection(), 0);
-                                } else if (mGridLayoutManager != null) {
-                                    mGridLayoutManager.scrollToPositionWithOffset(mIndexBar.getFirstRecyclerViewPositionBySelection(), 0);
-                                }
+                                linearLayoutManager.scrollToPositionWithOffset(mIndexBar.getFirstRecyclerViewPositionBySelection(), 0);
                             }
                         }
                         break;
@@ -500,6 +418,80 @@ public class IndexableLayout extends FrameLayout {
                 return true;
             }
         });
+    }
+
+    private void processScrollListener() {
+        if (!(mLayoutManager instanceof LinearLayoutManager)) return;
+
+        LinearLayoutManager linearLayoutManager = (LinearLayoutManager) mLayoutManager;
+
+        int firstItemPosition;
+        firstItemPosition = linearLayoutManager.findFirstVisibleItemPosition();
+        if (firstItemPosition == RecyclerView.NO_POSITION) return;
+
+        mIndexBar.setSelection(firstItemPosition);
+
+        if (!mSticyEnable) return;
+        ArrayList<EntityWrapper> list = mRealAdapter.getItems();
+        if (mStickyViewHolder != null && list.size() > firstItemPosition) {
+            EntityWrapper wrapper = list.get(firstItemPosition);
+            String wrapperTitle = wrapper.getIndexTitle();
+
+            if (EntityWrapper.TYPE_TITLE == wrapper.getItemType()) {
+                if (mLastInvisibleRecyclerViewItemView != null && mLastInvisibleRecyclerViewItemView.getVisibility() == INVISIBLE) {
+                    mLastInvisibleRecyclerViewItemView.setVisibility(VISIBLE);
+                    mLastInvisibleRecyclerViewItemView = null;
+                }
+
+                mLastInvisibleRecyclerViewItemView = linearLayoutManager.findViewByPosition(firstItemPosition);
+
+                if (mLastInvisibleRecyclerViewItemView != null) {
+                    mLastInvisibleRecyclerViewItemView.setVisibility(INVISIBLE);
+                }
+            }
+
+            // hide -> show
+            if (wrapperTitle == null && mStickyViewHolder.itemView.getVisibility() == VISIBLE) {
+                mStickyTitle = null;
+                mStickyViewHolder.itemView.setVisibility(INVISIBLE);
+            } else {
+                stickyNewViewHolder(wrapperTitle);
+            }
+
+            // GirdLayoutManager
+            if (mLayoutManager instanceof GridLayoutManager) {
+                GridLayoutManager gridLayoutManager = (GridLayoutManager) mLayoutManager;
+                if (firstItemPosition + gridLayoutManager.getSpanCount() < list.size()) {
+                    for (int i = firstItemPosition + 1; i <= firstItemPosition + gridLayoutManager.getSpanCount(); i++) {
+                        processScroll(linearLayoutManager, list, i, wrapperTitle);
+                    }
+                }
+            } else {   // LinearLayoutManager
+                if (firstItemPosition + 1 < list.size()) {
+                    processScroll(linearLayoutManager, list, firstItemPosition + 1, wrapperTitle);
+                }
+            }
+        }
+    }
+
+    private void processScroll(LinearLayoutManager layoutManager, ArrayList<EntityWrapper> list, int position, String title) {
+        EntityWrapper nextWrapper = list.get(position);
+        View nextTitleView = layoutManager.findViewByPosition(position);
+        if (nextTitleView == null) return;
+        if (nextWrapper.getItemType() == EntityWrapper.TYPE_TITLE) {
+            if (nextTitleView.getTop() <= mStickyViewHolder.itemView.getHeight() && title != null) {
+                mStickyViewHolder.itemView.setTranslationY(nextTitleView.getTop() - mStickyViewHolder.itemView.getHeight());
+            }
+            if (INVISIBLE == nextTitleView.getVisibility()) {
+                //特殊情况：手指向下滑动的时候，需要及时把成为第二个可见View的TitleView设置Visible，
+                // 这样才能配合StickyView制造两个TitleView切换的动画。
+                nextTitleView.setVisibility(VISIBLE);
+            }
+            return;
+        } else if (mStickyViewHolder.itemView.getTranslationY() != 0) {
+            mStickyViewHolder.itemView.setTranslationY(0);
+        }
+        return;
     }
 
     private void stickyNewViewHolder(String wrapperTitle) {
@@ -649,6 +641,7 @@ public class IndexableLayout extends FrameLayout {
                             mIndexableAdapter.getIndexCallback().onFinished(datas);
                         }
 
+                        processScrollListener();
                     }
                 });
             }

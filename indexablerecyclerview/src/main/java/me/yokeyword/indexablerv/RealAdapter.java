@@ -104,6 +104,7 @@ class RealAdapter<T extends IndexableEntity> extends RecyclerView.Adapter<Recycl
             @Override
             public void onClick(View v) {
                 int position = holder.getAdapterPosition();
+                if (position == RecyclerView.NO_POSITION) return;
                 EntityWrapper<T> wrapper = mDatasList.get(position);
                 if (viewType == EntityWrapper.TYPE_TITLE) {
                     if (mTitleClickListener != null) {
