@@ -169,6 +169,7 @@ indexableLayout.setCompareMode(@CompareMode int mode);
 
 > 更多细节使用，参见Demo
 
-#致谢
-####[TinyPinyin](https://github.com/promeG/TinyPinyin)
+## 致谢
+
+[TinyPinyin](https://github.com/promeG/TinyPinyin)
 
