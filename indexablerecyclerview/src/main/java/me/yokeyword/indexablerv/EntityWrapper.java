@@ -29,7 +29,7 @@ public class EntityWrapper<T> {
         this.itemType = itemType;
     }
 
-    String getIndex() {
+    public String getIndex() {
         return index;
     }
 
@@ -37,7 +37,7 @@ public class EntityWrapper<T> {
         this.index = index;
     }
 
-    String getIndexTitle() {
+    public String getIndexTitle() {
         return indexTitle;
     }
 
@@ -45,7 +45,7 @@ public class EntityWrapper<T> {
         this.indexTitle = indexTitle;
     }
 
-    String getPinyin() {
+    public String getPinyin() {
         return pinyin;
     }
 
@@ -53,7 +53,7 @@ public class EntityWrapper<T> {
         this.pinyin = pinyin;
     }
 
-    String getIndexByField() {
+    public String getIndexByField() {
         return indexByField;
     }
 

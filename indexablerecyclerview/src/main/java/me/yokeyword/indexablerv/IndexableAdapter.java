@@ -98,7 +98,7 @@ public abstract class IndexableAdapter<T extends IndexableEntity> {
         mDataSetObservable.notifySetListener(type);
     }
 
-    List<T> getItems() {
+    public List<T> getItems() {
         return mDatas;
     }
 

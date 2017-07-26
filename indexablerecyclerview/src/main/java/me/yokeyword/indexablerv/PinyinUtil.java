@@ -15,16 +15,13 @@ public class PinyinUtil {
      * Chinese character -> Pinyin
      */
     public static String getPingYin(String inputString) {
-        char[] input = inputString.trim().toCharArray();
-        String output = "";
-        for (int i = 0; i < input.length; i++) {
-            output += Pinyin.toPinyin(input[i]);
-        }
-        return output.toLowerCase();
+        if (inputString == null) return "";
+        return Pinyin.toPinyin(inputString, "").toLowerCase();
     }
 
     /**
      * Are start with a letter
+     *
      * @return if return false, index should be #
      */
     static boolean matchingLetter(String inputString) {

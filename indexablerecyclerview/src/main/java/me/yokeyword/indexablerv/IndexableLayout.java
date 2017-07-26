@@ -91,6 +91,7 @@ public class IndexableLayout extends FrameLayout {
     private DataObserver mDataSetObserver;
 
     private int mCompareMode = MODE_FAST;
+    private Comparator mComparator;
     private Handler mHandler;
 
     private HeaderFooterDataObserver<EntityWrapper> mHeaderFooterDataSetObserver = new HeaderFooterDataObserver<EntityWrapper>() {
@@ -249,6 +250,13 @@ public class IndexableLayout extends FrameLayout {
      */
     public void setCompareMode(@CompareMode int mode) {
         this.mCompareMode = mode;
+    }
+
+    /**
+     * set sort-mode
+     */
+    public <T extends IndexableEntity> void setComparator(Comparator<EntityWrapper<T>> comparator) {
+        this.mComparator = comparator;
     }
 
     /**
@@ -670,11 +678,11 @@ public class IndexableLayout extends FrameLayout {
                 T item = datas.get(i);
                 String indexName = item.getFieldIndexBy();
                 String pinyin = PinyinUtil.getPingYin(indexName);
+                entity.setPinyin(pinyin);
 
                 // init EntityWrapper
                 if (PinyinUtil.matchingLetter(pinyin)) {
                     entity.setIndex(pinyin.substring(0, 1).toUpperCase());
-                    entity.setPinyin(pinyin);
                     entity.setIndexByField(item.getFieldIndexBy());
                 } else if (PinyinUtil.matchingPolyphone(pinyin)) {
                     entity.setIndex(PinyinUtil.gePolyphoneInitial(pinyin).toUpperCase());
@@ -685,7 +693,6 @@ public class IndexableLayout extends FrameLayout {
                     item.setFieldIndexBy(hanzi);
                 } else {
                     entity.setIndex(INDEX_SIGN);
-                    entity.setPinyin(pinyin);
                     entity.setIndexByField(item.getFieldIndexBy());
                 }
                 entity.setIndexTitle(entity.getIndex());
@@ -709,14 +716,19 @@ public class IndexableLayout extends FrameLayout {
 
             ArrayList<EntityWrapper<T>> list = new ArrayList<>();
             for (List<EntityWrapper<T>> indexableEntities : map.values()) {
-                Comparator comparator;
-                if (mCompareMode == MODE_FAST) {
-                    comparator = new InitialComparator<T>();
-                    Collections.sort(indexableEntities, comparator);
-                } else if (mCompareMode == MODE_ALL_LETTERS) {
-                    comparator = new PinyinComparator<T>();
-                    Collections.sort(indexableEntities, comparator);
+                if (mComparator != null) {
+                    Collections.sort(indexableEntities, mComparator);
+                } else {
+                    Comparator comparator;
+                    if (mCompareMode == MODE_FAST) {
+                        comparator = new InitialComparator<T>();
+                        Collections.sort(indexableEntities, comparator);
+                    } else if (mCompareMode == MODE_ALL_LETTERS) {
+                        comparator = new PinyinComparator<T>();
+                        Collections.sort(indexableEntities, comparator);
+                    }
                 }
+
                 list.addAll(indexableEntities);
             }
             return list;
