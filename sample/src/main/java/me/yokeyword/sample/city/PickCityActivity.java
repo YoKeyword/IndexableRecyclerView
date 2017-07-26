@@ -9,6 +9,9 @@ import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.Toast;
 
+import com.github.promeg.pinyinhelper.Pinyin;
+import com.github.promeg.tinypinyin.lexicons.android.cncity.CnCityDict;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -46,14 +49,36 @@ public class PickCityActivity extends AppCompatActivity {
 //        indexableLayout.setLayoutManager(new LinearLayoutManager(this));
         indexableLayout.setLayoutManager(new GridLayoutManager(this, 2));
 
+        // 多音字处理
+        Pinyin.init(Pinyin.newConfig().with(CnCityDict.getInstance(this)));
+
+        // 添加自定义多音字词典
+//        Pinyin.init(Pinyin.newConfig()
+//                .with(new PinyinMapDict() {
+//                    @Override
+//                    public Map<String, String[]> mapping() {
+//                        HashMap<String, String[]> map = new HashMap<String, String[]>();
+//                        map.put("重庆",  new String[]{"CHONG", "QING"});
+//                        return map;
+//                    }
+//                }));
+
+
+        // 快速排序。  排序规则设置为：只按首字母  （默认全拼音排序）  效率很高，是默认的10倍左右。  按需开启～
+        indexableLayout.setCompareMode(IndexableLayout.MODE_FAST);
+        // 自定义排序规则
+//        indexableLayout.setComparator(new Comparator<EntityWrapper<CityEntity>>() {
+//            @Override
+//            public int compare(EntityWrapper<CityEntity> lhs, EntityWrapper<CityEntity> rhs) {
+//                return lhs.getPinyin().compareTo(rhs.getPinyin());
+//            }
+//        });
+
         // setAdapter
         CityAdapter adapter = new CityAdapter(this);
         indexableLayout.setAdapter(adapter);
         // set Datas
         mDatas = initDatas();
-
-        // 快速排序。  排序规则设置为：只按首字母  （默认全拼音排序）  效率很高，是默认的10倍左右。  按需开启～
-        indexableLayout.setCompareMode(IndexableLayout.MODE_FAST);
 
         adapter.setDatas(mDatas, new IndexableAdapter.IndexCallback<CityEntity>() {
             @Override
