@@ -24,17 +24,15 @@ A RecyclerView with indexable, sticky and many other features.
 6、使用[TinyPinyin](https://github.com/promeG/TinyPinyin)代替Pinyin4j.jar库，体积更小，拼音转化速度提升4倍！
 
 # 更新日志
+1.3.0
+* 多音字借助TinyPinyin处理
+* 可以自定义排序方式
+
 1.2.4
 * Fix 数据变动时，StickTitle不及时更新问题；增加2处安全校验
 
-1.2.2
-* 添加几个通知刷新机制，待完善
-
 1.2.0
 * 支持GridLayoutManager! (感谢[guodongAndroid](https://github.com/guodongAndroid))
-
-1.1.x
-* 优化
 
 1.0.7
 * 默认不再显示左侧的悬浮气泡
@@ -50,7 +48,7 @@ A RecyclerView with indexable, sticky and many other features.
 ### gradle
 项目下app的build.gradle中依赖：
 ````xml
- compile 'me.yokeyword:indexablerecyclerview:1.2.4'
+ compile 'me.yokeyword:indexablerecyclerview:1.3.0'
  compile 'com.android.support:appcompat-v7:你使用的版本号'
  compile 'com.android.support:recyclerview-v7:你使用的版本号'
 ````
@@ -138,8 +136,23 @@ indexableLayout.setOverlayStyle_MaterialDesign(int Color) & setOverlayStyle_Cent
 ````
 
 ### 2、多音字处理
-多音字需要手动处理:
-例如城市排序时, 拼音转化库默认重庆为zhongqing, 对于这种情况**你需要手动将源数据的 '重庆' 修改 为'#chongqing#重庆'**, 库会根据正则表达式进行对应的辨别处理(即 #多音字拼音#汉字 的格式)
+
+多音字处理得益于使用了[TinyPinyin](https://github.com/promeG/TinyPinyin)，可以如下设置：
+````java
+// 添加中文城市词典
+Pinyin.init(Pinyin.newConfig().with(CnCityDict.getInstance());
+
+// 添加自定义词典
+Pinyin.init(Pinyin.newConfig()
+            .with(new PinyinMapDict() {
+                @Override
+                public Map<String, String[]> mapping() {
+                    HashMap<String, String[]> map = new HashMap<String, String[]>();
+                    map.put("重庆",  new String[]{"CHONG", "QING"});
+                    return map;
+                }
+            }));
+````
 
 ### 3、添加自定义HeaderView，FooterView
 ````java
@@ -165,6 +178,9 @@ new SimpleHeaderAdapter(IndexableAdapter<T> adapter, String index, String indexT
 // 设置排序规则： 
 // MODE_FAST:按首字母排序（默认）；MODE_ALL_LETTERS:全字母比较，效率较低； MODE_NONE:字母模块内不排序，效率最高
 indexableLayout.setCompareMode(@CompareMode int mode);
+
+// 自定义排序规则
+indexableLayout.setComparator(yourComparator);
 ````
 
 > 更多细节使用，参见Demo
